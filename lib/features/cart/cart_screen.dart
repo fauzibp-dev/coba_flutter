@@ -42,11 +42,11 @@ class _CartScreenState extends State<CartScreen> {
               padding: const EdgeInsets.all(16),
               children: [
                 _cartItem(products[0], riceQty, (delta) {
-                  setState(() => riceQty = (riceQty + delta).clamp(1, 99));
+                  setState(() => riceQty = (riceQty + delta).clamp(1, 99).toInt());
                 }),
                 const SizedBox(height: 10),
                 _cartItem(products[1], oilQty, (delta) {
-                  setState(() => oilQty = (oilQty + delta).clamp(1, 99));
+                  setState(() => oilQty = (oilQty + delta).clamp(1, 99).toInt());
                 }),
                 const SizedBox(height: 16),
                 Container(
@@ -168,7 +168,7 @@ class _CartScreenState extends State<CartScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
-      builder: (context) {
+      builder: (sheetContext) {
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
@@ -214,8 +214,8 @@ class _CartScreenState extends State<CartScreen> {
                 const SizedBox(height: 14),
                 FilledButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(this.context).showSnackBar(const SnackBar(content: Text('Checkout berhasil disimulasikan')));
+                    Navigator.pop(sheetContext);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Checkout berhasil disimulasikan')));
                   },
                   child: const Text('Buat Pesanan'),
                 ),

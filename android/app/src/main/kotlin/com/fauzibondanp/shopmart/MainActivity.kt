@@ -1,4 +1,4 @@
-package com.example.coba_flutter
+package com.fauzibondanp.shopmart
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/theme/app_theme.dart';
-import '../shared/widgets/shop_shell.dart';
+import 'core/theme/app_theme.dart';
+import 'screens/home_shell.dart';
 
 class ShopMartApp extends StatelessWidget {
   const ShopMartApp({super.key});
@@ -9,10 +9,10 @@ class ShopMartApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Shop Mart',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const ShopShell(),
+      home: const HomeShell(),
     );
   }
 }

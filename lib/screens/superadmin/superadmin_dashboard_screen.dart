@@ -5,11 +5,13 @@ import '../../core/utils/app_utils.dart';
 import '../../services/superadmin_repository.dart';
 import 'superadmin_audit_screen.dart';
 import 'superadmin_categories_screen.dart';
+import 'superadmin_operations_screen.dart';
 import 'superadmin_orders_screen.dart';
 import 'superadmin_products_screen.dart';
 import 'superadmin_promotions_screen.dart';
 import 'superadmin_returns_screen.dart';
 import 'superadmin_stores_screen.dart';
+import 'superadmin_support_screen.dart';
 import 'superadmin_users_screen.dart';
 
 class SuperadminDashboardScreen extends StatefulWidget {
@@ -92,7 +94,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Akses global untuk toko, akun pengelola, kategori, katalog, order, promo, retur, dan audit.',
+                        'Akses global untuk toko, hak akses, kategori, katalog, order, promo, retur, customer support, integrasi, dan audit.',
                         style: TextStyle(color: Colors.white.withValues(alpha: .78), height: 1.35, fontSize: 12),
                       ),
                     ],
@@ -157,8 +159,20 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                 _ActionTile(
                   icon: Icons.assignment_return_outlined,
                   title: 'Retur & After Sales',
-                  subtitle: 'Review status permintaan retur',
+                  subtitle: 'Review status permintaan retur dan refund',
                   onTap: () => _open(const SuperadminReturnsScreen()),
+                ),
+                _ActionTile(
+                  icon: Icons.support_agent_rounded,
+                  title: 'Customer Support',
+                  subtitle: 'Baca dan balas chat pelanggan seluruh toko',
+                  onTap: () => _open(const SuperadminSupportScreen()),
+                ),
+                _ActionTile(
+                  icon: Icons.hub_outlined,
+                  title: 'Operations Center',
+                  subtitle: 'Broadcast notifikasi, integrasi, dan sync log',
+                  onTap: () => _open(const SuperadminOperationsScreen()),
                 ),
                 _ActionTile(
                   icon: Icons.history_rounded,

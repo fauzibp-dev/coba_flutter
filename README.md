@@ -29,6 +29,7 @@ Mutation sensitif tidak lagi mengandalkan direct table update dari client:
 - perubahan lifecycle order melalui RPC state machine
 - perubahan stok admin melalui RPC yang menulis inventory ledger secara atomik
 - review melalui RPC yang memastikan user benar-benar membeli produk tersebut dan order sudah selesai
+- return/refund mutation melalui RPC dan refund ledger
 - owner tidak lagi dapat diklaim otomatis oleh user pertama yang login
 - product image mutation dibatasi berdasarkan folder `store_id`
 
@@ -92,14 +93,14 @@ Dari **Akun > Shop Mart Admin**:
 - lihat pesanan masuk
 - update lifecycle status order melalui state machine server
 - ringkasan nilai order yang sudah dibayar
-- lihat dan proses retur
+- lihat dan proses retur dengan transisi status yang tervalidasi
 - tambah/edit/aktifkan voucher promo
 
 ## Owner / admin bootstrap
 
 Aplikasi **tidak** memberikan role owner secara otomatis kepada user yang login. Owner production yang sudah ada tetap dipertahankan di database.
 
-Untuk deployment baru, bootstrap owner harus dilakukan melalui proses administrasi/database yang terkontrol, bukan dari client Flutter. Jangan membuka kembali `claim_initial_owner()` untuk role `authenticated`.
+Untuk deployment baru, bootstrap owner harus dilakukan melalui proses administrasi/database yang terkontrol, bukan dari client Flutter. Endpoint legacy `claim_initial_owner()` dipertahankan hanya sebagai fungsi no-op yang selalu mengembalikan `false` agar client lama masih dapat login tanpa membuka privilege escalation.
 
 ## Supabase migrations
 
@@ -111,6 +112,9 @@ supabase/migrations/
   20261005_000002_cart_checkout.sql
   20261005_000003_admin_product_orders.sql
   20261005_000004_notifications_chat_returns.sql
+  20261005_000005_return_refund_corrections.sql
+  20261005_000006_after_sales_hardening.sql
+  20261005_000007_legacy_client_compatibility.sql
 ```
 
 Apply migration secara berurutan. Jangan mengedit database production secara manual tanpa menambahkan migration ekuivalen ke repository.
@@ -128,7 +132,12 @@ flutter build apk --debug
 
 ## Release Android
 
-Workflow development/course masih memakai debug APK. Untuk distribusi Play Store, konfigurasi production keystore dan signing secret harus dilakukan secara terpisah dan tidak boleh di-commit ke Git.
+Workflow development/course tetap memakai debug APK. Konfigurasi release **tidak lagi fallback ke debug signing**. Untuk Play Store:
+
+1. salin `android/key.properties.example` menjadi `android/key.properties`;
+2. isi path/credential ke production keystore secara lokal atau lewat CI secret;
+3. jangan commit `key.properties` atau file `.jks`;
+4. build `flutter build appbundle --release` setelah signing tersedia.
 
 ## External integrations
 
@@ -143,6 +152,7 @@ Payment gateway, kurir pihak ketiga, dan sinkronisasi e-commerce lama Koperasi M
 - order total dihitung server-side
 - stock revalidated server-side
 - review terikat ke purchased order item
-- owner bootstrap tidak exposed ke client
+- return/refund mutation memiliki state validation dan ledger
+- owner bootstrap tidak exposed sebagai privilege escalation
 - service-role/secret key tidak boleh ada di source
 - production keystore tidak boleh ada di repository

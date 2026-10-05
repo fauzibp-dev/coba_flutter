@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/app_utils.dart';
@@ -49,7 +50,7 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
     if (!mounted) return;
 
     var storeId = detail?['store_id']?.toString() ?? product?['store_id']?.toString() ?? stores.first['id'].toString();
-    var categories = await SuperadminRepository.instance.categories(storeId);
+    var categories = await SuperadminRepository.instance.productCategories(storeId);
     if (!mounted) return;
 
     final name = TextEditingController(text: detail?['name']?.toString() ?? '');
@@ -66,6 +67,12 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
     var featured = detail?['is_featured'] == true || product?['is_featured'] == true;
     var categoryValue = detail?['category_id']?.toString() ?? '_none';
     var saving = false;
+    XFile? selectedImage;
+    final images = (detail?['product_images'] as List? ?? const []).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+    final primaryImages = images.where((e) => e['is_primary'] == true).toList();
+    final currentImageUrl = primaryImages.isNotEmpty
+        ? primaryImages.first['image_url']?.toString()
+        : (images.isEmpty ? null : images.first['image_url']?.toString());
 
     final changed = await showDialog<bool>(
       context: context,
@@ -87,7 +94,7 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
                         ? null
                         : (v) async {
                             if (v == null) return;
-                            final next = await SuperadminRepository.instance.categories(v);
+                            final next = await SuperadminRepository.instance.productCategories(v);
                             setDialogState(() {
                               storeId = v;
                               categories = next;
@@ -145,6 +152,47 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
                     value: featured,
                     onChanged: saving ? null : (v) => setDialogState(() => featured = v),
                   ),
+                  const Divider(height: 24),
+                  Row(
+                    children: [
+                      Container(
+                        width: 68,
+                        height: 68,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(color: const Color(0xFFF2F2F2), borderRadius: BorderRadius.circular(9)),
+                        child: currentImageUrl == null
+                            ? const Icon(Icons.image_outlined, color: AppTheme.textSecondary)
+                            : Image.network(currentImageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.broken_image_outlined)),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Foto utama', style: TextStyle(fontWeight: FontWeight.w800)),
+                            const SizedBox(height: 2),
+                            Text(selectedImage?.name ?? (currentImageUrl == null ? 'Belum ada gambar' : 'Gambar saat ini'), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                            const SizedBox(height: 6),
+                            OutlinedButton.icon(
+                              onPressed: saving
+                                  ? null
+                                  : () async {
+                                      final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 88, maxWidth: 1600);
+                                      if (picked != null) setDialogState(() => selectedImage = picked);
+                                    },
+                              icon: const Icon(Icons.photo_library_outlined, size: 18),
+                              label: Text(selectedImage == null ? 'Pilih gambar' : 'Ganti pilihan'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('JPG/PNG/WebP maksimal 5 MB. Gambar baru menjadi foto utama.', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                  ),
                 ],
               ),
             ),
@@ -165,7 +213,7 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
                       }
                       setDialogState(() => saving = true);
                       try {
-                        await SuperadminRepository.instance.saveProduct(
+                        final productId = await SuperadminRepository.instance.saveProduct(
                           id: product?['id']?.toString(),
                           storeId: storeId,
                           name: name.text,
@@ -179,6 +227,9 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
                           featured: featured,
                           stockReason: reason.text,
                         );
+                        if (selectedImage != null) {
+                          await SuperadminRepository.instance.uploadProductImage(storeId: storeId, productId: productId, image: selectedImage!);
+                        }
                         if (context.mounted) Navigator.pop(context, true);
                       } catch (e) {
                         setDialogState(() => saving = false);

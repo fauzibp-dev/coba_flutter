@@ -14,7 +14,11 @@ class ProductCard extends StatelessWidget {
     if (images is List && images.isNotEmpty) {
       final sorted = List<Map<String, dynamic>>.from(
         images.map((e) => Map<String, dynamic>.from(e as Map)),
-      )..sort((a, b) => ((a['sort_order'] ?? 0) as num).compareTo((b['sort_order'] ?? 0) as num));
+      )..sort((a, b) {
+          final primaryCompare = (b['is_primary'] == true ? 1 : 0).compareTo(a['is_primary'] == true ? 1 : 0);
+          if (primaryCompare != 0) return primaryCompare;
+          return ((a['sort_order'] ?? 0) as num).compareTo((b['sort_order'] ?? 0) as num);
+        });
       return sorted.first['image_url'] as String?;
     }
     return null;
@@ -54,7 +58,7 @@ class ProductCard extends StatelessWidget {
                   : Image.network(
                       imageUrl!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const ColoredBox(
+                      errorBuilder: (_, _, _) => const ColoredBox(
                         color: Color(0xFFF0F0F0),
                         child: Icon(Icons.broken_image_outlined, color: Color(0xFFAAAAAA)),
                       ),

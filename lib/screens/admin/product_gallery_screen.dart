@@ -10,10 +10,12 @@ class ProductGalleryScreen extends StatefulWidget {
     super.key,
     required this.productId,
     required this.productName,
+    this.storeId,
   });
 
   final String productId;
   final String productName;
+  final String? storeId;
 
   @override
   State<ProductGalleryScreen> createState() => _ProductGalleryScreenState();
@@ -51,6 +53,7 @@ class _ProductGalleryScreenState extends State<ProductGalleryScreen> {
       for (final file in files.take(8)) {
         await ProductGalleryRepository.instance.upload(
           productId: widget.productId,
+          storeId: widget.storeId,
           file: file,
         );
         uploaded++;

@@ -93,8 +93,8 @@ class _SuperadminGalleryScreenState extends State<SuperadminGalleryScreen> {
                   child: RefreshIndicator(
                     onRefresh: _refresh,
                     child: products.isEmpty
-                        ? const ListView(
-                            children: [
+                        ? ListView(
+                            children: const [
                               SizedBox(height: 140),
                               Center(child: Text('Produk tidak ditemukan.')),
                             ],
@@ -102,7 +102,7 @@ class _SuperadminGalleryScreenState extends State<SuperadminGalleryScreen> {
                         : ListView.separated(
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
                             itemCount: products.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: 8),
+                            separatorBuilder: (_, _) => const SizedBox(height: 8),
                             itemBuilder: (_, i) {
                               final p = products[i];
                               return Container(

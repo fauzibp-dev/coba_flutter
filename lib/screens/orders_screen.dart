@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_utils.dart';
 import '../services/shop_repository.dart';
+import 'order_detail_screen.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key, this.embedded = false});
@@ -23,10 +24,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   void _reload() => _future = ShopRepository.instance.myOrders();
 
+  Future<void> _open(String id) async {
+    await Navigator.push(context, MaterialPageRoute(builder: (_) => OrderDetailScreen(orderId: id)));
+    if (mounted) setState(_reload);
+  }
+
   Future<void> _cancel(String id) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text('Batalkan pesanan?'),
         content: const Text('Stok akan dikembalikan ke katalog. Tindakan ini tidak dapat dibatalkan.'),
         actions: [
@@ -58,7 +64,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       'refund_pending': 'Refund Diproses',
       'refunded': 'Refund Selesai',
     };
-    return labels[value] ?? value;
+    return labels[value] ?? value.replaceAll('_', ' ');
   }
 
   @override
@@ -83,8 +89,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
               child: FutureBuilder<List<Map<String, dynamic>>>(
                 future: _future,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-                  if (snapshot.hasError) return const Center(child: Text('Gagal memuat pesanan.'));
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Gagal memuat pesanan: ${friendlyError(snapshot.error!)}'));
+                  }
                   final orders = snapshot.data ?? [];
                   if (orders.isEmpty) {
                     return ListView(
@@ -101,62 +111,78 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   return ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: orders.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (_, i) {
-                      final order = orders[i];
+                    separatorBuilder: (_, _) => const SizedBox(height: 10),
+                    itemBuilder: (_, index) {
+                      final order = orders[index];
                       final items = order['order_items'] as List? ?? [];
                       final status = order['status']?.toString() ?? '';
-                      return Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.border)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(child: Text(order['order_number']?.toString() ?? '-', style: const TextStyle(fontWeight: FontWeight.w900))),
-                                _StatusBadge(label: _status(status), danger: status == 'cancelled'),
-                              ],
-                            ),
-                            const Divider(height: 22),
-                            ...items.take(3).map((raw) {
-                              final item = Map<String, dynamic>.from(raw as Map);
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 7),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Text('${item['product_name']} ×${item['quantity']}', maxLines: 1, overflow: TextOverflow.ellipsis)),
-                                    Text(rupiah((item['subtotal'] ?? 0) as num), style: const TextStyle(fontWeight: FontWeight.w600)),
-                                  ],
-                                ),
-                              );
-                            }),
-                            if (items.length > 3) Text('+${items.length - 3} produk lainnya', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                            const Divider(height: 22),
-                            Row(
-                              children: [
-                                const Text('Total', style: TextStyle(color: AppTheme.textSecondary)),
-                                const Spacer(),
-                                Text(rupiah((order['total_amount'] ?? 0) as num), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: AppTheme.primary)),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              '${order['shipping_method'] == 'pickup' ? 'Ambil di koperasi' : 'Local Delivery'} • ${order['payment_method'] == 'cod' ? 'COD' : 'Transfer manual'}',
-                              style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
-                            ),
-                            if (status == 'pending_payment' || status == 'confirmed') ...[
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                width: double.infinity,
-                                child: OutlinedButton(
-                                  onPressed: () => _cancel(order['id'] as String),
-                                  style: OutlinedButton.styleFrom(foregroundColor: AppTheme.primary),
-                                  child: const Text('Batalkan Pesanan'),
-                                ),
+                      return InkWell(
+                        onTap: () => _open(order['id'] as String),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppTheme.border),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(child: Text(order['order_number']?.toString() ?? '-', style: const TextStyle(fontWeight: FontWeight.w900))),
+                                  _StatusBadge(label: _status(status), danger: status == 'cancelled' || status == 'refunded'),
+                                ],
                               ),
+                              const Divider(height: 22),
+                              ...items.take(3).map((raw) {
+                                final item = Map<String, dynamic>.from(raw as Map);
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 7),
+                                  child: Row(
+                                    children: [
+                                      Expanded(child: Text('${item['product_name']} ×${item['quantity']}', maxLines: 1, overflow: TextOverflow.ellipsis)),
+                                      Text(rupiah((item['subtotal'] ?? 0) as num), style: const TextStyle(fontWeight: FontWeight.w600)),
+                                    ],
+                                  ),
+                                );
+                              }),
+                              if (items.length > 3)
+                                Text('+${items.length - 3} produk lainnya', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                              const Divider(height: 22),
+                              Row(
+                                children: [
+                                  const Text('Total', style: TextStyle(color: AppTheme.textSecondary)),
+                                  const Spacer(),
+                                  Text(rupiah((order['total_amount'] ?? 0) as num), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: AppTheme.primary)),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '${order['shipping_method'] == 'pickup' ? 'Ambil di koperasi' : 'Local Delivery'} • ${order['payment_method'] == 'cod' ? 'COD' : 'Transfer manual'}',
+                                      style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                                    ),
+                                  ),
+                                  const Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+                                ],
+                              ),
+                              if (status == 'pending_payment' || status == 'confirmed') ...[
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton(
+                                    onPressed: () => _cancel(order['id'] as String),
+                                    style: OutlinedButton.styleFrom(foregroundColor: AppTheme.primary),
+                                    child: const Text('Batalkan Pesanan'),
+                                  ),
+                                ),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
                       );
                     },
@@ -177,6 +203,7 @@ class _StatusBadge extends StatelessWidget {
   const _StatusBadge({required this.label, required this.danger});
   final String label;
   final bool danger;
+
   @override
   Widget build(BuildContext context) {
     final color = danger ? AppTheme.primary : AppTheme.success;

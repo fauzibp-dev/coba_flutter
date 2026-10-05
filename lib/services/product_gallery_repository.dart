@@ -22,20 +22,27 @@ class ProductGalleryRepository {
     return _maps(rows);
   }
 
+  Future<String> _authorizedStoreId(String productId, String? requestedStoreId) async {
+    final member = await ShopRepository.instance.membership();
+    if (requestedStoreId == null) {
+      if (member == null) throw StateError('Not authorized');
+      return member['store_id'].toString();
+    }
+    if (member != null && member['store_id'].toString() == requestedStoreId) {
+      return requestedStoreId;
+    }
+    final superAdmin = await db.rpc('is_platform_super_admin');
+    if (superAdmin != true) throw StateError('Not authorized');
+    return requestedStoreId;
+  }
+
   Future<String> upload({
     required String productId,
     required XFile file,
+    String? storeId,
     bool makePrimary = false,
   }) async {
-    final member = await ShopRepository.instance.membership();
-    if (member == null) throw StateError('Not authorized');
-    final product = await db
-        .from('products')
-        .select('id,store_id')
-        .eq('id', productId)
-        .eq('store_id', member['store_id'])
-        .maybeSingle();
-    if (product == null) throw StateError('Product not found or not authorized');
+    final authorizedStoreId = await _authorizedStoreId(productId, storeId);
 
     final rawExt = file.path.split('.').last.toLowerCase();
     final ext = rawExt == 'jpeg' ? 'jpg' : rawExt;
@@ -46,8 +53,7 @@ class ProductGalleryRepository {
     if (bytes.length > 5 * 1024 * 1024) {
       throw StateError('Ukuran gambar maksimal 5 MB.');
     }
-    final storeId = product['store_id'].toString();
-    final path = '$storeId/$productId/${DateTime.now().microsecondsSinceEpoch}.$ext';
+    final path = '$authorizedStoreId/$productId/${DateTime.now().microsecondsSinceEpoch}.$ext';
     final mime = file.mimeType ?? (ext == 'jpg' ? 'image/jpeg' : 'image/$ext');
     await db.storage.from('product-images').uploadBinary(
           path,

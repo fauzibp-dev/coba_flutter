@@ -52,17 +52,16 @@ android {
     }
 }
 
-gradle.taskGraph.whenReady { graph ->
-    val releaseRequested = graph.allTasks.any { task ->
-        task.name.contains("release", ignoreCase = true) ||
-            task.name.contains("bundleRelease", ignoreCase = true) ||
-            task.name.contains("assembleRelease", ignoreCase = true)
-    }
-    if (releaseRequested && !keystorePropertiesFile.exists()) {
-        throw GradleException(
-            "Release signing is not configured. Copy android/key.properties.example to " +
-                "android/key.properties and reference a production keystore. Never use the debug key for release."
-        )
+tasks.configureEach {
+    if (name == "assembleRelease" || name == "bundleRelease") {
+        doFirst {
+            if (!keystorePropertiesFile.exists()) {
+                throw GradleException(
+                    "Release signing is not configured. Copy android/key.properties.example to " +
+                        "android/key.properties and reference a production keystore. Never use the debug key for release."
+                )
+            }
+        }
     }
 }
 

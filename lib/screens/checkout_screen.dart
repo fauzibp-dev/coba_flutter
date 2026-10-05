@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_utils.dart';
@@ -15,6 +16,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   late Future<List<dynamic>> _future;
   final _voucher = TextEditingController();
   final _notes = TextEditingController();
+  final _requestId = const Uuid().v4();
   String _payment = 'cod';
   String _shipping = 'local_delivery';
   String? _addressId;
@@ -58,16 +60,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Future<void> _submit() async {
-    if (_addressId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pilih atau tambahkan alamat terlebih dahulu.')));
+    if (_shipping == 'local_delivery' && _addressId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Pilih atau tambahkan alamat terlebih dahulu.')),
+      );
       return;
     }
     setState(() => _submitting = true);
     try {
       final orderId = await ShopRepository.instance.checkout(
-        addressId: _addressId!,
+        addressId: _shipping == 'local_delivery' ? _addressId : null,
         paymentMethod: _payment,
         shippingMethod: _shipping,
+        clientRequestId: _requestId,
         voucherCode: _voucher.text,
         notes: _notes.text,
       );
@@ -78,13 +83,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.check_circle_rounded, color: AppTheme.success, size: 48),
           title: const Text('Pesanan berhasil dibuat'),
-          content: Text('ID transaksi: ${orderId.substring(0, 8).toUpperCase()}\n\nStatus dan detail pesanan dapat dilihat di menu Pesanan.'),
-          actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Selesai'))],
+          content: Text(
+            'ID transaksi: ${orderId.substring(0, 8).toUpperCase()}\n\n'
+            'Status dan detail pesanan dapat dilihat di menu Pesanan.',
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Selesai')),
+          ],
         ),
       );
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e)), backgroundColor: AppTheme.primaryDark));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(friendlyError(e)), backgroundColor: AppTheme.primaryDark),
+        );
+      }
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -97,18 +111,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: FutureBuilder<List<dynamic>>(
         future: _future,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
           if (snapshot.hasError) return const Center(child: Text('Checkout tidak dapat dimuat.'));
           final items = snapshot.data![0] as List<Map<String, dynamic>>;
           final addresses = snapshot.data![1] as List<Map<String, dynamic>>;
           if (_addressId == null && addresses.isNotEmpty) {
-            final defaultAddress = addresses.cast<Map<String, dynamic>>().firstWhere(
-                  (a) => a['is_default'] == true,
-                  orElse: () => addresses.first,
-                );
+            final defaultAddress = addresses.firstWhere(
+              (a) => a['is_default'] == true,
+              orElse: () => addresses.first,
+            );
             _addressId = defaultAddress['id'] as String;
           }
-          final subtotal = items.fold<num>(0, (sum, e) => sum + _price(e) * ((e['quantity'] ?? 1) as num));
+          final subtotal = items.fold<num>(
+            0,
+            (sum, e) => sum + _price(e) * ((e['quantity'] ?? 1) as num),
+          );
           final shippingCost = _shipping == 'local_delivery' ? 5000 : 0;
           return Column(
             children: [
@@ -121,8 +140,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (addresses.isEmpty)
-                            const Text('Belum ada alamat pengiriman.', style: TextStyle(color: AppTheme.textSecondary))
+                          if (_shipping == 'pickup')
+                            const Text(
+                              'Alamat tidak diperlukan untuk pengambilan di koperasi.',
+                              style: TextStyle(color: AppTheme.textSecondary),
+                            )
+                          else if (addresses.isEmpty)
+                            const Text(
+                              'Belum ada alamat pengiriman.',
+                              style: TextStyle(color: AppTheme.textSecondary),
+                            )
                           else
                             DropdownButtonFormField<String>(
                               initialValue: _addressId,
@@ -131,13 +158,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               items: addresses.map((a) {
                                 return DropdownMenuItem(
                                   value: a['id'] as String,
-                                  child: Text('${a['label']} • ${a['recipient_name']} — ${a['address_line']}', overflow: TextOverflow.ellipsis),
+                                  child: Text(
+                                    '${a['label']} • ${a['recipient_name']} — ${a['address_line']}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 );
                               }).toList(),
                               onChanged: (v) => setState(() => _addressId = v),
                             ),
-                          const SizedBox(height: 10),
-                          OutlinedButton.icon(onPressed: _addAddress, icon: const Icon(Icons.add_location_alt_outlined), label: const Text('Tambah alamat')),
+                          if (_shipping == 'local_delivery') ...[
+                            const SizedBox(height: 10),
+                            OutlinedButton.icon(
+                              onPressed: _addAddress,
+                              icon: const Icon(Icons.add_location_alt_outlined),
+                              label: const Text('Tambah alamat'),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -151,9 +187,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Row(
                               children: [
-                                Expanded(child: Text('${product['name']}  ×${item['quantity']}', maxLines: 2, overflow: TextOverflow.ellipsis)),
+                                Expanded(
+                                  child: Text(
+                                    '${product['name']}  ×${item['quantity']}',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                                 const SizedBox(width: 10),
-                                Text(rupiah(_price(item) * ((item['quantity'] ?? 1) as num)), style: const TextStyle(fontWeight: FontWeight.w700)),
+                                Text(
+                                  rupiah(_price(item) * ((item['quantity'] ?? 1) as num)),
+                                  style: const TextStyle(fontWeight: FontWeight.w700),
+                                ),
                               ],
                             ),
                           );
@@ -212,9 +257,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       title: 'Voucher & Catatan',
                       child: Column(
                         children: [
-                          TextField(controller: _voucher, textCapitalization: TextCapitalization.characters, decoration: const InputDecoration(labelText: 'Kode voucher (opsional)')),
+                          TextField(
+                            controller: _voucher,
+                            textCapitalization: TextCapitalization.characters,
+                            decoration: const InputDecoration(labelText: 'Kode voucher (opsional)'),
+                          ),
                           const SizedBox(height: 10),
-                          TextField(controller: _notes, maxLines: 2, decoration: const InputDecoration(labelText: 'Catatan pesanan (opsional)')),
+                          TextField(
+                            controller: _notes,
+                            maxLines: 2,
+                            decoration: const InputDecoration(labelText: 'Catatan pesanan (opsional)'),
+                          ),
                         ],
                       ),
                     ),
@@ -227,9 +280,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           const SizedBox(height: 7),
                           _TotalRow(label: 'Pengiriman', value: rupiah(shippingCost)),
                           const Divider(height: 22),
-                          _TotalRow(label: 'Estimasi total', value: rupiah(subtotal + shippingCost), bold: true),
+                          _TotalRow(
+                            label: 'Estimasi total',
+                            value: rupiah(subtotal + shippingCost),
+                            bold: true,
+                          ),
                           const SizedBox(height: 6),
-                          const Text('Voucher dan seluruh harga divalidasi ulang oleh server sebelum order dibuat.', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary, height: 1.4)),
+                          const Text(
+                            'Voucher, harga, dan stok divalidasi ulang oleh server. '
+                            'Pengiriman ulang request yang sama tidak membuat pesanan ganda.',
+                            style: TextStyle(fontSize: 11, color: AppTheme.textSecondary, height: 1.4),
+                          ),
                         ],
                       ),
                     ),
@@ -241,7 +302,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: Container(
                   color: Colors.white,
                   padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
-                  child: FilledButton(onPressed: _submitting ? null : _submit, child: Text(_submitting ? 'Membuat pesanan...' : 'Buat Pesanan')),
+                  child: FilledButton(
+                    onPressed: _submitting ? null : _submit,
+                    child: Text(_submitting ? 'Membuat pesanan...' : 'Buat Pesanan'),
+                  ),
                 ),
               ),
             ],
@@ -256,11 +320,16 @@ class _Section extends StatelessWidget {
   const _Section({required this.title, required this.child});
   final String title;
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.border)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.border),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -278,12 +347,20 @@ class _TotalRow extends StatelessWidget {
   final String label;
   final String value;
   final bool bold;
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(child: Text(label, style: TextStyle(fontWeight: bold ? FontWeight.w800 : FontWeight.w400))),
-        Text(value, style: TextStyle(fontWeight: bold ? FontWeight.w900 : FontWeight.w600, color: bold ? AppTheme.primary : null, fontSize: bold ? 18 : 14)),
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: bold ? FontWeight.w900 : FontWeight.w600,
+            color: bold ? AppTheme.primary : null,
+            fontSize: bold ? 18 : 14,
+          ),
+        ),
       ],
     );
   }
@@ -291,6 +368,7 @@ class _TotalRow extends StatelessWidget {
 
 class _AddressFormSheet extends StatefulWidget {
   const _AddressFormSheet();
+
   @override
   State<_AddressFormSheet> createState() => _AddressFormSheetState();
 }
@@ -331,7 +409,9 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
       );
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));
+      }
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -364,7 +444,10 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
               const SizedBox(height: 10),
               TextFormField(controller: _postal, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Kode pos (opsional)')),
               const SizedBox(height: 16),
-              FilledButton(onPressed: _saving ? null : _save, child: Text(_saving ? 'Menyimpan...' : 'Simpan Alamat')),
+              FilledButton(
+                onPressed: _saving ? null : _save,
+                child: Text(_saving ? 'Menyimpan...' : 'Simpan Alamat'),
+              ),
             ],
           ),
         ),
@@ -372,5 +455,6 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
     );
   }
 
-  static String? _required(String? value) => value == null || value.trim().isEmpty ? 'Wajib diisi.' : null;
+  static String? _required(String? value) =>
+      value == null || value.trim().isEmpty ? 'Wajib diisi.' : null;
 }

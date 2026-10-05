@@ -1,0 +1,6 @@
+# Copy this file to android/key.properties for an actual release build.
+# Never commit android/key.properties or the keystore file.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=shopmart
+storeFile=/absolute/path/to/shopmart-release.jks

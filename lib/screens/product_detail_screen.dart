@@ -4,6 +4,7 @@ import '../core/theme/app_theme.dart';
 import '../core/utils/app_utils.dart';
 import '../services/shop_repository.dart';
 import 'auth_screen.dart';
+import 'cart_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key, required this.productId});
@@ -34,25 +35,73 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Future<bool> _ensureAuth() async {
     if (ShopRepository.instance.isSignedIn) return true;
-    final ok = await Navigator.push<bool>(context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+    final ok = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => const AuthScreen()),
+    );
+    if (!mounted) return false;
     return ok == true || ShopRepository.instance.isSignedIn;
+  }
+
+  int _stock(List inventory, List variants) {
+    if (variants.isNotEmpty && _variantId != null) {
+      return inventory.where((raw) => (raw as Map)['variant_id'] == _variantId).fold<int>(
+            0,
+            (sum, raw) => sum + (((raw as Map)['available_qty'] ?? 0) as num).toInt(),
+          );
+    }
+    return inventory.fold<int>(
+      0,
+      (sum, raw) => sum + (((raw as Map)['available_qty'] ?? 0) as num).toInt(),
+    );
+  }
+
+  num _displayPrice(Map<String, dynamic> product, List variants) {
+    if (_variantId != null) {
+      for (final raw in variants) {
+        final v = raw as Map;
+        if (v['id'] == _variantId && v['price_override'] != null) {
+          return v['price_override'] as num;
+        }
+      }
+    }
+    return (product['price'] ?? 0) as num;
+  }
+
+  String? _imageUrl(List images) {
+    if (images.isEmpty) return null;
+    final rows = images.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+    final primary = rows.where((e) => e['is_primary'] == true).toList();
+    final selected = primary.isNotEmpty ? primary.first : rows.first;
+    return selected['image_url']?.toString();
   }
 
   Future<void> _addToCart(Map<String, dynamic> product, {bool buyNow = false}) async {
     if (!await _ensureAuth()) return;
     final variants = product['product_variants'] as List? ?? [];
     if (variants.isNotEmpty && _variantId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pilih varian produk terlebih dahulu.')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Pilih varian produk terlebih dahulu.')),
+        );
+      }
       return;
     }
     setState(() => _adding = true);
     try {
       await ShopRepository.instance.addToCart(product['id'] as String, variantId: _variantId);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Produk masuk ke keranjang.')));
-      if (buyNow) Navigator.pop(context, 'cart');
+      if (buyNow) {
+        await Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Produk masuk ke keranjang.')),
+        );
+      }
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));
+      }
     } finally {
       if (mounted) setState(() => _adding = false);
     }
@@ -64,7 +113,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       final value = await ShopRepository.instance.toggleWishlist(widget.productId);
       if (mounted) setState(() => _wishlisted = value);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));
+      }
     }
   }
 
@@ -76,24 +127,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         actions: [
           IconButton(
             onPressed: _toggleWishlist,
-            icon: Icon(_wishlisted ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: _wishlisted ? AppTheme.primary : null),
+            icon: Icon(
+              _wishlisted ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+              color: _wishlisted ? AppTheme.primary : null,
+            ),
           ),
         ],
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _future,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError || !snapshot.hasData) return const Center(child: Text('Produk tidak dapat dimuat.'));
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError || !snapshot.hasData) {
+            return const Center(child: Text('Produk tidak dapat dimuat.'));
+          }
           final product = snapshot.data!;
           final images = product['product_images'] as List? ?? [];
           final variants = product['product_variants'] as List? ?? [];
           final reviews = product['reviews'] as List? ?? [];
-          final price = (product['price'] ?? 0) as num;
-          final compare = product['compare_at_price'] as num?;
-          final imageUrl = images.isNotEmpty ? (images.first as Map)['image_url']?.toString() : null;
           final inventory = product['inventory'] as List? ?? [];
-          final stock = inventory.fold<int>(0, (sum, e) => sum + (((e as Map)['available_qty'] ?? 0) as num).toInt());
+          final price = _displayPrice(product, variants);
+          final compare = product['compare_at_price'] as num?;
+          final imageUrl = _imageUrl(images);
+          final stock = _stock(inventory, variants);
+          final requiresVariant = variants.isNotEmpty && _variantId == null;
+
           return Column(
             children: [
               Expanded(
@@ -102,8 +162,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     AspectRatio(
                       aspectRatio: 1,
                       child: imageUrl == null
-                          ? Container(color: const Color(0xFFF1F1F1), child: const Icon(Icons.storefront_outlined, size: 74, color: Color(0xFFAAAAAA)))
-                          : Image.network(imageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFF1F1F1), child: Icon(Icons.broken_image_outlined, size: 56))),
+                          ? Container(
+                              color: const Color(0xFFF1F1F1),
+                              child: const Icon(Icons.storefront_outlined, size: 74, color: Color(0xFFAAAAAA)),
+                            )
+                          : Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => const ColoredBox(
+                                color: Color(0xFFF1F1F1),
+                                child: Icon(Icons.broken_image_outlined, size: 56),
+                              ),
+                            ),
                     ),
                     Container(
                       color: Colors.white,
@@ -125,7 +195,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               const Icon(Icons.star_rounded, size: 18, color: Color(0xFFF5A623)),
                               Text('${((product['rating_average'] ?? 0) as num).toStringAsFixed(1)}  •  ${product['sold_count'] ?? 0} terjual'),
                               const Spacer(),
-                              Text('Stok $stock', style: const TextStyle(color: AppTheme.textSecondary)),
+                              Text(requiresVariant ? 'Pilih varian' : 'Stok $stock', style: const TextStyle(color: AppTheme.textSecondary)),
                             ],
                           ),
                         ],
@@ -147,10 +217,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               children: variants.map((raw) {
                                 final v = Map<String, dynamic>.from(raw as Map);
                                 final selected = _variantId == v['id'];
+                                final variantStock = inventory
+                                    .where((entry) => (entry as Map)['variant_id'] == v['id'])
+                                    .fold<int>(0, (sum, entry) => sum + ((((entry as Map)['available_qty']) ?? 0) as num).toInt());
                                 return ChoiceChip(
-                                  label: Text(v['name']?.toString() ?? '-'),
+                                  label: Text('${v['name'] ?? '-'}${variantStock <= 0 ? ' • Habis' : ''}'),
                                   selected: selected,
-                                  onSelected: (_) => setState(() => _variantId = v['id'] as String),
+                                  onSelected: variantStock <= 0 ? null : (_) => setState(() => _variantId = v['id'] as String),
                                 );
                               }).toList(),
                             ),
@@ -167,7 +240,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           const Text('Deskripsi Produk', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                           const SizedBox(height: 9),
                           Text(
-                            (product['description']?.toString().trim().isNotEmpty ?? false) ? product['description'].toString() : 'Belum ada deskripsi produk.',
+                            (product['description']?.toString().trim().isNotEmpty ?? false)
+                                ? product['description'].toString()
+                                : 'Belum ada deskripsi produk.',
                             style: const TextStyle(height: 1.55, color: AppTheme.textSecondary),
                           ),
                         ],
@@ -214,7 +289,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: stock <= 0 || _adding ? null : () => _addToCart(product),
+                          onPressed: stock <= 0 || _adding || requiresVariant ? null : () => _addToCart(product),
                           icon: const Icon(Icons.add_shopping_cart_rounded),
                           label: const Text('Keranjang'),
                           style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
@@ -223,8 +298,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: FilledButton(
-                          onPressed: stock <= 0 || _adding ? null : () => _addToCart(product, buyNow: true),
-                          child: Text(stock <= 0 ? 'Stok Habis' : (_adding ? 'Memproses...' : 'Beli Sekarang')),
+                          onPressed: stock <= 0 || _adding || requiresVariant ? null : () => _addToCart(product, buyNow: true),
+                          child: Text(stock <= 0 ? 'Stok Habis' : (requiresVariant ? 'Pilih Varian' : (_adding ? 'Memproses...' : 'Beli Sekarang'))),
                         ),
                       ),
                     ],

@@ -52,11 +52,11 @@ android {
     }
 }
 
-gradle.taskGraph.whenReady {
-    val releaseRequested = allTasks.any {
-        it.name.contains("release", ignoreCase = true) ||
-            it.name.contains("bundleRelease", ignoreCase = true) ||
-            it.name.contains("assembleRelease", ignoreCase = true)
+gradle.taskGraph.whenReady { graph ->
+    val releaseRequested = graph.allTasks.any { task ->
+        task.name.contains("release", ignoreCase = true) ||
+            task.name.contains("bundleRelease", ignoreCase = true) ||
+            task.name.contains("assembleRelease", ignoreCase = true)
     }
     if (releaseRequested && !keystorePropertiesFile.exists()) {
         throw GradleException(

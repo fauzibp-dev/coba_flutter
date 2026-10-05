@@ -23,6 +23,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   late final TextEditingController _compare;
   late final TextEditingController _sku;
   late final TextEditingController _stock;
+  late final TextEditingController _stockReason;
+  late final int _initialStock;
   late Future<List<Map<String, dynamic>>> _categories;
   String? _categoryId;
   bool _active = true;
@@ -36,12 +38,21 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     final p = widget.product;
     _name = TextEditingController(text: p?['name']?.toString() ?? '');
     _description = TextEditingController(text: p?['description']?.toString() ?? '');
-    _price = TextEditingController(text: p == null ? '' : ((p['price'] ?? 0) as num).toInt().toString());
-    _compare = TextEditingController(text: p?['compare_at_price'] == null ? '' : ((p!['compare_at_price']) as num).toInt().toString());
+    _price = TextEditingController(
+      text: p == null ? '' : ((p['price'] ?? 0) as num).toInt().toString(),
+    );
+    _compare = TextEditingController(
+      text: p?['compare_at_price'] == null
+          ? ''
+          : ((p!['compare_at_price']) as num).toInt().toString(),
+    );
     _sku = TextEditingController(text: p?['sku']?.toString() ?? '');
     final inventory = p?['inventory'] as List? ?? [];
-    final stock = inventory.isEmpty ? 0 : ((inventory.first as Map)['available_qty'] ?? 0) as num;
-    _stock = TextEditingController(text: p == null ? '' : stock.toInt().toString());
+    _initialStock = inventory.isEmpty
+        ? 0
+        : (((inventory.first as Map)['available_qty'] ?? 0) as num).toInt();
+    _stock = TextEditingController(text: p == null ? '' : _initialStock.toString());
+    _stockReason = TextEditingController();
     _categoryId = p?['category_id'] as String?;
     _active = p == null ? true : p['status'] == 'active';
     _featured = p?['is_featured'] == true;
@@ -56,10 +67,17 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _compare.dispose();
     _sku.dispose();
     _stock.dispose();
+    _stockReason.dispose();
     super.dispose();
   }
 
-  int? _integer(String value) => int.tryParse(value.replaceAll('.', '').replaceAll(',', ''));
+  int? _integer(String value) =>
+      int.tryParse(value.replaceAll('.', '').replaceAll(',', ''));
+
+  bool get _stockChanged {
+    if (widget.product == null) return false;
+    return (_integer(_stock.text) ?? _initialStock) != _initialStock;
+  }
 
   Future<void> _pickImage() async {
     final image = await ImagePicker().pickImage(
@@ -73,9 +91,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   Future<void> _save() async {
     if (!_key.currentState!.validate()) return;
     if (_categoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pilih kategori produk.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Pilih kategori produk.')),
+      );
       return;
     }
+    if (_stockChanged && _stockReason.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Isi alasan perubahan stok.')),
+      );
+      return;
+    }
+
     setState(() => _saving = true);
     try {
       await ShopRepository.instance.saveProduct(
@@ -89,6 +116,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         stock: _integer(_stock.text)!,
         active: _active,
         featured: _featured,
+        stockReason: widget.product == null ? 'Stok awal produk' : _stockReason.text,
         image: _image,
       );
       if (mounted) Navigator.pop(context, true);
@@ -103,7 +131,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     }
   }
 
-  String? _required(String? v) => v == null || v.trim().isEmpty ? 'Wajib diisi.' : null;
+  String? _required(String? v) =>
+      v == null || v.trim().isEmpty ? 'Wajib diisi.' : null;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +141,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _categories,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final categories = snapshot.data ?? [];
           return Form(
             key: _key,
@@ -124,7 +155,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     height: 150,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.border)),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppTheme.border),
+                    ),
                     child: _image == null
                         ? const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -138,47 +173,99 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         : FutureBuilder<Uint8List>(
                             future: _image!.readAsBytes(),
                             builder: (_, bytes) {
-                              if (!bytes.hasData) return const Center(child: CircularProgressIndicator());
-                              return ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.memory(bytes.data!, fit: BoxFit.cover, width: double.infinity));
+                              if (!bytes.hasData) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.memory(
+                                  bytes.data!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                ),
+                              );
                             },
                           ),
                   ),
                 ),
                 const SizedBox(height: 14),
-                TextFormField(controller: _name, decoration: const InputDecoration(labelText: 'Nama produk'), validator: _required),
+                TextFormField(
+                  controller: _name,
+                  decoration: const InputDecoration(labelText: 'Nama produk'),
+                  validator: _required,
+                ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   initialValue: _categoryId,
                   decoration: const InputDecoration(labelText: 'Kategori'),
-                  items: categories.map((c) => DropdownMenuItem(value: c['id'] as String, child: Text(c['name']?.toString() ?? '-'))).toList(),
+                  items: categories
+                      .map(
+                        (c) => DropdownMenuItem(
+                          value: c['id'] as String,
+                          child: Text(c['name']?.toString() ?? '-'),
+                        ),
+                      )
+                      .toList(),
                   onChanged: (v) => setState(() => _categoryId = v),
                 ),
                 const SizedBox(height: 10),
-                TextFormField(controller: _description, minLines: 3, maxLines: 6, decoration: const InputDecoration(labelText: 'Deskripsi produk'), validator: _required),
+                TextFormField(
+                  controller: _description,
+                  minLines: 3,
+                  maxLines: 6,
+                  decoration: const InputDecoration(labelText: 'Deskripsi produk'),
+                  validator: _required,
+                ),
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _price,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(labelText: 'Harga jual', prefixText: 'Rp '),
-                  validator: (v) => (_integer(v ?? '') ?? 0) <= 0 ? 'Harga harus lebih dari 0.' : null,
+                  validator: (v) =>
+                      (_integer(v ?? '') ?? 0) <= 0 ? 'Harga harus lebih dari 0.' : null,
                 ),
                 const SizedBox(height: 10),
-                TextFormField(controller: _compare, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Harga sebelum diskon (opsional)', prefixText: 'Rp ')),
+                TextFormField(
+                  controller: _compare,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Harga sebelum diskon (opsional)',
+                    prefixText: 'Rp ',
+                  ),
+                ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    Expanded(child: TextFormField(controller: _sku, decoration: const InputDecoration(labelText: 'SKU (opsional)'))),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _sku,
+                        decoration: const InputDecoration(labelText: 'SKU (opsional)'),
+                      ),
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: TextFormField(
                         controller: _stock,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(labelText: 'Stok'),
-                        validator: (v) => (_integer(v ?? '') ?? -1) < 0 ? 'Stok tidak valid.' : null,
+                        onChanged: (_) => setState(() {}),
+                        validator: (v) =>
+                            (_integer(v ?? '') ?? -1) < 0 ? 'Stok tidak valid.' : null,
                       ),
                     ),
                   ],
                 ),
+                if (_stockChanged) ...[
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _stockReason,
+                    maxLines: 2,
+                    decoration: const InputDecoration(
+                      labelText: 'Alasan perubahan stok',
+                      hintText: 'Contoh: stok opname, barang masuk, koreksi pencatatan',
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 10),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
@@ -194,7 +281,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   onChanged: (v) => setState(() => _featured = v),
                 ),
                 const SizedBox(height: 16),
-                FilledButton(onPressed: _saving ? null : _save, child: Text(_saving ? 'Menyimpan...' : 'Simpan Produk')),
+                FilledButton(
+                  onPressed: _saving ? null : _save,
+                  child: Text(_saving ? 'Menyimpan...' : 'Simpan Produk'),
+                ),
               ],
             ),
           );

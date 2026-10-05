@@ -1,0 +1,6 @@
+# Copy this file to android/key.properties and fill it locally or from CI secrets.
+# Never commit the real key.properties or keystore file.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=shopmart
+storeFile=/absolute/path/to/shopmart-release.jks

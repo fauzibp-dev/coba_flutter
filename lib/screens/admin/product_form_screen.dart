@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/app_utils.dart';
 import '../../services/shop_repository.dart';
+import 'product_gallery_screen.dart';
 import 'variant_manager_screen.dart';
 
 class ProductFormScreen extends StatefulWidget {
@@ -55,7 +56,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   @override
   void dispose() {
-    _name.dispose(); _description.dispose(); _price.dispose(); _compare.dispose(); _sku.dispose(); _stock.dispose(); _stockReason.dispose();
+    _name.dispose();
+    _description.dispose();
+    _price.dispose();
+    _compare.dispose();
+    _sku.dispose();
+    _stock.dispose();
+    _stockReason.dispose();
     super.dispose();
   }
 
@@ -65,6 +72,20 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   Future<void> _pickImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1400, imageQuality: 82);
     if (image != null && mounted) setState(() => _image = image);
+  }
+
+  Future<void> _openGallery() async {
+    final p = widget.product;
+    if (p == null) return;
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProductGalleryScreen(
+          productId: p['id'] as String,
+          productName: p['name']?.toString() ?? _name.text,
+        ),
+      ),
+    );
   }
 
   Future<void> _save() async {
@@ -112,6 +133,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
             final categories = snapshot.data ?? [];
             final variants = widget.product?['product_variants'] as List? ?? [];
+            final gallery = widget.product?['product_images'] as List? ?? [];
             return Form(
               key: _key,
               child: ListView(
@@ -124,11 +146,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       height: 150,
                       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.border)),
                       child: _image == null
-                          ? const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                              Icon(Icons.add_photo_alternate_outlined, size: 38, color: AppTheme.textSecondary),
-                              SizedBox(height: 8),
-                              Text('Pilih foto produk', style: TextStyle(fontWeight: FontWeight.w700)),
-                              Text('JPG, PNG, atau WebP maks. 5 MB', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                          ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                              const Icon(Icons.add_photo_alternate_outlined, size: 38, color: AppTheme.textSecondary),
+                              const SizedBox(height: 8),
+                              Text(widget.product == null ? 'Pilih foto utama produk' : 'Ganti / tambah foto utama saat menyimpan', style: const TextStyle(fontWeight: FontWeight.w700)),
+                              const Text('JPG, PNG, atau WebP maks. 5 MB', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
                             ])
                           : FutureBuilder<Uint8List>(
                               future: _image!.readAsBytes(),
@@ -138,6 +160,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                             ),
                     ),
                   ),
+                  if (widget.product != null) ...[
+                    const SizedBox(height: 10),
+                    OutlinedButton.icon(
+                      onPressed: _openGallery,
+                      icon: const Icon(Icons.photo_library_outlined),
+                      label: Text('Kelola Galeri (${gallery.length} gambar)'),
+                    ),
+                  ],
                   const SizedBox(height: 14),
                   TextFormField(controller: _name, decoration: const InputDecoration(labelText: 'Nama produk'), validator: _required),
                   const SizedBox(height: 10),

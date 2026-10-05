@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../services/shop_repository.dart';
 import '../widgets/product_card.dart';
+import 'auth_screen.dart';
+import 'notifications_screen.dart';
 import 'product_detail_screen.dart';
 import 'search_screen.dart';
 
@@ -35,6 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
     await _data;
   }
 
+  Future<void> _notifications() async {
+    if (!ShopRepository.instance.isSignedIn) {
+      await Navigator.push<bool>(context, MaterialPageRoute(builder: (_) => const AuthScreen()));
+      if (!mounted || !ShopRepository.instance.isSignedIn) return;
+    }
+    if (mounted) {
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -51,9 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -63,7 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        Icon(Icons.notifications_none_rounded, color: AppTheme.textPrimary),
+                        IconButton(
+                          tooltip: 'Notifikasi',
+                          onPressed: _notifications,
+                          icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.textPrimary),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 14),
@@ -133,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         scrollDirection: Axis.horizontal,
                         itemCount: categories.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        separatorBuilder: (_, _) => const SizedBox(width: 12),
                         itemBuilder: (context, index) {
                           final category = categories[index];
                           return InkWell(
@@ -234,10 +250,7 @@ class _PromoBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: AppTheme.primary,
-        borderRadius: BorderRadius.circular(14),
-      ),
+      decoration: BoxDecoration(color: AppTheme.primary, borderRadius: BorderRadius.circular(14)),
       child: Row(
         children: [
           Expanded(
@@ -260,6 +273,7 @@ class _PromoBanner extends StatelessWidget {
 
 class _EmptyCatalog extends StatelessWidget {
   const _EmptyCatalog();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -285,6 +299,7 @@ class _StateMessage extends StatelessWidget {
   final String subtitle;
   final String action;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return Center(

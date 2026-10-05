@@ -11,6 +11,7 @@ Shop Mart production database predates the repository migration directory. The f
 - `20261005070659_shop_mart_v1_1_security_hardening`
 - `20261005072051_disable_initial_owner_claim_safely`
 - `20261005072319_harden_review_updates`
+- `20261005073242_lock_inventory_ledger_writes`
 
 The first six entries are the legacy production baseline that was created before database migration files were committed to Git. From v1.1 onward, every database change must be committed under `supabase/migrations/` using the exact Supabase migration version and name before it is merged to `main`.
 

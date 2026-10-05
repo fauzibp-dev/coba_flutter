@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/theme/app_theme.dart';
 import '../services/shop_repository.dart';
+import '../services/superadmin_repository.dart';
 import '../widgets/product_card.dart';
 import 'address_book_screen.dart';
 import 'admin/admin_dashboard_screen.dart';
@@ -9,6 +10,7 @@ import 'auth_screen.dart';
 import 'chat_screen.dart';
 import 'notifications_screen.dart';
 import 'product_detail_screen.dart';
+import 'superadmin/superadmin_dashboard_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key, required this.onAuthChanged});
@@ -31,8 +33,13 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<List<dynamic>> _load() async {
     final repo = ShopRepository.instance;
-    if (!repo.isSignedIn) return [null, null];
-    return [await repo.profile(), await repo.membership()];
+    if (!repo.isSignedIn) return [null, null, false];
+    final values = await Future.wait<dynamic>([
+      repo.profile(),
+      repo.membership(),
+      SuperadminRepository.instance.isSuperAdmin(),
+    ]);
+    return values;
   }
 
   Future<void> _login() async {
@@ -117,6 +124,7 @@ class _AccountScreenState extends State<AccountScreen> {
           }
           final profile = snapshot.data?[0] as Map<String, dynamic>?;
           final membership = snapshot.data?[1] as Map<String, dynamic>?;
+          final isSuperAdmin = snapshot.data?[2] == true;
           final email = ShopRepository.instance.user?.email ?? '';
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -137,7 +145,10 @@ class _AccountScreenState extends State<AccountScreen> {
                           Text(profile?['full_name']?.toString().isNotEmpty == true ? profile!['full_name'].toString() : 'Pengguna Shop Mart', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                           const SizedBox(height: 3),
                           Text(email, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                          if (membership != null) ...[
+                          if (isSuperAdmin) ...[
+                            const SizedBox(height: 5),
+                            const Text('Platform • SUPER ADMIN', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Color(0xFF7F1D1D))),
+                          ] else if (membership != null) ...[
                             const SizedBox(height: 5),
                             Text('Pengelola • ${membership['role']}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppTheme.primary)),
                           ],
@@ -168,6 +179,18 @@ class _AccountScreenState extends State<AccountScreen> {
                 subtitle: 'Chat dengan pengelola Koperasi Merah Putih Kerten',
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen())),
               ),
+              if (isSuperAdmin) ...[
+                const SizedBox(height: 12),
+                const Text('Platform', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900)),
+                const SizedBox(height: 8),
+                _MenuTile(
+                  icon: Icons.security_rounded,
+                  title: 'Shop Mart Super Admin',
+                  subtitle: 'Kontrol seluruh toko, user, katalog, order, promo, retur, dan audit',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SuperadminDashboardScreen())),
+                  accent: true,
+                ),
+              ],
               if (membership != null) ...[
                 const SizedBox(height: 12),
                 const Text('Pengelola Koperasi', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
@@ -175,7 +198,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 _MenuTile(
                   icon: Icons.admin_panel_settings_outlined,
                   title: 'Shop Mart Admin',
-                  subtitle: 'Produk, stok, dan pesanan',
+                  subtitle: 'Produk, stok, dan pesanan toko',
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen())),
                   accent: true,
                 ),
@@ -183,7 +206,7 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 16),
               OutlinedButton.icon(onPressed: _logout, icon: const Icon(Icons.logout_rounded), label: const Text('Keluar')),
               const SizedBox(height: 28),
-              const Center(child: Text('Shop Mart v1.1.0\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
+              const Center(child: Text('Shop Mart v1.2.0\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
             ],
           );
         },

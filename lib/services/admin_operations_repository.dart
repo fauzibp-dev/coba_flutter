@@ -62,7 +62,8 @@ class AdminOperationsRepository {
     });
   }
 
-  Future<String> signedPaymentProofUrl(String path) => db.storage.from('payment-proofs').createSignedUrl(path, 900);
+  Future<String> signedPaymentProofUrl(String path) =>
+      db.storage.from('payment-proofs').createSignedUrl(path, 900);
 
   Future<Map<String, dynamic>> settings() async {
     final storeId = await _storeId();
@@ -97,7 +98,11 @@ class AdminOperationsRepository {
 
   Future<List<Map<String, dynamic>>> deliveryZones() async {
     final storeId = await _storeId();
-    return _maps(await db.from('delivery_zones').select().eq('store_id', storeId).order('priority', ascending: false));
+    return _maps(await db
+        .from('delivery_zones')
+        .select()
+        .eq('store_id', storeId)
+        .order('priority', ascending: false));
   }
 
   Future<void> saveDeliveryZone({
@@ -129,16 +134,30 @@ class AdminOperationsRepository {
     }
   }
 
-  Future<void> deleteDeliveryZone(String id) async => db.from('delivery_zones').delete().eq('id', id);
+  Future<void> deleteDeliveryZone(String id) async =>
+      db.from('delivery_zones').delete().eq('id', id);
 
   Future<List<Map<String, dynamic>>> suppliers() async {
     final storeId = await _storeId();
     return _maps(await db.from('suppliers').select().eq('store_id', storeId).order('name'));
   }
 
-  Future<String> saveSupplier({String? id, required String name, String? phone, String? email, String? address}) async {
+  Future<String> saveSupplier({
+    String? id,
+    required String name,
+    String? phone,
+    String? email,
+    String? address,
+  }) async {
     final storeId = await _storeId();
-    final values = {'store_id': storeId, 'name': name.trim(), 'phone': phone?.trim(), 'email': email?.trim(), 'address': address?.trim(), 'updated_at': DateTime.now().toUtc().toIso8601String()};
+    final values = {
+      'store_id': storeId,
+      'name': name.trim(),
+      'phone': phone?.trim(),
+      'email': email?.trim(),
+      'address': address?.trim(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
     if (id == null) {
       final row = await db.from('suppliers').insert(values).select('id').single();
       return row['id'] as String;
@@ -149,15 +168,27 @@ class AdminOperationsRepository {
 
   Future<List<Map<String, dynamic>>> stocktakes() async {
     final storeId = await _storeId();
-    return _maps(await db.from('stocktakes').select('*, stocktake_items(*)').eq('store_id', storeId).order('created_at', ascending: false));
+    return _maps(await db
+        .from('stocktakes')
+        .select('*, stocktake_items(*)')
+        .eq('store_id', storeId)
+        .order('created_at', ascending: false));
   }
 
   Future<String> createStocktake({String? notes}) async {
     final storeId = await _storeId();
     final userId = db.auth.currentUser!.id;
-    final row = await db.from('stocktakes').insert({'store_id': storeId, 'status': 'counting', 'notes': notes?.trim(), 'created_by': userId}).select('id').single();
+    final row = await db.from('stocktakes').insert({
+      'store_id': storeId,
+      'status': 'counting',
+      'notes': notes?.trim(),
+      'created_by': userId,
+    }).select('id').single();
     final id = row['id'] as String;
-    final inventory = _maps(await db.from('inventory').select('product_id,variant_id,available_qty,products!inner(store_id)').eq('products.store_id', storeId));
+    final inventory = _maps(await db
+        .from('inventory')
+        .select('product_id,variant_id,available_qty,products!inner(store_id)')
+        .eq('products.store_id', storeId));
     if (inventory.isNotEmpty) {
       await db.from('stocktake_items').insert(inventory.map((e) => {
             'stocktake_id': id,
@@ -174,7 +205,8 @@ class AdminOperationsRepository {
     await db.from('stocktake_items').update({'counted_qty': count}).eq('id', itemId);
   }
 
-  Future<void> completeStocktake(String id) async => db.rpc('complete_stocktake', params: {'p_stocktake_id': id});
+  Future<void> completeStocktake(String id) async =>
+      db.rpc('complete_stocktake', params: {'p_stocktake_id': id});
 
   Future<List<Map<String, dynamic>>> purchaseOrders() async {
     final storeId = await _storeId();
@@ -185,18 +217,82 @@ class AdminOperationsRepository {
         .order('created_at', ascending: false));
   }
 
-  Future<String> createPurchaseOrder({String? supplierId, String? notes, DateTime? expectedAt}) async {
+  Future<Map<String, dynamic>> purchaseOrder(String id) async {
     final storeId = await _storeId();
-    final seq = DateTime.now().millisecondsSinceEpoch.toString().substring(5);
+    final row = await db
+        .from('purchase_orders')
+        .select('*, suppliers(name,phone,email), purchase_order_items(*, products(name,sku), product_variants(name,sku))')
+        .eq('id', id)
+        .eq('store_id', storeId)
+        .single();
+    return Map<String, dynamic>.from(row);
+  }
+
+  Future<List<Map<String, dynamic>>> warehouseProducts() async {
+    final storeId = await _storeId();
+    return _maps(await db
+        .from('products')
+        .select('id,name,sku,cost_price,product_variants(id,name,sku)')
+        .eq('store_id', storeId)
+        .neq('status', 'archived')
+        .order('name'));
+  }
+
+  Future<String> createPurchaseOrder({
+    String? supplierId,
+    String? notes,
+    DateTime? expectedAt,
+  }) async {
+    final storeId = await _storeId();
+    final seq = DateTime.now().microsecondsSinceEpoch.toString();
     final row = await db.from('purchase_orders').insert({
       'store_id': storeId,
       'supplier_id': supplierId,
-      'po_number': 'PO-$seq',
+      'po_number': 'PO-${seq.substring(seq.length - 10)}',
       'status': 'draft',
       'expected_at': expectedAt?.toUtc().toIso8601String(),
       'notes': notes?.trim(),
       'created_by': db.auth.currentUser!.id,
     }).select('id').single();
     return row['id'] as String;
+  }
+
+  Future<String> addPurchaseOrderItem({
+    required String purchaseOrderId,
+    required String productId,
+    String? variantId,
+    required int quantity,
+    required num unitCost,
+  }) async {
+    final value = await db.rpc('add_purchase_order_item', params: {
+      'p_purchase_order_id': purchaseOrderId,
+      'p_product_id': productId,
+      'p_variant_id': variantId,
+      'p_quantity': quantity,
+      'p_unit_cost': unitCost,
+    });
+    return value as String;
+  }
+
+  Future<void> markPurchaseOrderOrdered(String id) async {
+    final storeId = await _storeId();
+    final detail = await purchaseOrder(id);
+    final items = detail['purchase_order_items'] as List? ?? [];
+    if (items.isEmpty) throw StateError('Tambahkan item sebelum PO dikirim ke supplier.');
+    await db.from('purchase_orders').update({
+      'status': 'ordered',
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    }).eq('id', id).eq('store_id', storeId).eq('status', 'draft');
+  }
+
+  Future<void> receivePurchaseOrder(
+    String id,
+    List<Map<String, dynamic>> receipts,
+  ) async {
+    if (receipts.isEmpty) throw StateError('Tidak ada jumlah penerimaan.');
+    await db.rpc('receive_purchase_order', params: {
+      'p_purchase_order_id': id,
+      'p_receipts': receipts,
+    });
   }
 }

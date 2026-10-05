@@ -5,6 +5,7 @@ import '../../core/utils/app_utils.dart';
 import '../../services/shop_repository.dart';
 import 'admin_operations_screen.dart';
 import 'product_form_screen.dart';
+import 'purchase_orders_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -47,6 +48,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
     if (mounted) setState(_reload);
   }
 
+  Future<void> _openPurchaseOrders() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (_) => const PurchaseOrdersScreen()));
+    if (mounted) setState(_reload);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +65,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
           ],
         ),
         actions: [
+          IconButton(tooltip: 'Purchase Order', onPressed: _openPurchaseOrders, icon: const Icon(Icons.inventory_2_outlined)),
           IconButton(tooltip: 'Operasional', onPressed: _openOperations, icon: const Icon(Icons.dashboard_customize_outlined)),
         ],
         bottom: TabBar(controller: _tabs, tabs: const [Tab(text: 'Produk'), Tab(text: 'Pesanan')]),
@@ -185,7 +192,13 @@ class _OrdersTab extends StatelessWidget {
           const SizedBox(height: 8),
           _Metric(label: 'Revenue terbayar', value: rupiah(paidRevenue)),
           const SizedBox(height: 10),
-          OutlinedButton.icon(onPressed: onOperations, icon: const Icon(Icons.local_shipping_outlined), label: const Text('Buka Fulfillment, Pembayaran & Gudang')),
+          Row(
+            children: [
+              Expanded(child: OutlinedButton.icon(onPressed: onOperations, icon: const Icon(Icons.local_shipping_outlined), label: const Text('Fulfillment & Gudang'))),
+              const SizedBox(width: 8),
+              Expanded(child: OutlinedButton.icon(onPressed: _openPurchaseOrdersFromContext(context), icon: const Icon(Icons.inventory_2_outlined), label: const Text('Purchase Order'))),
+            ],
+          ),
           const SizedBox(height: 16),
           ...orders.map((order) {
             final items = order['order_items'] as List? ?? [];
@@ -225,6 +238,10 @@ class _OrdersTab extends StatelessWidget {
       ),
     );
   }
+
+  VoidCallback _openPurchaseOrdersFromContext(BuildContext context) => () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const PurchaseOrdersScreen()));
+      };
 }
 
 class _Metric extends StatelessWidget {

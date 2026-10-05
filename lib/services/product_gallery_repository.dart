@@ -22,7 +22,7 @@ class ProductGalleryRepository {
     return _maps(rows);
   }
 
-  Future<String> _authorizedStoreId(String productId, String? requestedStoreId) async {
+  Future<String> _authorizedStoreId(String? requestedStoreId) async {
     final member = await ShopRepository.instance.membership();
     if (requestedStoreId == null) {
       if (member == null) throw StateError('Not authorized');
@@ -42,7 +42,7 @@ class ProductGalleryRepository {
     String? storeId,
     bool makePrimary = false,
   }) async {
-    final authorizedStoreId = await _authorizedStoreId(productId, storeId);
+    final authorizedStoreId = await _authorizedStoreId(storeId);
 
     final rawExt = file.path.split('.').last.toLowerCase();
     final ext = rawExt == 'jpeg' ? 'jpg' : rawExt;
@@ -112,10 +112,6 @@ class ProductGalleryRepository {
     required String productId,
     required Map<String, dynamic> image,
   }) async {
-    final rows = await images(productId);
-    if (rows.length <= 1) {
-      throw StateError('Produk minimal harus memiliki satu gambar sebelum gambar terakhir dihapus.');
-    }
     final id = image['id'].toString();
     final wasPrimary = image['is_primary'] == true;
     await db.from('product_images').delete().eq('product_id', productId).eq('id', id);
@@ -126,8 +122,7 @@ class ProductGalleryRepository {
       try {
         await db.storage.from('product-images').remove([path]);
       } catch (_) {
-        // The database record is already gone. A missing legacy object must not
-        // leave the catalog in an unusable state.
+        // A missing legacy object must not leave the catalog unusable.
       }
     }
 

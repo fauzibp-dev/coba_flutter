@@ -4,6 +4,7 @@ import '../core/theme/app_theme.dart';
 import '../services/shop_repository.dart';
 import '../services/superadmin_repository.dart';
 import '../widgets/product_card.dart';
+import 'account_security_screen.dart';
 import 'address_book_screen.dart';
 import 'admin/admin_dashboard_screen.dart';
 import 'auth_screen.dart';
@@ -34,12 +35,11 @@ class _AccountScreenState extends State<AccountScreen> {
   Future<List<dynamic>> _load() async {
     final repo = ShopRepository.instance;
     if (!repo.isSignedIn) return [null, null, false];
-    final values = await Future.wait<dynamic>([
+    return Future.wait<dynamic>([
       repo.profile(),
       repo.membership(),
       SuperadminRepository.instance.isSuperAdmin(),
     ]);
-    return values;
   }
 
   Future<void> _login() async {
@@ -100,9 +100,7 @@ class _AccountScreenState extends State<AccountScreen> {
       child: FutureBuilder<List<dynamic>>(
         future: _future,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
           if (!ShopRepository.instance.isSignedIn) {
             return ListView(
               padding: const EdgeInsets.all(16),
@@ -114,7 +112,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 const SizedBox(height: 14),
                 const Text('Masuk untuk menggunakan Shop Mart', textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 6),
-                const Text('Kelola keranjang, checkout, wishlist, dan pesanan dari akunmu.', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textSecondary, height: 1.4)),
+                const Text('Kelola keranjang, checkout, wishlist, pesanan, dan layanan purnajual dari akunmu.', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textSecondary, height: 1.4)),
                 const SizedBox(height: 20),
                 FilledButton(onPressed: _login, child: const Text('Masuk / Daftar')),
                 const SizedBox(height: 40),
@@ -170,14 +168,20 @@ class _AccountScreenState extends State<AccountScreen> {
               _MenuTile(
                 icon: Icons.notifications_none_rounded,
                 title: 'Notifikasi',
-                subtitle: 'Update status pesanan',
+                subtitle: 'Update pesanan, pengiriman, pembayaran, dan promo',
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
               ),
               _MenuTile(
                 icon: Icons.chat_bubble_outline_rounded,
                 title: 'Pusat Bantuan',
-                subtitle: 'Chat dengan pengelola Koperasi Merah Putih Kerten',
+                subtitle: 'Chat dengan pengelola koperasi',
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen())),
+              ),
+              _MenuTile(
+                icon: Icons.security_outlined,
+                title: 'Keamanan & Preferensi',
+                subtitle: 'Password, email, notifikasi, dan privasi akun',
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountSecurityScreen())),
               ),
               if (isSuperAdmin) ...[
                 const SizedBox(height: 12),
@@ -186,7 +190,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 _MenuTile(
                   icon: Icons.security_rounded,
                   title: 'Shop Mart Super Admin',
-                  subtitle: 'Kontrol seluruh toko, user, katalog, order, promo, retur, dan audit',
+                  subtitle: 'Kontrol seluruh toko, user, katalog, order, promo, fulfillment, retur, dan audit',
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SuperadminDashboardScreen())),
                   accent: true,
                 ),
@@ -198,7 +202,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 _MenuTile(
                   icon: Icons.admin_panel_settings_outlined,
                   title: 'Shop Mart Admin',
-                  subtitle: 'Produk, stok, dan pesanan toko',
+                  subtitle: 'Produk, stok, order, pembayaran, pengiriman, dan gudang',
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen())),
                   accent: true,
                 ),
@@ -206,7 +210,7 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 16),
               OutlinedButton.icon(onPressed: _logout, icon: const Icon(Icons.logout_rounded), label: const Text('Keluar')),
               const SizedBox(height: 28),
-              const Center(child: Text('Shop Mart v1.2.0\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
+              const Center(child: Text('Shop Mart v1.5.0\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
             ],
           );
         },
@@ -224,19 +228,17 @@ class _MenuTile extends StatelessWidget {
   final bool accent;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(11), border: Border.all(color: accent ? const Color(0xFFFFBABA) : AppTheme.border)),
-      child: ListTile(
-        onTap: onTap,
-        leading: Icon(icon, color: accent ? AppTheme.primary : AppTheme.textPrimary),
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.w700, color: accent ? AppTheme.primary : AppTheme.textPrimary)),
-        subtitle: subtitle == null ? null : Text(subtitle!, style: const TextStyle(fontSize: 12)),
-        trailing: const Icon(Icons.chevron_right_rounded),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(11), border: Border.all(color: accent ? const Color(0xFFFFBABA) : AppTheme.border)),
+        child: ListTile(
+          onTap: onTap,
+          leading: Icon(icon, color: accent ? AppTheme.primary : AppTheme.textPrimary),
+          title: Text(title, style: TextStyle(fontWeight: FontWeight.w700, color: accent ? AppTheme.primary : AppTheme.textPrimary)),
+          subtitle: subtitle == null ? null : Text(subtitle!, style: const TextStyle(fontSize: 12)),
+          trailing: const Icon(Icons.chevron_right_rounded),
+        ),
+      );
 }
 
 class _WishlistScreen extends StatefulWidget {
@@ -256,27 +258,25 @@ class _WishlistScreenState extends State<_WishlistScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Wishlist')),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          final rows = snapshot.data ?? [];
-          final products = rows.where((r) => r['products'] is Map).map((r) => Map<String, dynamic>.from(r['products'] as Map)).toList();
-          if (products.isEmpty) return const Center(child: Text('Wishlist masih kosong.'));
-          return GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, childAspectRatio: 0.59),
-            itemCount: products.length,
-            itemBuilder: (_, i) => ProductCard(
-              product: products[i],
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailScreen(productId: products[i]['id'] as String))),
-            ),
-          );
-        },
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text('Wishlist')),
+        body: FutureBuilder<List<Map<String, dynamic>>>(
+          future: _future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+            final rows = snapshot.data ?? [];
+            final products = rows.where((r) => r['products'] is Map).map((r) => Map<String, dynamic>.from(r['products'] as Map)).toList();
+            if (products.isEmpty) return const Center(child: Text('Wishlist masih kosong.'));
+            return GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, childAspectRatio: 0.59),
+              itemCount: products.length,
+              itemBuilder: (_, i) => ProductCard(
+                product: products[i],
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailScreen(productId: products[i]['id'] as String))),
+              ),
+            );
+          },
+        ),
+      );
 }

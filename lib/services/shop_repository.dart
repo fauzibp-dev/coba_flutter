@@ -18,27 +18,37 @@ class ShopRepository {
     final data = await db
         .from('stores')
         .select()
-        .eq('slug', 'koperasi-merah-putih-kerten')
+        .eq('is_active', true)
+        .order('created_at')
+        .limit(1)
         .single();
     return Map<String, dynamic>.from(data);
   }
 
   Future<List<Map<String, dynamic>>> categories() async {
+    final shop = await store();
     final data = await db
         .from('categories')
         .select()
+        .eq('store_id', shop['id'])
         .eq('is_active', true)
         .order('sort_order');
     return _maps(data);
   }
 
   Future<List<Map<String, dynamic>>> banners() async {
+    final shop = await store();
     final data = await db
         .from('banners')
         .select()
+        .eq('store_id', shop['id'])
         .eq('is_active', true)
+        .lte('starts_at', DateTime.now().toUtc().toIso8601String())
         .order('sort_order');
-    return _maps(data);
+    return _maps(data).where((row) {
+      final end = DateTime.tryParse(row['ends_at']?.toString() ?? '');
+      return end == null || end.isAfter(DateTime.now().toUtc());
+    }).toList();
   }
 
   Future<List<Map<String, dynamic>>> products({
@@ -46,10 +56,11 @@ class ShopRepository {
     String? categoryId,
     bool featuredOnly = false,
   }) async {
+    final shop = await store();
     dynamic query = db.from('products').select(
           '*, categories(name), product_images(*), product_variants(*), inventory(*)',
         );
-    query = query.eq('status', 'active');
+    query = query.eq('store_id', shop['id']).eq('status', 'active');
     if (categoryId != null) query = query.eq('category_id', categoryId);
     if (featuredOnly) query = query.eq('is_featured', true);
     if (search != null && search.trim().isNotEmpty) {
@@ -64,7 +75,7 @@ class ShopRepository {
     final data = await db
         .from('products')
         .select(
-          '*, categories(name), product_images(*), product_variants(*), inventory(*), reviews(rating,comment,created_at)',
+          '*, categories(name), product_images(*), product_variants(*), inventory(*), reviews(id,rating,comment,seller_reply,created_at,review_images(*),review_helpful_votes(user_id))',
         )
         .eq('id', id)
         .single();
@@ -92,6 +103,8 @@ class ShopRepository {
         .from('store_members')
         .select('id, store_id, role')
         .eq('user_id', user!.id)
+        .order('created_at')
+        .limit(1)
         .maybeSingle();
     return data == null ? null : Map<String, dynamic>.from(data);
   }
@@ -224,7 +237,7 @@ class ShopRepository {
     String? voucherCode,
     String? notes,
   }) async {
-    final result = await db.rpc('create_checkout', params: {
+    final result = await db.rpc('create_checkout_v2', params: {
       'p_address_id': addressId,
       'p_payment_method': paymentMethod,
       'p_shipping_method': shippingMethod,
@@ -239,7 +252,7 @@ class ShopRepository {
     if (!isSignedIn) return [];
     final data = await db
         .from('orders')
-        .select('*, order_items(*)')
+        .select('*, order_items(*), shipments(status,tracking_number,internal_delivery_code,estimated_delivery_at)')
         .eq('user_id', user!.id)
         .order('created_at', ascending: false);
     return _maps(data);
@@ -248,7 +261,7 @@ class ShopRepository {
   Future<Map<String, dynamic>> orderDetail(String orderId) async {
     final data = await db
         .from('orders')
-        .select('*, order_items(*), order_status_history(*), payments(*)')
+        .select('*, order_items(*), order_status_history(*), payments(*), shipments(*, shipment_events(*)), manual_payment_proofs(*), returns(*, return_items(*), return_evidence(*))')
         .eq('id', orderId)
         .single();
     return Map<String, dynamic>.from(data);
@@ -265,27 +278,43 @@ class ShopRepository {
     if (!isSignedIn) return null;
     final row = await db
         .from('reviews')
-        .select()
+        .select('*, review_images(*)')
         .eq('order_item_id', orderItemId)
         .eq('user_id', user!.id)
         .maybeSingle();
     return row == null ? null : Map<String, dynamic>.from(row);
   }
 
-  Future<void> submitReview({
+  Future<String> submitReview({
     required String orderItemId,
     required String productId,
     required int rating,
     String? comment,
   }) async {
     if (!isSignedIn) throw StateError('AUTH_REQUIRED');
-    await db.from('reviews').insert({
+    final row = await db.from('reviews').insert({
       'user_id': user!.id,
       'product_id': productId,
       'order_item_id': orderItemId,
       'rating': rating,
       'comment': comment?.trim().isEmpty == true ? null : comment?.trim(),
-    });
+    }).select('id').single();
+    return row['id'] as String;
+  }
+
+  Future<void> toggleHelpfulReview(String reviewId) async {
+    if (!isSignedIn) throw StateError('AUTH_REQUIRED');
+    final existing = await db
+        .from('review_helpful_votes')
+        .select('review_id')
+        .eq('review_id', reviewId)
+        .eq('user_id', user!.id)
+        .maybeSingle();
+    if (existing == null) {
+      await db.from('review_helpful_votes').insert({'review_id': reviewId, 'user_id': user!.id});
+    } else {
+      await db.from('review_helpful_votes').delete().eq('review_id', reviewId).eq('user_id', user!.id);
+    }
   }
 
   Future<List<Map<String, dynamic>>> notifications() async {
@@ -304,6 +333,11 @@ class ShopRepository {
       .update({'is_read': true})
       .eq('id', id)
       .eq('user_id', user!.id);
+
+  Future<void> markAllNotificationsRead() async {
+    if (!isSignedIn) return;
+    await db.from('notifications').update({'is_read': true}).eq('user_id', user!.id).eq('is_read', false);
+  }
 
   Future<Map<String, dynamic>> customerConversation() async {
     if (!isSignedIn) throw StateError('AUTH_REQUIRED');
@@ -331,7 +365,7 @@ class ShopRepository {
     return _maps(data);
   }
 
-  Future<void> sendMessage(String conversationId, String body) async {
+  Future<void> sendMessage(String conversationId, String body, {String? replyToId}) async {
     final text = body.trim();
     if (text.isEmpty) return;
     await db.from('messages').insert({
@@ -339,7 +373,13 @@ class ShopRepository {
       'sender_id': user!.id,
       'message_type': 'text',
       'body': text,
+      'reply_to_id': replyToId,
     });
+    await db.from('conversations').update({
+      'last_message_at': DateTime.now().toUtc().toIso8601String(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+      'status': 'open',
+    }).eq('id', conversationId);
   }
 
   Future<void> requestReturn({
@@ -397,7 +437,7 @@ class ShopRepository {
     if (member == null) return [];
     final data = await db
         .from('products')
-        .select('*, categories(name), product_images(*), inventory(*)')
+        .select('*, categories(name), product_images(*), product_variants(*), inventory(*)')
         .eq('store_id', member['store_id'])
         .order('created_at', ascending: false);
     return _maps(data);
@@ -432,7 +472,6 @@ class ShopRepository {
     if (member == null) throw StateError('Not authorized');
     final storeId = member['store_id'] as String;
     final slug = '${slugify(name)}-${DateTime.now().millisecondsSinceEpoch}';
-
     final result = await db.rpc('save_product_core', params: {
       'p_product_id': productId,
       'p_name': name.trim(),
@@ -448,7 +487,6 @@ class ShopRepository {
       'p_stock_reason': stockReason?.trim(),
     });
     final id = result as String;
-
     if (image != null) {
       final bytes = await image.readAsBytes();
       final ext = image.path.split('.').last.toLowerCase();
@@ -470,15 +508,14 @@ class ShopRepository {
     return id;
   }
 
-  Future<void> archiveProduct(String id) =>
-      db.rpc('archive_product', params: {'p_product_id': id});
+  Future<void> archiveProduct(String id) => db.rpc('archive_product', params: {'p_product_id': id});
 
   Future<List<Map<String, dynamic>>> adminOrders() async {
     final member = await membership();
     if (member == null) return [];
     final data = await db
         .from('orders')
-        .select('*, order_items(*), profiles(full_name,phone)')
+        .select('*, order_items(*), profiles(full_name,phone), shipments(*), manual_payment_proofs(*)')
         .eq('store_id', member['store_id'])
         .order('created_at', ascending: false);
     return _maps(data);
@@ -489,6 +526,34 @@ class ShopRepository {
       'p_order_id': orderId,
       'p_status': status,
       'p_note': note,
+    });
+  }
+
+  Future<void> verifyPaymentProof(String proofId, bool approved, {String? note}) async {
+    await db.rpc('verify_manual_payment_proof', params: {
+      'p_proof_id': proofId,
+      'p_approved': approved,
+      'p_note': note,
+    });
+  }
+
+  Future<void> updateShipmentStatus({
+    required String shipmentId,
+    required String status,
+    String? description,
+    String? location,
+    String? driverName,
+    String? driverPhone,
+    String? trackingNumber,
+  }) async {
+    await db.rpc('update_shipment_status', params: {
+      'p_shipment_id': shipmentId,
+      'p_status': status,
+      'p_description': description,
+      'p_location': location,
+      'p_driver_name': driverName,
+      'p_driver_phone': driverPhone,
+      'p_tracking_number': trackingNumber,
     });
   }
 

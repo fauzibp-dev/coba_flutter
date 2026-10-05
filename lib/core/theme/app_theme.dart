@@ -9,6 +9,7 @@ class AppTheme {
   static const textSecondary = Color(0xFF6F6F6F);
   static const border = Color(0xFFE6E6E6);
   static const success = Color(0xFF2E7D32);
+  static const error = Color(0xFFD32F2F);
 
   static ThemeData get light {
     final scheme = ColorScheme.fromSeed(
@@ -18,7 +19,7 @@ class AppTheme {
     );
     return ThemeData(
       useMaterial3: true,
-      colorScheme: scheme.copyWith(primary: primary, secondary: primaryDark),
+      colorScheme: scheme.copyWith(primary: primary, secondary: primaryDark, error: error),
       scaffoldBackgroundColor: background,
       fontFamily: null,
       appBarTheme: const AppBarTheme(

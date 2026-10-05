@@ -1,6 +1,15 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
 }
 
 android {
@@ -21,13 +30,39 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // A dedicated production keystore must be configured before publishing
-            // to an app store. Debug signing is intentionally kept for the current
-            // internship/course deployment workflow and must not be used for store release.
-            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+            isShrinkResources = false
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
+    }
+}
+
+gradle.taskGraph.whenReady {
+    val releaseRequested = allTasks.any {
+        it.name.contains("release", ignoreCase = true) ||
+            it.name.contains("bundleRelease", ignoreCase = true) ||
+            it.name.contains("assembleRelease", ignoreCase = true)
+    }
+    if (releaseRequested && !keystorePropertiesFile.exists()) {
+        throw GradleException(
+            "Release signing is not configured. Copy android/key.properties.example to " +
+                "android/key.properties and reference a production keystore. Never use the debug key for release."
+        )
     }
 }
 

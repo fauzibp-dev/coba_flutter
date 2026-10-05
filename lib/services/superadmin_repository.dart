@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SuperadminRepository {
@@ -68,6 +69,41 @@ class SuperadminRepository {
     });
   }
 
+  Future<List<Map<String, dynamic>>> categories({String? storeId}) async =>
+      _maps(await db.rpc('superadmin_list_categories', params: {'p_store_id': storeId}));
+
+  Future<String> saveCategory({
+    String? id,
+    required String storeId,
+    String? parentId,
+    required String name,
+    required String slug,
+    String? iconName,
+    int sortOrder = 0,
+    required bool isActive,
+  }) async {
+    final value = await db.rpc('superadmin_save_category', params: {
+      'p_category_id': id,
+      'p_store_id': storeId,
+      'p_parent_id': parentId,
+      'p_name': name.trim(),
+      'p_slug': slug.trim(),
+      'p_icon_name': iconName?.trim(),
+      'p_sort_order': sortOrder,
+      'p_is_active': isActive,
+    });
+    return value as String;
+  }
+
+  Future<List<Map<String, dynamic>>> productCategories(String storeId) async {
+    final data = await db
+        .from('categories')
+        .select()
+        .eq('store_id', storeId)
+        .order('sort_order');
+    return _maps(data);
+  }
+
   Future<List<Map<String, dynamic>>> products({String? storeId, String? search}) async =>
       _maps(await db.rpc('superadmin_list_products', params: {
         'p_store_id': storeId,
@@ -77,19 +113,10 @@ class SuperadminRepository {
   Future<Map<String, dynamic>> productDetail(String productId) async {
     final row = await db
         .from('products')
-        .select('*, categories(name), inventory(*)')
+        .select('*, categories(name), inventory(*), product_images(*)')
         .eq('id', productId)
         .single();
     return Map<String, dynamic>.from(row);
-  }
-
-  Future<List<Map<String, dynamic>>> categories(String storeId) async {
-    final data = await db
-        .from('categories')
-        .select()
-        .eq('store_id', storeId)
-        .order('sort_order');
-    return _maps(data);
   }
 
   Future<String> saveProduct({
@@ -121,6 +148,38 @@ class SuperadminRepository {
       'p_stock_reason': stockReason?.trim(),
     });
     return value as String;
+  }
+
+  Future<String> uploadProductImage({
+    required String storeId,
+    required String productId,
+    required XFile image,
+  }) async {
+    final rawExt = image.path.split('.').last.toLowerCase();
+    final ext = rawExt == 'jpeg' ? 'jpg' : rawExt;
+    if (!{'jpg', 'png', 'webp'}.contains(ext)) {
+      throw StateError('Format gambar harus JPG, PNG, atau WebP.');
+    }
+    final bytes = await image.readAsBytes();
+    if (bytes.length > 5 * 1024 * 1024) {
+      throw StateError('Ukuran gambar maksimal 5 MB.');
+    }
+    final mime = image.mimeType ?? (ext == 'jpg' ? 'image/jpeg' : 'image/$ext');
+    final path = '$storeId/$productId/${DateTime.now().microsecondsSinceEpoch}.$ext';
+    await db.storage.from('product-images').uploadBinary(
+          path,
+          bytes,
+          fileOptions: FileOptions(contentType: mime, upsert: false),
+        );
+    final url = db.storage.from('product-images').getPublicUrl(path);
+    await db.from('product_images').update({'is_primary': false}).eq('product_id', productId);
+    await db.from('product_images').insert({
+      'product_id': productId,
+      'image_url': url,
+      'is_primary': true,
+      'sort_order': 0,
+    });
+    return url;
   }
 
   Future<List<Map<String, dynamic>>> orders({String? storeId, String? status}) async =>

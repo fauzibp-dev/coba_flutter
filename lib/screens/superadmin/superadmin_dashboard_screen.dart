@@ -6,6 +6,7 @@ import '../../services/superadmin_repository.dart';
 import 'superadmin_audit_screen.dart';
 import 'superadmin_categories_screen.dart';
 import 'superadmin_commerce_screen.dart';
+import 'superadmin_gallery_screen.dart';
 import 'superadmin_operations_screen.dart';
 import 'superadmin_orders_screen.dart';
 import 'superadmin_products_screen.dart';
@@ -49,7 +50,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       const Row(children: [Icon(Icons.verified_user_rounded, color: Colors.white), SizedBox(width: 8), Text('Platform Control Center', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 17))]),
                       const SizedBox(height: 8),
-                      Text('Akses global toko, user, katalog, commerce, fulfillment, promo, retur, support, integrasi, analytics, dan audit.', style: TextStyle(color: Colors.white.withValues(alpha: .78), height: 1.35, fontSize: 12)),
+                      Text('Akses global toko, user, katalog, galeri, commerce, fulfillment, promo, retur, support, integrasi, analytics, dan audit.', style: TextStyle(color: Colors.white.withValues(alpha: .78), height: 1.35, fontSize: 12)),
                     ]),
                   ),
                   const SizedBox(height: 14),
@@ -76,7 +77,8 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                   _ActionTile(icon: Icons.store_mall_directory_outlined, title: 'Toko & Koperasi', subtitle: 'Buat, edit, aktif/nonaktifkan toko', onTap: () => _open(const SuperadminStoresScreen())),
                   _ActionTile(icon: Icons.manage_accounts_outlined, title: 'Pengguna & Hak Akses', subtitle: 'Owner, admin, staff, dan Super Admin', onTap: () => _open(const SuperadminUsersScreen())),
                   _ActionTile(icon: Icons.category_outlined, title: 'Kategori Global', subtitle: 'Atur kategori, hierarki, urutan, dan status per toko', onTap: () => _open(const SuperadminCategoriesScreen())),
-                  _ActionTile(icon: Icons.inventory_2_outlined, title: 'Katalog Global', subtitle: 'Edit produk, harga, status, stok, kategori, dan gambar', onTap: () => _open(const SuperadminProductsScreen())),
+                  _ActionTile(icon: Icons.inventory_2_outlined, title: 'Katalog Global', subtitle: 'Edit produk, harga, status, stok, kategori, dan gambar utama', onTap: () => _open(const SuperadminProductsScreen())),
+                  _ActionTile(icon: Icons.photo_library_outlined, title: 'Galeri Produk Global', subtitle: 'Tambah, urutkan, hapus, dan pilih foto utama seluruh produk', onTap: () => _open(const SuperadminGalleryScreen())),
                   _ActionTile(icon: Icons.receipt_long_outlined, title: 'Pesanan Global', subtitle: 'Pantau dan proses order seluruh toko', onTap: () => _open(const SuperadminOrdersScreen())),
                   _ActionTile(icon: Icons.campaign_outlined, title: 'Voucher & Banner', subtitle: 'Voucher dan konten promosi per toko', onTap: () => _open(const SuperadminPromotionsScreen())),
                   _ActionTile(icon: Icons.assignment_return_outlined, title: 'Retur & After Sales', subtitle: 'Review status permintaan retur dan refund', onTap: () => _open(const SuperadminReturnsScreen())),

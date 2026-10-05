@@ -4,6 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/utils/app_utils.dart';
 import '../../services/superadmin_repository.dart';
 import 'superadmin_audit_screen.dart';
+import 'superadmin_categories_screen.dart';
 import 'superadmin_orders_screen.dart';
 import 'superadmin_products_screen.dart';
 import 'superadmin_promotions_screen.dart';
@@ -78,10 +79,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1F1F1F),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  decoration: BoxDecoration(color: const Color(0xFF1F1F1F), borderRadius: BorderRadius.circular(12)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -94,7 +92,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Akses global untuk toko, akun pengelola, katalog, order, promo, retur, dan audit.',
+                        'Akses global untuk toko, akun pengelola, kategori, katalog, order, promo, retur, dan audit.',
                         style: TextStyle(color: Colors.white.withValues(alpha: .78), height: 1.35, fontSize: 12),
                       ),
                     ],
@@ -133,9 +131,15 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                   onTap: () => _open(const SuperadminUsersScreen()),
                 ),
                 _ActionTile(
+                  icon: Icons.category_outlined,
+                  title: 'Kategori Global',
+                  subtitle: 'Atur kategori, hierarki, urutan, dan status per toko',
+                  onTap: () => _open(const SuperadminCategoriesScreen()),
+                ),
+                _ActionTile(
                   icon: Icons.inventory_2_outlined,
                   title: 'Katalog Global',
-                  subtitle: 'Edit produk, harga, status, dan stok seluruh toko',
+                  subtitle: 'Edit produk, harga, status, stok, kategori, dan gambar',
                   onTap: () => _open(const SuperadminProductsScreen()),
                 ),
                 _ActionTile(

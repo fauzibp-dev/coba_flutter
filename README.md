@@ -2,12 +2,16 @@
 
 Shop Mart adalah aplikasi e-commerce mobile Flutter untuk Koperasi Merah Putih Kerten, Kecamatan Laweyan. Aplikasi ini dikembangkan oleh **fauzibondanp**.
 
+Versi aplikasi saat ini: **1.5.0+4**.
+
 ## Stack
 
 - Flutter 3.47.5 / Dart 3.13+
 - Supabase Auth
 - PostgreSQL + Row Level Security
-- Supabase Storage (`product-images`)
+- Supabase Storage
+- Supabase Realtime untuk customer support chat
+- `pg_cron` untuk expiry order/reservation
 - Android physical-device workflow
 
 ## Backend dan environment
@@ -22,15 +26,95 @@ flutter run \
   --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
 ```
 
-Backend mencakup profil, store, kategori, produk, gambar, varian, inventory ledger, wishlist, cart, alamat, voucher, order, payment, reviews, notifications, chat, returns/refunds, audit log, dan integration mapping.
+Backend mencakup profil, store, kategori, produk, multi-image gallery, opsi/varian, inventory ledger, stock reservation, wishlist, cart, alamat, voucher, campaign/flash sale, order, payment, manual-payment proof, shipping/fulfillment, reviews, notifications, chat, returns/refunds, warehouse, supplier/purchase order, stocktake, audit log, platform settings, privacy request, dan integration mapping.
 
-Checkout, perubahan quantity cart, product+stock mutation, archive product, dan lifecycle order yang sensitif dilakukan lewat PostgreSQL RPC. Harga, voucher, stock, total, role, dan ownership divalidasi server-side. Checkout memakai client request UUID agar retry request yang sama tidak membuat order ganda.
+Checkout, perubahan quantity cart, product+stock mutation, archive product, variant stock, purchase-order receiving, shipment lifecycle, payment verification, dan lifecycle order yang sensitif dilakukan lewat PostgreSQL RPC. Harga, voucher, campaign, stock, total, role, dan ownership divalidasi server-side. Checkout memakai client request UUID agar retry request yang sama tidak membuat order ganda.
 
-## Owner dan admin
+## Customer commerce v1.5
 
-Owner **tidak pernah lagi di-bootstrap dari user pertama yang login**. Fungsi legacy `claim_initial_owner()` dipertahankan sebagai no-op untuk kompatibilitas client lama, tetapi tidak dapat membuat owner baru.
+- browse catalog tanpa login
+- register / login email-password
+- forgot/reset password, change password dan change email
+- advanced search, filter harga/rating/kategori dan sorting
+- search history dan recently viewed
+- home merchandising: flash sale, best seller, produk terbaru dan rekomendasi katalog
+- product detail dengan opsi/varian, variant-specific price/stock/image/weight
+- multi-image product gallery
+- wishlist
+- persistent cart dengan server stock validation
+- address book: tambah/edit/hapus/default
+- **server checkout quote** sebelum membuat order
+- voucher/campaign validation dari server
+- COD / transfer manual
+- pickup / local delivery + dynamic delivery zones
+- idempotent checkout retry
+- stock reservation + expiry lifecycle
+- manual transfer deadline + upload bukti pembayaran
+- daftar pesanan, detail dan timeline status
+- shipment/tracking, driver, tracking number dan shipment events
+- cancellation sesuai state machine
+- rich review: rating, komentar, gambar, seller reply, helpful vote
+- in-app notification center + preferences
+- realtime support chat + image attachment
+- item-level return/refund request + evidence upload
+- account deletion request
 
-Provisioning owner/admin dilakukan lewat administrasi database yang terkontrol. Jangan membuat flow client yang dapat mempromosikan dirinya sendiri menjadi owner/admin.
+## Admin toko
+
+Dari **Akun > Shop Mart Admin**:
+
+- tambah/edit/arsip produk
+- multi-image gallery: upload beberapa foto, pilih primary, reorder dan delete
+- opsi & varian: SKU/barcode/harga/berat/stok per kombinasi
+- inventory adjustment wajib memiliki reason dan movement ledger
+- lihat serta proses order
+- update lifecycle order melalui state-machine RPC
+- manual payment proof approval/rejection
+- fulfillment: shipment status, driver, lokasi, tracking number dan event
+- store settings: ongkir, free-shipping threshold, timeout transfer, bank account, return window
+- delivery-zone management
+- supplier management
+- stocktake / stock opname
+- purchase order: create PO, add item/variant, mark ordered, partial/full receiving
+- PO receiving otomatis menambah inventory dan inventory movement
+
+## Super Admin
+
+Dari **Akun > Shop Mart Super Admin**:
+
+- toko/koperasi global
+- user, owner/admin/staff dan platform Super Admin
+- kategori global
+- katalog global
+- **galeri produk global** lintas toko
+- order global
+- voucher dan banner
+- Commerce Control Center
+- analytics dan top products
+- campaign / flash sale + quota dan promo price
+- return/refund oversight
+- customer support seluruh toko
+- operations/integration/sync log
+- maintenance mode dan minimum supported version
+- account-deletion/privacy queue
+- audit log platform
+
+Super Admin tidak dapat mengambil alih platform dari client bootstrap. `claim_initial_owner()` tidak executable oleh role authenticated.
+
+## Warehouse & reservation automation
+
+- inventory memisahkan `available_qty` dan `reserved_qty`
+- checkout membuat inventory reservation
+- unpaid manual-transfer order memiliki expiry
+- cron production menjalankan expiry cleanup setiap 10 menit
+- cancellation/expiry mengembalikan stock sesuai ledger
+- stocktake dan PO receiving dicatat sebagai inventory movement
+
+## Notification & push readiness
+
+In-app notification dan notification preferences sudah aktif. Schema `device_tokens` sudah tersedia untuk push provider.
+
+**Transport push eksternal (FCM/OneSignal/APNs) belum diaktifkan** karena project credential/provider resmi belum disediakan. Jangan menaruh service credential push di Flutter client.
 
 ## Menjalankan di HP Android
 
@@ -49,63 +133,51 @@ flutter devices
 adb devices
 ```
 
-## Alur customer
-
-- browse tanpa login
-- register / login email-password
-- search & kategori
-- product detail + variant-specific stock
-- wishlist
-- cart tersimpan dan dibatasi stock server
-- address book: tambah/edit/hapus/default
-- checkout server-side, COD / transfer manual, pickup / local delivery
-- idempotent checkout retry
-- daftar + detail pesanan dan timeline status
-- cancellation untuk status yang masih diizinkan
-- notification center untuk update order
-- review produk setelah order completed
-- chat bantuan dengan koperasi
-- request return/refund untuk order delivered/completed
-
-## Alur admin
-
-Dari **Akun > Shop Mart Admin**:
-
-- tambah/edit/arsip produk
-- upload foto produk ke Supabase Storage
-- atur harga, kategori, SKU, stok, featured, status katalog
-- perubahan stok wajib memiliki alasan dan tercatat di inventory ledger
-- lihat pesanan masuk
-- update lifecycle status order melalui state-machine RPC
-- ringkasan order dan nilai transaksi
-
 ## Supabase migrations
 
-Perubahan database v1.1+ disimpan di `supabase/migrations/`. Riwayat database yang dibuat sebelum migration directory tersedia didokumentasikan di `supabase/MIGRATION_HISTORY.md`.
+Perubahan database disimpan di `supabase/migrations/`. Riwayat database sebelum migration directory tersedia didokumentasikan di `supabase/MIGRATION_HISTORY.md`.
 
-Semua perubahan schema/RLS/RPC berikutnya harus migration-first dan direview bersama perubahan aplikasi yang memakainya.
+Semua perubahan schema/RLS/RPC berikutnya harus migration-first dan direview bersama perubahan aplikasi yang memakainya. Migration production v1.5 mencakup commerce suite, warehouse/variant operations, schedulers, security hardening, FK indexes, RLS performance, product gallery dan Super Admin gallery access.
 
 ## Release Android
 
-Debug build tetap dapat dijalankan seperti biasa. Release build **tidak akan memakai debug key**. Untuk membuat release resmi:
+Debug build tetap dapat dijalankan seperti biasa. Release build **tidak boleh memakai debug key**. Untuk membuat release resmi:
 
 1. Buat dan simpan production keystore di luar repository.
 2. Copy `android/key.properties.example` menjadi `android/key.properties`.
 3. Isi referensi keystore/alias/password secara lokal atau dari CI secret.
 4. Jalankan `flutter build appbundle --release`.
 
-`android/key.properties`, `*.jks`, dan `*.keystore` sudah di-ignore dan tidak boleh di-commit.
+`android/key.properties`, `*.jks`, dan `*.keystore` di-ignore dan tidak boleh di-commit.
 
 ## External integrations
 
-Payment gateway, kurir pihak ketiga, dan sinkronisasi e-commerce lama Koperasi Merah Putih Kerten tidak di-hardcode karena credential/API resmi belum tersedia. Database memiliki `integration_sources`, `external_mappings`, dan `sync_logs` sehingga integrasi dapat ditambahkan tanpa membongkar core commerce.
+Payment gateway, kurir pihak ketiga, push provider, dan sinkronisasi e-commerce lama Koperasi Merah Putih Kerten tidak di-hardcode tanpa credential/API resmi.
+
+Payment gateway sengaja menjadi tahap terakhir. Core payment abstraction sudah memiliki `payments`, payment state, manual-transfer proof, idempotent checkout, order/payment separation dan integration tables sehingga provider dapat ditambahkan tanpa membongkar commerce core.
+
+Internal/local-delivery fulfillment sudah dapat berjalan tanpa API kurir eksternal.
 
 ## Security
 
-- RLS aktif pada seluruh tabel public aplikasi.
+- RLS aktif pada seluruh tabel public aplikasi yang menyimpan data aplikasi.
 - Client hanya memakai publishable key.
-- Customer-private data dibatasi dengan `auth.uid()`/ownership.
-- Direct mutation terhadap order, inventory, cart item, dan product core dibatasi; mutation sensitif memakai RPC yang memeriksa ownership/role.
-- Review harus terkait order item milik customer yang benar dan order completed.
-- Product Storage write dibatasi ke folder store yang dimiliki staff terkait.
+- Customer-private data dibatasi dengan ownership/RLS.
+- Direct mutation terhadap order dan inventory sensitif tidak diberikan kepada role authenticated.
+- Mutation sensitif menggunakan RPC yang memeriksa ownership/role.
+- Review harus terkait order item customer yang benar dan order completed.
+- Product Storage write dibatasi folder store; Super Admin memiliki policy eksplisit untuk operasi global.
+- Trigger-only helper RPC tidak executable oleh authenticated client.
+- Checkout quote/search mengikuti RLS caller.
 - Service-role / secret key tidak boleh dimasukkan ke APK atau repository.
+
+## Final release gate
+
+Sebelum menandai build sebagai release final publik:
+
+1. GitHub CI harus hijau: analyze, test, debug build.
+2. Supabase migration Git/production harus sinkron.
+3. Security/integrity audit harus bersih dari blocker.
+4. Jalankan physical-device UAT pada Android target.
+5. Siapkan production signing bila aplikasi akan didistribusikan sebagai release/App Bundle.
+6. Payment gateway baru diaktifkan setelah API/provider resmi tersedia.

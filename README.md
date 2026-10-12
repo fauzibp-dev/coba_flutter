@@ -188,4 +188,5 @@ Sebelum menandai build sebagai release final publik:
 - Fix the server-side Super Admin analytics aggregates.
 - Use an authorization-checked RPC for Privacy Queue profile lookup.
 - Publish RLS-protected chat messages to Realtime; keep stream subscriptions stable and retryable.
-- Production migration: `20261012043032_shop_mart_uat_runtime_fixes.sql`.
+- Production migrations: `20261012043032_shop_mart_uat_runtime_fixes.sql`, `20261012043810_shop_mart_superadmin_email_casts.sql`, and `20261012043901_shop_mart_superadmin_audit_email_cast.sql`.
+- All 13 read-only Super Admin RPC smoke checks passed after the explicit `varchar` to `text` return-contract fixes.

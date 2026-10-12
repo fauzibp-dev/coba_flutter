@@ -151,7 +151,7 @@ class _CartScreenState extends State<CartScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text('Subtotal', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                                  Text(rupiah(subtotal), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: AppTheme.primary)),
+                                  FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(rupiah(subtotal), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: AppTheme.primary))),
                                 ],
                               ),
                             ),

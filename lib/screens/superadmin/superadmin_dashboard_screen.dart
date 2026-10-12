@@ -4,6 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/utils/app_utils.dart';
 import '../../services/superadmin_repository.dart';
 import 'superadmin_audit_screen.dart';
+import 'superadmin_error_logs_screen.dart';
 import 'superadmin_categories_screen.dart';
 import 'superadmin_commerce_screen.dart';
 import 'superadmin_gallery_screen.dart';
@@ -32,7 +33,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: const Color(0xFFF7F7F7),
-        appBar: AppBar(title: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('KKMP Kerten Super Admin', style: TextStyle(fontWeight: FontWeight.w900)), Text('Kontrol platform dan seluruh toko', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary))])),
+        appBar: AppBar(title: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('KKMP Kerten Super Admin', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w900)), Text('Kontrol platform dan seluruh toko', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary))])),
         body: FutureBuilder<Map<String, dynamic>>(
           future: _future,
           builder: (context, snapshot) {
@@ -48,7 +49,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(color: const Color(0xFF1F1F1F), borderRadius: BorderRadius.circular(12)),
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Row(children: [Icon(Icons.verified_user_rounded, color: Colors.white), SizedBox(width: 8), Text('Platform Control Center', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 17))]),
+                      const Row(children: [Icon(Icons.verified_user_rounded, color: Colors.white), SizedBox(width: 8), Text('Platform Control Center', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 17))]),
                       const SizedBox(height: 8),
                       Text('Akses global toko, user, katalog, galeri, commerce, fulfillment, promo, retur, support, integrasi, analytics, dan audit.', style: TextStyle(color: Colors.white.withValues(alpha: .78), height: 1.35, fontSize: 12)),
                     ]),
@@ -60,7 +61,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    childAspectRatio: 1.55,
+                    childAspectRatio: 1.35,
                     children: [
                       _Metric(label: 'Toko aktif', value: '${d['active_stores'] ?? 0}/${d['stores'] ?? 0}', icon: Icons.storefront_outlined),
                       _Metric(label: 'Pengguna', value: '${d['users'] ?? 0}', icon: Icons.people_outline_rounded),
@@ -85,6 +86,9 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
                   _ActionTile(icon: Icons.support_agent_rounded, title: 'Customer Support', subtitle: 'Baca dan balas chat pelanggan seluruh toko', onTap: () => _open(const SuperadminSupportScreen())),
                   _ActionTile(icon: Icons.hub_outlined, title: 'Operations Center', subtitle: 'Broadcast notifikasi, integrasi, dan sync log', onTap: () => _open(const SuperadminOperationsScreen())),
                   _ActionTile(icon: Icons.history_rounded, title: 'Audit Log', subtitle: 'Jejak perubahan sensitif seluruh platform', onTap: () => _open(const SuperadminAuditScreen())),
+                  _ActionTile(icon: Icons.bug_report_outlined, title: 'Error Log Center',
+                    subtitle: 'Error aplikasi, detail teknis, salin & ekspor TXT/Word/PDF',
+                    onTap: () => _open(const SuperadminErrorLogsScreen())),
                 ],
               ),
             );

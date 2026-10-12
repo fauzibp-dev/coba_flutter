@@ -72,11 +72,9 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
                     onChanged: voucher != null || saving ? null : (v) => setDialogState(() => storeId = v ?? storeId),
                   ),
                   const SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(child: TextField(controller: code, decoration: const InputDecoration(labelText: 'Kode *'))),
-                    const SizedBox(width: 8),
-                    Expanded(child: TextField(controller: title, decoration: const InputDecoration(labelText: 'Judul *'))),
-                  ]),
+                  TextField(controller: code, decoration: const InputDecoration(labelText: 'Kode *')),
+                  const SizedBox(height: 10),
+                  TextField(controller: title, decoration: const InputDecoration(labelText: 'Judul *')),
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     initialValue: type,
@@ -89,17 +87,13 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
                     onChanged: saving ? null : (v) => setDialogState(() => type = v ?? type),
                   ),
                   const SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(child: TextField(controller: value, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Nilai diskon *'))),
-                    const SizedBox(width: 8),
-                    Expanded(child: TextField(controller: minimum, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Minimum belanja'))),
-                  ]),
+                  TextField(controller: value, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Nilai diskon *')),
                   const SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(child: TextField(controller: maximum, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Maks. diskon'))),
-                    const SizedBox(width: 8),
-                    Expanded(child: TextField(controller: usageLimit, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Limit total'))),
-                  ]),
+                  TextField(controller: minimum, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Minimum belanja')),
+                  const SizedBox(height: 10),
+                  TextField(controller: maximum, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Maks. diskon')),
+                  const SizedBox(height: 10),
+                  TextField(controller: usageLimit, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Limit total')),
                   const SizedBox(height: 10),
                   TextField(controller: usagePerUser, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Limit per pengguna')),
                   SwitchListTile(contentPadding: EdgeInsets.zero, title: const Text('Voucher aktif'), value: active, onChanged: saving ? null : (v) => setDialogState(() => active = v)),
@@ -276,7 +270,7 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
                   decoration: const InputDecoration(labelText: 'Filter toko'),
                   items: [
                     const DropdownMenuItem(value: '_all', child: Text('Semua toko')),
-                    ...stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-'))),
+                    ...stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-', maxLines: 1, overflow: TextOverflow.ellipsis))),
                   ],
                   onChanged: (v) => setState(() {
                     _storeId = v == '_all' ? null : v;

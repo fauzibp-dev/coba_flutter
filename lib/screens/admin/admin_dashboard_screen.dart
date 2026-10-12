@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/app_utils.dart';
+import '../../core/utils/relations.dart';
 import '../../services/shop_repository.dart';
 import 'admin_operations_screen.dart';
 import 'product_form_screen.dart';
@@ -202,7 +203,7 @@ class _OrdersTab extends StatelessWidget {
           const SizedBox(height: 16),
           ...orders.map((order) {
             final items = order['order_items'] as List? ?? [];
-            final shipment = (order['shipments'] as List? ?? []).cast<dynamic>();
+            final shipment = relationRows(order['shipments']);
             final proofs = (order['manual_payment_proofs'] as List? ?? []).cast<dynamic>();
             return Container(
               margin: const EdgeInsets.only(bottom: 9),

@@ -49,8 +49,10 @@ class _ShopMartAppState extends State<ShopMartApp> {
       home: FutureBuilder<Map<String, dynamic>>(
         future: _settings,
         builder: (context, snapshot) {
+          // The public settings network request must not delay the first
+          // Flutter frame or the storefront's initial navigation.
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const _StartupScreen();
+            return const HomeShell();
           }
           // Availability of the public storefront must not depend on the
           // settings endpoint. If it is temporarily unavailable, normal app
@@ -89,27 +91,6 @@ class _ShopMartAppState extends State<ShopMartApp> {
   }
 }
 
-class _StartupScreen extends StatelessWidget {
-  const _StartupScreen();
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset('assets/branding/kkmp_kerten_logo.png', width: 144, height: 144),
-              const SizedBox(height: 8),
-              const Text('Belanja Lebih Mudah Di KKMP Kerten',
-                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-              const SizedBox(height: 20),
-              const SizedBox(width: 26, height: 26, child: CircularProgressIndicator(strokeWidth: 2.5)),
-            ],
-          ),
-        ),
-      );
-}
-
 class _ReleaseGateScreen extends StatelessWidget {
   const _ReleaseGateScreen({
     required this.icon,
@@ -144,7 +125,7 @@ class _ReleaseGateScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     FilledButton(onPressed: onAction, child: Text(actionLabel)),
                     const SizedBox(height: 12),
-                    const Text('KKMP Kerten v1.5.2', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                    const Text('KKMP Kerten v1.5.3', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
                   ],
                 ),
               ),

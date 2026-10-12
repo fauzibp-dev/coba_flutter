@@ -60,16 +60,17 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           title: const Text('Hak Akses Pengguna'),
           content: SingleChildScrollView(
             child: SizedBox(
-              width: 460,
+              width: MediaQuery.sizeOf(context).width - 80 < 460 ? MediaQuery.sizeOf(context).width - 80 : 460,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(user['full_name']?.toString().isNotEmpty == true ? user['full_name'].toString() : 'Pengguna', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
-                  Text(user['email']?.toString() ?? '-', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                  Text(user['email']?.toString() ?? '-', overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -90,8 +91,9 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
                   else ...[
                     DropdownButtonFormField<String>(
                       initialValue: storeId,
+                      isExpanded: true,
                       decoration: const InputDecoration(labelText: 'Toko'),
-                      items: stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-'))).toList(),
+                      items: stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-', maxLines: 1, overflow: TextOverflow.ellipsis))).toList(),
                       onChanged: saving
                           ? null
                           : (v) => setDialogState(() {
@@ -107,6 +109,7 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
                     ),
                     DropdownButtonFormField<String>(
                       initialValue: role,
+                      isExpanded: true,
                       decoration: const InputDecoration(labelText: 'Role toko'),
                       items: const [
                         DropdownMenuItem(value: 'owner', child: Text('Owner')),

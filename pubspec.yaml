@@ -1,7 +1,7 @@
 name: coba_flutter
 description: "KKMP Kerten - E-Commerce Koperasi Merah Putih Kerten"
 publish_to: 'none'
-version: 1.5.2+6
+version: 1.5.3+7
 
 environment:
   sdk: ^3.13.4

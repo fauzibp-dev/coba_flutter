@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_utils.dart';
+import '../core/utils/relations.dart';
 import '../services/commerce_repository.dart';
 import '../services/shop_repository.dart';
 
@@ -102,7 +103,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Future<void> _requestReturn(Map<String, dynamic> order) async {
-    final items = (order['order_items'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+    final items = relationRows(order['order_items']);
     final selected = <String, bool>{for (final item in items) item['id'].toString(): false};
     final quantities = <String, TextEditingController>{for (final item in items) item['id'].toString(): TextEditingController(text: '1')};
     final reason = TextEditingController();
@@ -210,11 +211,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             if (snapshot.hasError || !snapshot.hasData) return Center(child: Text('Detail pesanan tidak dapat dimuat: ${snapshot.hasError ? friendlyError(snapshot.error!) : ''}'));
             final order = snapshot.data![0] as Map<String, dynamic>;
             final settings = snapshot.data![1] as Map<String, dynamic>;
-            final items = (order['order_items'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList();
-            final history = (order['order_status_history'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList()..sort((a, b) => (a['created_at']?.toString() ?? '').compareTo(b['created_at']?.toString() ?? ''));
-            final shipments = (order['shipments'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList();
-            final proofs = (order['manual_payment_proofs'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList();
-            final returns = (order['returns'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+            final items = relationRows(order['order_items']);
+            final history = relationRows(order['order_status_history'])..sort((a, b) => (a['created_at']?.toString() ?? '').compareTo(b['created_at']?.toString() ?? ''));
+            final shipments = relationRows(order['shipments']);
+            final proofs = relationRows(order['manual_payment_proofs']);
+            final returns = relationRows(order['returns']);
             final address = order['address_snapshot'];
             final status = order['status']?.toString() ?? '';
             final isManualPending = order['payment_method'] == 'manual_transfer' && order['payment_status'] == 'pending' && status == 'pending_payment';
@@ -279,7 +280,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   if (shipments.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     ...shipments.map((shipment) {
-                      final events = (shipment['shipment_events'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList()..sort((a,b) => (b['created_at']?.toString() ?? '').compareTo(a['created_at']?.toString() ?? ''));
+                      final events = relationRows(shipment['shipment_events'])..sort((a,b) => (b['created_at']?.toString() ?? '').compareTo(a['created_at']?.toString() ?? ''));
                       return _Card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         const Text('Pengiriman', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
                         const SizedBox(height: 7),

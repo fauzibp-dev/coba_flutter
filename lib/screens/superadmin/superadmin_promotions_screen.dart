@@ -56,17 +56,19 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
       barrierDismissible: false,
       builder: (_) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           title: Text(voucher == null ? 'Tambah Voucher' : 'Edit Voucher'),
           content: SingleChildScrollView(
             child: SizedBox(
-              width: 480,
+              width: MediaQuery.sizeOf(context).width - 80 < 480 ? MediaQuery.sizeOf(context).width - 80 : 480,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DropdownButtonFormField<String>(
                     initialValue: storeId,
+                    isExpanded: true,
                     decoration: const InputDecoration(labelText: 'Toko *'),
-                    items: stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-'))).toList(),
+                    items: stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-', maxLines: 1, overflow: TextOverflow.ellipsis))).toList(),
                     onChanged: voucher != null || saving ? null : (v) => setDialogState(() => storeId = v ?? storeId),
                   ),
                   const SizedBox(height: 10),
@@ -78,6 +80,7 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     initialValue: type,
+                    isExpanded: true,
                     decoration: const InputDecoration(labelText: 'Jenis diskon'),
                     items: const [
                       DropdownMenuItem(value: 'percentage', child: Text('Persentase')),
@@ -173,17 +176,19 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
       barrierDismissible: false,
       builder: (_) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           title: Text(banner == null ? 'Tambah Banner' : 'Edit Banner'),
           content: SingleChildScrollView(
             child: SizedBox(
-              width: 480,
+              width: MediaQuery.sizeOf(context).width - 80 < 480 ? MediaQuery.sizeOf(context).width - 80 : 480,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DropdownButtonFormField<String>(
                     initialValue: storeId,
+                    isExpanded: true,
                     decoration: const InputDecoration(labelText: 'Toko *'),
-                    items: stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-'))).toList(),
+                    items: stores.map((s) => DropdownMenuItem(value: s['id'].toString(), child: Text(s['name']?.toString() ?? '-', maxLines: 1, overflow: TextOverflow.ellipsis))).toList(),
                     onChanged: banner != null || saving ? null : (v) => setDialogState(() => storeId = v ?? storeId),
                   ),
                   const SizedBox(height: 10),
@@ -193,11 +198,9 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
                   const SizedBox(height: 10),
                   TextField(controller: image, decoration: const InputDecoration(labelText: 'Image URL')),
                   const SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(child: TextField(controller: targetType, decoration: const InputDecoration(labelText: 'Target type'))),
-                    const SizedBox(width: 8),
-                    Expanded(child: TextField(controller: targetId, decoration: const InputDecoration(labelText: 'Target UUID'))),
-                  ]),
+                  TextField(controller: targetType, decoration: const InputDecoration(labelText: 'Target type')),
+                  const SizedBox(height: 10),
+                  TextField(controller: targetId, decoration: const InputDecoration(labelText: 'Target UUID')),
                   const SizedBox(height: 10),
                   TextField(controller: sort, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Urutan')),
                   SwitchListTile(contentPadding: EdgeInsets.zero, title: const Text('Banner aktif'), value: active, onChanged: saving ? null : (v) => setDialogState(() => active = v)),

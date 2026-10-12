@@ -17,6 +17,7 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final _voucher = TextEditingController();
   final _notes = TextEditingController();
+  final _scroll = ScrollController(keepScrollOffset: false);
   final _requestId = const Uuid().v4();
   String _payment = 'cod';
   String _shipping = 'local_delivery';
@@ -37,6 +38,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void dispose() {
     _voucher.dispose();
     _notes.dispose();
+    _scroll.dispose();
     super.dispose();
   }
 
@@ -127,7 +129,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Checkout')),
+      appBar: AppBar(title: const Text('Checkout'), actions: [
+        IconButton(tooltip: 'Muat ulang checkout', icon: const Icon(Icons.refresh_rounded),
+            onPressed: () => setState(() { _quote = null; _reload(); })),
+      ]),
       body: FutureBuilder<List<dynamic>>(
         future: _future,
         builder: (context, snapshot) {
@@ -145,6 +150,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: [
               Expanded(
                 child: ListView(
+                  controller: _scroll,
+                  primary: false,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(16),
                   children: [
                     _Section(

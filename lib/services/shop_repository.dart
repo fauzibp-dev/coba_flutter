@@ -375,11 +375,8 @@ class ShopRepository {
       'body': text,
       'reply_to_id': replyToId,
     });
-    await db.from('conversations').update({
-      'last_message_at': DateTime.now().toUtc().toIso8601String(),
-      'updated_at': DateTime.now().toUtc().toIso8601String(),
-      'status': 'open',
-    }).eq('id', conversationId);
+    // The database's AFTER INSERT trigger updates conversation timestamps.
+    // A second client UPDATE is blocked by RLS and caused a false send error.
   }
 
   Future<void> requestReturn({

@@ -91,27 +91,6 @@ class _ShopMartAppState extends State<ShopMartApp> {
   }
 }
 
-class _StartupScreen extends StatelessWidget {
-  const _StartupScreen();
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset('assets/branding/kkmp_kerten_logo.png', width: 144, height: 144),
-              const SizedBox(height: 8),
-              const Text('Belanja Lebih Mudah Di KKMP Kerten',
-                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-              const SizedBox(height: 20),
-              const SizedBox(width: 26, height: 26, child: CircularProgressIndicator(strokeWidth: 2.5)),
-            ],
-          ),
-        ),
-      );
-}
-
 class _ReleaseGateScreen extends StatelessWidget {
   const _ReleaseGateScreen({
     required this.icon,

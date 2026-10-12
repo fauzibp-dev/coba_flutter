@@ -164,7 +164,7 @@ class _SuperadminCommerceScreenState extends State<SuperadminCommerceScreen> wit
 
   Future<void> _maintenance() async {
     var enabled = false;
-    final message = TextEditingController(text: 'Shop Mart sedang dalam pemeliharaan. Silakan coba beberapa saat lagi.');
+    final message = TextEditingController(text: 'KKMP Kerten sedang dalam pemeliharaan. Silakan coba beberapa saat lagi.');
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => StatefulBuilder(builder: (context, setDialogState) => AlertDialog(

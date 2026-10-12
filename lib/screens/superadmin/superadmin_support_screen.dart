@@ -188,7 +188,7 @@ class _SupportThreadScreenState extends State<_SupportThreadScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(customer, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-            Text(widget.conversation['store_name']?.toString() ?? 'Shop Mart', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400)),
+            Text(widget.conversation['store_name']?.toString() ?? 'KKMP Kerten', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400)),
           ],
         ),
       ),
@@ -252,7 +252,7 @@ class _SupportThreadScreenState extends State<_SupportThreadScreen> {
               color: Colors.white,
               child: Row(
                 children: [
-                  Expanded(child: TextField(controller: _controller, minLines: 1, maxLines: 4, decoration: const InputDecoration(hintText: 'Balas sebagai Shop Mart...'))),
+                  Expanded(child: TextField(controller: _controller, minLines: 1, maxLines: 4, decoration: const InputDecoration(hintText: 'Balas sebagai KKMP Kerten...'))),
                   IconButton.filled(onPressed: _sending ? null : _send, icon: const Icon(Icons.send_rounded)),
                 ],
               ),

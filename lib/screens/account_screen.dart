@@ -110,13 +110,13 @@ class _AccountScreenState extends State<AccountScreen> {
                 const SizedBox(height: 28),
                 const Icon(Icons.person_outline_rounded, size: 64, color: AppTheme.textSecondary),
                 const SizedBox(height: 14),
-                const Text('Masuk untuk menggunakan Shop Mart', textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                const Text('Masuk untuk menggunakan KKMP Kerten', textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 6),
                 const Text('Kelola keranjang, checkout, wishlist, pesanan, dan layanan purnajual dari akunmu.', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textSecondary, height: 1.4)),
                 const SizedBox(height: 20),
                 FilledButton(onPressed: _login, child: const Text('Masuk / Daftar')),
                 const SizedBox(height: 40),
-                const Center(child: Text('Shop Mart • Developed by fauzibondanp', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary))),
+                const Center(child: Text('KKMP Kerten • Developed by fauzibondanp', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary))),
               ],
             );
           }
@@ -140,7 +140,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(profile?['full_name']?.toString().isNotEmpty == true ? profile!['full_name'].toString() : 'Pengguna Shop Mart', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                          Text(profile?['full_name']?.toString().isNotEmpty == true ? profile!['full_name'].toString() : 'Pengguna KKMP Kerten', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                           const SizedBox(height: 3),
                           Text(email, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
                           if (isSuperAdmin) ...[
@@ -189,7 +189,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 const SizedBox(height: 8),
                 _MenuTile(
                   icon: Icons.security_rounded,
-                  title: 'Shop Mart Super Admin',
+                  title: 'KKMP Kerten Super Admin',
                   subtitle: 'Kontrol seluruh toko, user, katalog, order, promo, fulfillment, retur, dan audit',
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SuperadminDashboardScreen())),
                   accent: true,
@@ -201,7 +201,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 const SizedBox(height: 8),
                 _MenuTile(
                   icon: Icons.admin_panel_settings_outlined,
-                  title: 'Shop Mart Admin',
+                  title: 'KKMP Kerten Admin',
                   subtitle: 'Produk, stok, order, pembayaran, pengiriman, dan gudang',
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen())),
                   accent: true,
@@ -210,7 +210,7 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 16),
               OutlinedButton.icon(onPressed: _logout, icon: const Icon(Icons.logout_rounded), label: const Text('Keluar')),
               const SizedBox(height: 28),
-              const Center(child: Text('Shop Mart v1.5.0\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
+              const Center(child: Text('KKMP Kerten v1.5.2\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
             ],
           );
         },

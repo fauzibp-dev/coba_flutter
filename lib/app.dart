@@ -12,7 +12,7 @@ class ShopMartApp extends StatefulWidget {
 }
 
 class _ShopMartAppState extends State<ShopMartApp> {
-  static const _currentVersion = '1.5.1';
+  static const _currentVersion = '1.5.2';
   late Future<Map<String, dynamic>> _settings;
 
   @override
@@ -43,7 +43,7 @@ class _ShopMartAppState extends State<ShopMartApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Shop Mart',
+      title: 'KKMP Kerten',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: FutureBuilder<Map<String, dynamic>>(
@@ -62,7 +62,7 @@ class _ShopMartAppState extends State<ShopMartApp> {
           if (maintenance is Map && maintenance['enabled'] == true) {
             return _ReleaseGateScreen(
               icon: Icons.engineering_rounded,
-              title: 'Shop Mart sedang dipelihara',
+              title: 'KKMP Kerten sedang dipelihara',
               message: maintenance['message']?.toString() ??
                   'Layanan sedang dalam pemeliharaan. Silakan coba beberapa saat lagi.',
               actionLabel: 'Coba lagi',
@@ -77,7 +77,7 @@ class _ShopMartAppState extends State<ShopMartApp> {
               icon: Icons.system_update_rounded,
               title: 'Pembaruan diperlukan',
               message:
-                  'Versi Shop Mart ini sudah tidak didukung. Perbarui aplikasi sebelum melanjutkan.',
+                  'Versi KKMP Kerten ini sudah tidak didukung. Perbarui aplikasi sebelum melanjutkan.',
               actionLabel: 'Periksa lagi',
               onAction: () => setState(_reload),
             );
@@ -93,14 +93,17 @@ class _StartupScreen extends StatelessWidget {
   const _StartupScreen();
 
   @override
-  Widget build(BuildContext context) => const Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.storefront_rounded, size: 54, color: AppTheme.primary),
-              SizedBox(height: 16),
-              SizedBox(width: 26, height: 26, child: CircularProgressIndicator(strokeWidth: 2.5)),
+              Image.asset('assets/branding/kkmp_kerten_logo.png', width: 144, height: 144),
+              const SizedBox(height: 8),
+              const Text('Belanja Lebih Mudah Di KKMP Kerten',
+                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+              const SizedBox(height: 20),
+              const SizedBox(width: 26, height: 26, child: CircularProgressIndicator(strokeWidth: 2.5)),
             ],
           ),
         ),
@@ -141,7 +144,7 @@ class _ReleaseGateScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     FilledButton(onPressed: onAction, child: Text(actionLabel)),
                     const SizedBox(height: 12),
-                    const Text('Shop Mart v1.5.0', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                    const Text('KKMP Kerten v1.5.2', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
                   ],
                 ),
               ),

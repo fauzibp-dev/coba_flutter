@@ -43,11 +43,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _reload() {
-    _future = Future.wait([
+    _future = Future.wait<dynamic>([
       ShopRepository.instance.cartItems(),
       ShopRepository.instance.addresses(),
-      CommerceRepository.instance.storeSettings(),
-    ]);
+      // Bank settings are optional for COD. Do not blank checkout if they fail.
+      CommerceRepository.instance.storeSettings()
+          .timeout(const Duration(seconds: 8))
+          .catchError((Object error) => <String, dynamic>{}),
+    ]).timeout(const Duration(seconds: 20));
   }
 
   Future<void> _openAddresses() async {
@@ -136,21 +139,44 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: FutureBuilder<List<dynamic>>(
         future: _future,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return Center(child: Text('Checkout tidak dapat dimuat: ${friendlyError(snapshot.error!)}'));
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 14),
+              Text('Memuat keranjang dan alamat checkout...'),
+            ]));
+          }
+          if (snapshot.hasError || !snapshot.hasData) {
+            return Center(child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.report_problem_outlined, color: AppTheme.error, size: 38),
+                const SizedBox(height: 12),
+                Text('Checkout gagal dimuat: ${snapshot.hasError ? friendlyError(snapshot.error!) : 'Tidak ada data'}',
+                  textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                FilledButton.icon(
+                  onPressed: () => setState(() { _quote = null; _reload(); }),
+                  icon: const Icon(Icons.refresh), label: const Text('Coba lagi')),
+              ]),
+            ));
+          }
           final items = snapshot.data![0] as List<Map<String, dynamic>>;
           final addresses = snapshot.data![1] as List<Map<String, dynamic>>;
           _settings = snapshot.data![2] as Map<String, dynamic>;
           if (items.isEmpty) return const Center(child: Text('Keranjang kosong.'));
-          if (_addressId == null && addresses.isNotEmpty) {
-            final selected = addresses.firstWhere((a) => a['is_default'] == true, orElse: () => addresses.first);
-            _addressId = selected['id'] as String;
+          if (addresses.isNotEmpty &&
+              !addresses.any((a) => a['id']?.toString() == _addressId)) {
+            final selected = addresses.firstWhere(
+              (a) => a['is_default'] == true, orElse: () => addresses.first);
+            _addressId = selected['id']?.toString();
           }
           return Column(
             children: [
               Expanded(
                 child: ListView(
                   controller: _scroll,
+                  key: const PageStorageKey('kkmp-checkout-items'),
                   primary: false,
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(16),
@@ -302,10 +328,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: Container(
                   color: Colors.white,
                   padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
-                  child: FilledButton(
+                  child: SizedBox(width: double.infinity, child: FilledButton(
                     onPressed: _submitting ? null : _submit,
                     child: Text(_submitting ? 'Membuat pesanan...' : 'Buat Pesanan'),
-                  ),
+                  )),
                 ),
               ),
             ],

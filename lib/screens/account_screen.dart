@@ -210,7 +210,7 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 16),
               OutlinedButton.icon(onPressed: _logout, icon: const Icon(Icons.logout_rounded), label: const Text('Keluar')),
               const SizedBox(height: 28),
-              const Center(child: Text('KKMP Kerten v1.5.2\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
+              const Center(child: Text('KKMP Kerten v1.5.4\nDeveloped by fauzibondanp', textAlign: TextAlign.center, style: TextStyle(fontSize: 11, height: 1.5, color: AppTheme.textSecondary))),
             ],
           );
         },

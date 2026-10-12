@@ -12,7 +12,7 @@ class ShopMartApp extends StatefulWidget {
 }
 
 class _ShopMartAppState extends State<ShopMartApp> {
-  static const _currentVersion = '1.5.2';
+  static const _currentVersion = '1.5.4';
   late Future<Map<String, dynamic>> _settings;
 
   @override
@@ -125,7 +125,7 @@ class _ReleaseGateScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     FilledButton(onPressed: onAction, child: Text(actionLabel)),
                     const SizedBox(height: 12),
-                    const Text('KKMP Kerten v1.5.3', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                    const Text('KKMP Kerten v1.5.4', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
                   ],
                 ),
               ),

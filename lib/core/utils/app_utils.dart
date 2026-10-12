@@ -1,3 +1,4 @@
+import '../../services/client_error_reporter.dart';
 import 'package:intl/intl.dart';
 
 final _rupiah = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
@@ -11,6 +12,7 @@ String slugify(String value) {
 }
 
 String friendlyError(Object error) {
+  ClientErrorReporter.instance.record(error, trace: StackTrace.current);
   final text = error.toString();
   if (text.contains('Invalid login credentials')) return 'Email atau password salah.';
   if (text.contains('Email not confirmed')) return 'Email belum dikonfirmasi.';

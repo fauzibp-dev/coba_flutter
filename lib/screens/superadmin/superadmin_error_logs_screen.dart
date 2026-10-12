@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/app_utils.dart';
 import '../../services/client_error_export.dart';
-import '../../services/client_error_reporter.dart';
 
 /// Only Super Admin can read rows: enforced by PostgreSQL RLS.
 class SuperadminErrorLogsScreen extends StatefulWidget {
@@ -54,11 +53,15 @@ class _SuperadminErrorLogsScreenState extends State<SuperadminErrorLogsScreen> {
   }
 
   Future<void> _testLog() async {
-    ClientErrorReporter.instance.record(
-      StateError('Diagnostic test from KKMP Kerten Error Log Center'),
-      source: 'diagnostic_test', screen: 'Super Admin / Error Logs',
-    );
-    await ClientErrorReporter.instance.flush();
+    await Supabase.instance.client.rpc('capture_client_error', params: {
+      'p_source': 'diagnostic_test',
+      'p_message': 'Error Log Center test: connection OK',
+      'p_stack': 'Manual test initiated by Super Admin',
+      'p_screen': 'Super Admin / Error Logs',
+      'p_severity': 'warning',
+      'p_app_version': '1.5.4',
+      'p_platform': 'flutter',
+    });
     if (mounted) setState(_reload);
   }
 
@@ -68,7 +71,7 @@ class _SuperadminErrorLogsScreenState extends State<SuperadminErrorLogsScreen> {
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       title: const Text('Detail Error'),
       content: SizedBox(
-        width: 520,
+        width: MediaQuery.sizeOf(context).width > 620 ? 520 : MediaQuery.sizeOf(context).width - 80,
         height: MediaQuery.sizeOf(context).height * 0.6,
         child: SingleChildScrollView(child: SelectableText(data,
           style: const TextStyle(fontSize: 12, height: 1.5))),

@@ -91,10 +91,12 @@ class SuperadminCommerceRepository {
     await q;
   }
 
-  Future<List<Map<String, dynamic>>> accountDeletionRequests() async => _maps(await db
-      .from('account_deletion_requests')
-      .select('*, profiles(full_name,phone)')
-      .order('requested_at', ascending: false));
+  Future<List<Map<String, dynamic>>> accountDeletionRequests() async {
+    // No direct foreign key exists between account_deletion_requests and profiles.
+    // Use a platform-admin-checked RPC instead of invalid PostgREST embedding.
+    final value = await db.rpc('superadmin_privacy_queue');
+    return _maps(value);
+  }
 
   Future<void> updateAppSetting(String key, Map<String, dynamic> value, {bool isPublic = true}) async {
     await db.from('app_settings').upsert({

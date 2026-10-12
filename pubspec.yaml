@@ -1,7 +1,7 @@
 name: coba_flutter
 description: "Shop Mart - E-Commerce Koperasi Merah Putih Kerten"
 publish_to: 'none'
-version: 1.5.0+4
+version: 1.5.1+5
 
 environment:
   sdk: ^3.13.4

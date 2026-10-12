@@ -2,7 +2,7 @@
 
 Shop Mart adalah aplikasi e-commerce mobile Flutter untuk Koperasi Merah Putih Kerten, Kecamatan Laweyan. Aplikasi ini dikembangkan oleh **fauzibondanp**.
 
-Versi aplikasi saat ini: **1.5.0+4**.
+Versi aplikasi saat ini: **1.5.1+5**.
 
 ## Stack
 
@@ -181,3 +181,12 @@ Sebelum menandai build sebagai release final publik:
 4. Jalankan physical-device UAT pada Android target.
 5. Siapkan production signing bila aplikasi akan didistribusikan sebagai release/App Bundle.
 6. Payment gateway baru diaktifkan setelah API/provider resmi tersedia.
+
+## Android UAT runtime fixes (12 Oktober 2026)
+
+- Initialize Indonesian date symbols before rendering order/chat/admin timestamps.
+- Fix the server-side Super Admin analytics aggregates.
+- Use an authorization-checked RPC for Privacy Queue profile lookup.
+- Publish RLS-protected chat messages to Realtime; keep stream subscriptions stable and retryable.
+- Production migrations: `20261012043032_shop_mart_uat_runtime_fixes.sql`, `20261012043810_shop_mart_superadmin_email_casts.sql`, and `20261012043901_shop_mart_superadmin_audit_email_cast.sql`.
+- All 13 read-only Super Admin RPC smoke checks passed after the explicit `varchar` to `text` return-contract fixes.

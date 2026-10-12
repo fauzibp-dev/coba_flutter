@@ -20,6 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Map<String, dynamic>? _conversation;
   bool _starting = true;
   bool _sending = false;
+  Stream<List<Map<String, dynamic>>>? _messages;
 
   @override
   void initState() {
@@ -37,7 +38,11 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       final conversation = await ShopRepository.instance.customerConversation();
       if (!mounted) return;
-      setState(() => _conversation = conversation);
+      setState(() {
+        _conversation = conversation;
+        // Re-use one subscription across rebuilds and outgoing messages.
+        _messages = _messagesStream(conversation['id'] as String);
+      });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -147,14 +152,29 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     Expanded(
                       child: StreamBuilder<List<Map<String, dynamic>>>(
-                        stream: _messagesStream(_conversation!['id'] as String),
+                        stream: _messages,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
                             return const Center(child: CircularProgressIndicator());
                           }
                           if (snapshot.hasError) {
                             return Center(
-                              child: Text('Pesan tidak dapat dimuat: ${friendlyError(snapshot.error!)}'),
+                              child: Padding(
+                                padding: const EdgeInsets.all(24),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Pesan tidak dapat dimuat: ${friendlyError(snapshot.error!)}', textAlign: TextAlign.center),
+                                    const SizedBox(height: 12),
+                                    OutlinedButton(
+                                      onPressed: () => setState(() {
+                                        _messages = _messagesStream(_conversation!['id'] as String);
+                                      }),
+                                      child: const Text('Coba lagi'),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             );
                           }
                           final rows = snapshot.data ?? const <Map<String, dynamic>>[];

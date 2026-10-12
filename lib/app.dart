@@ -12,7 +12,7 @@ class ShopMartApp extends StatefulWidget {
 }
 
 class _ShopMartAppState extends State<ShopMartApp> {
-  static const _currentVersion = '1.5.0';
+  static const _currentVersion = '1.5.1';
   late Future<Map<String, dynamic>> _settings;
 
   @override

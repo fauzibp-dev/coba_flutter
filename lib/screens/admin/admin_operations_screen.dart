@@ -314,7 +314,7 @@ class _WarehouseTab extends StatelessWidget {
 
   Future<void> _stocktake(BuildContext context) async {
     try {
-      await AdminOperationsRepository.instance.createStocktake(notes: 'Stocktake dari Shop Mart Admin');
+      await AdminOperationsRepository.instance.createStocktake(notes: 'Stocktake dari KKMP Kerten Admin');
       await onChanged();
     } catch (e) {
       if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));

@@ -206,7 +206,7 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(u['full_name']?.toString().isNotEmpty == true ? u['full_name'].toString() : 'Pengguna Shop Mart', style: const TextStyle(fontWeight: FontWeight.w800)),
+                                      Text(u['full_name']?.toString().isNotEmpty == true ? u['full_name'].toString() : 'Pengguna KKMP Kerten', style: const TextStyle(fontWeight: FontWeight.w800)),
                                       Text(u['email']?.toString() ?? '-', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
                                     ],
                                   ),

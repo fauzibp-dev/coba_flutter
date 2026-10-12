@@ -68,7 +68,7 @@ class _CartScreenState extends State<CartScreen> {
                           SizedBox(height: 12),
                           Text('Keranjang masih kosong', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
                           SizedBox(height: 5),
-                          Text('Tambahkan produk dari katalog Shop Mart.', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textSecondary)),
+                          Text('Tambahkan produk dari katalog KKMP Kerten.', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textSecondary)),
                         ],
                       ),
                     ),

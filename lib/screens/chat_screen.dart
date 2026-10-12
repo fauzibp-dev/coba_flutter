@@ -115,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Text('Pusat Bantuan', style: TextStyle(fontWeight: FontWeight.w800)),
             Text(
-              'Koperasi Merah Putih Kerten',
+              'KKMP Kerten',
               style: TextStyle(fontSize: 11, fontWeight: FontWeight.w400),
             ),
           ],

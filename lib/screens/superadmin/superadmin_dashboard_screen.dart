@@ -32,7 +32,7 @@ class _SuperadminDashboardScreenState extends State<SuperadminDashboardScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: const Color(0xFFF7F7F7),
-        appBar: AppBar(title: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Shop Mart Super Admin', style: TextStyle(fontWeight: FontWeight.w900)), Text('Kontrol platform dan seluruh toko', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary))])),
+        appBar: AppBar(title: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('KKMP Kerten Super Admin', style: TextStyle(fontWeight: FontWeight.w900)), Text('Kontrol platform dan seluruh toko', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary))])),
         body: FutureBuilder<Map<String, dynamic>>(
           future: _future,
           builder: (context, snapshot) {

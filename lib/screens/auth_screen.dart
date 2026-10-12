@@ -58,7 +58,7 @@ class _AuthScreenState extends State<AuthScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Reset Password'),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Text('Masukkan email akun. Shop Mart akan meminta Supabase Auth mengirim link pemulihan password.'),
+          const Text('Masukkan email akun. KKMP Kerten akan meminta Supabase Auth mengirim link pemulihan password.'),
           const SizedBox(height: 12),
           TextField(controller: email, keyboardType: TextInputType.emailAddress, autofocus: true, decoration: const InputDecoration(labelText: 'Email')),
         ]),
@@ -91,9 +91,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Form(
                   key: _formKey,
                   child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                    const Icon(Icons.storefront_rounded, size: 54, color: AppTheme.primary),
+                    Image.asset('assets/branding/kkmp_kerten_logo.png', height: 126, fit: BoxFit.contain),
+                    const SizedBox(height: 8),
+                    const Text('Belanja Lebih Mudah Di KKMP Kerten', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
                     const SizedBox(height: 14),
-                    Text(_register ? 'Buat akun Shop Mart' : 'Masuk ke Shop Mart', textAlign: TextAlign.center, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+                    Text(_register ? 'Buat akun KKMP Kerten' : 'Masuk ke KKMP Kerten', textAlign: TextAlign.center, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
                     const SizedBox(height: 6),
                     Text(_register ? 'Belanja produk koperasi dengan akunmu.' : 'Masuk untuk keranjang, checkout, pesanan, dan layanan pelanggan.', textAlign: TextAlign.center, style: const TextStyle(color: AppTheme.textSecondary, height: 1.4)),
                     const SizedBox(height: 26),

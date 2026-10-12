@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.hasError) {
                   return SliverFillRemaining(
                     child: _StateMessage(
-                      title: 'Gagal memuat Shop Mart',
+                      title: 'Gagal memuat KKMP Kerten',
                       subtitle: 'Periksa koneksi internet lalu coba lagi.',
                       onTap: () => setState(_reload),
                     ),
@@ -139,13 +139,15 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Row(
               children: [
+                Image.asset('assets/branding/kkmp_kerten_logo.png', width: 48, height: 48, fit: BoxFit.contain),
+                const SizedBox(width: 10),
                 const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Shop Mart', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+                      Text('KKMP Kerten', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
                       SizedBox(height: 2),
-                      Text('Belanja koperasi dengan lebih mudah', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                      Text('Belanja Lebih Mudah Di KKMP Kerten', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
                     ],
                   ),
                 ),
@@ -341,7 +343,7 @@ class _PromoBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(data['title']?.toString() ?? 'Shop Mart', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900)),
+                  Text(data['title']?.toString() ?? 'KKMP Kerten', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900)),
                   const SizedBox(height: 6),
                   Text(data['subtitle']?.toString() ?? '', style: const TextStyle(color: Colors.white, fontSize: 12, height: 1.4)),
                 ],

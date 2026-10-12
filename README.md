@@ -1,8 +1,11 @@
-# Shop Mart
+# KKMP Kerten
+KKMP Kerten adalah aplikasi e-commerce mobile Flutter untuk Koperasi Merah Putih Kerten, Kecamatan Laweyan.
 
-Shop Mart adalah aplikasi e-commerce mobile Flutter untuk Koperasi Merah Putih Kerten, Kecamatan Laweyan. Aplikasi ini dikembangkan oleh **fauzibondanp**.
+**Tagline:** Belanja Lebih Mudah Di KKMP Kerten.
 
-Versi aplikasi saat ini: **1.5.1+5**.
+Brand lama aplikasi bernama Shop Mart. Identitas teknis (`coba_flutter`, package ID, database, dan migration history) dipertahankan agar pembaruan tetap kompatibel. Aplikasi ini dikembangkan oleh **fauzibondanp**.
+
+Versi aplikasi saat ini: **1.5.2+6**.
 
 ## Stack
 
@@ -190,3 +193,10 @@ Sebelum menandai build sebagai release final publik:
 - Publish RLS-protected chat messages to Realtime; keep stream subscriptions stable and retryable.
 - Production migrations: `20261012043032_shop_mart_uat_runtime_fixes.sql`, `20261012043810_shop_mart_superadmin_email_casts.sql`, and `20261012043901_shop_mart_superadmin_audit_email_cast.sql`.
 - All 13 read-only Super Admin RPC smoke checks passed after the explicit `varchar` to `text` return-contract fixes.
+
+## KKMP Kerten brand refresh
+
+- Application label Android/iOS/web: `KKMP Kerten`.
+- Tagline resmi aplikasi: `Belanja Lebih Mudah Di KKMP Kerten`.
+- Ikon launcher Android, web icon dan logo UI memakai logo koperasi yang dikirim pada 12 Oktober 2026.
+- Jangan mengubah `applicationId`, `namespace`, nama package Dart, atau project Supabase hanya demi tampilan brand.

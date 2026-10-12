@@ -60,7 +60,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Shop Mart Admin', style: TextStyle(fontWeight: FontWeight.w800)),
+            Text('KKMP Kerten Admin', style: TextStyle(fontWeight: FontWeight.w800)),
             Text('Operasional toko & koperasi', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: AppTheme.textSecondary)),
           ],
         ),
@@ -165,7 +165,7 @@ class _OrdersTab extends StatelessWidget {
 
   Future<void> _changeStatus(BuildContext context, Map<String, dynamic> order, String status) async {
     try {
-      await ShopRepository.instance.updateOrderStatus(order['id'] as String, status, note: 'Diubah dari Shop Mart Admin');
+      await ShopRepository.instance.updateOrderStatus(order['id'] as String, status, note: 'Diubah dari KKMP Kerten Admin');
       onReload();
     } catch (e) {
       if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(friendlyError(e))));

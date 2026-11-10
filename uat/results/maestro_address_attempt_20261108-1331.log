@@ -1,0 +1,22 @@
+Maestro MCP address test evidence
+Date: 2026-11-08 13:31 Asia/Jakarta
+Device: nnzxea79ayypnzzx
+App: com.fauzibondanp.shopmart
+
+UAT-036 FAIL
+  Steps: Open Account > Alamat tersimpan > Tambah alamat; fill label UAT_TEST,
+  receiver UAT Test Customer, test phone, TD-009 address; tap Simpan Alamat.
+  Expected: UAT_TEST is listed and can be selected at checkout.
+  Actual: Form hierarchy showed all entered values before save. After save, the
+  address list returned with only the pre-existing Rumah address. UAT_TEST was
+  absent on the immediate list and could not be verified after reopening.
+  Evidence: uat-address-form-filled.png, uat-address-save-attempt.png,
+  uat-address-create-failed.png
+  Technical classification: application/data persistence failure or backend
+  rejection is reproducible; no visible validation message was exposed. This is
+  not marked BLOCKED because the required UI action was executed and the expected
+  persisted result was not observed.
+
+No product UAT_TEST_PRODUK_20261108 was created. No CRUD product or final COD
+order was attempted after the address persistence failure. No existing address,
+product, account, order, stock, role, or database record was deleted.

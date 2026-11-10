@@ -1,0 +1,23 @@
+appId: com.fauzibondanp.shopmart
+---
+# Requires an approved super-admin session; opening it is not attempted without that prerequisite.
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 15000
+- tapOn:
+    text: "Akun.*"
+- assertVisible: "KKMP Kerten Super Admin.*"
+- tapOn:
+    text: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Error Log Center"
+    timeout: 10000
+- assertVisible: "Error Log Center"
+- takeScreenshot: error-log-center

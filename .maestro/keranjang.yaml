@@ -1,0 +1,21 @@
+appId: com.fauzibondanp.shopmart
+---
+# Return to a known app entry point without clearing the existing session.
+- pressKey: Back
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 15000
+- tapOn:
+    text: "Keranjang.*"
+- extendedWaitUntil:
+    visible: "Keranjang masih kosong"
+    timeout: 10000
+- assertVisible: "Keranjang masih kosong"
+- takeScreenshot: cart-empty-readonly

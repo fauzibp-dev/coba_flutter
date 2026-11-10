@@ -1,0 +1,19 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 15000
+- tapOn:
+    text: "Cari.*"
+- assertVisible: "Pencarian"
+- assertVisible: "Cari nama atau deskripsi produk..."
+- inputText: "beras"
+- pressKey: Enter
+- takeScreenshot: search-results-beras

@@ -1,0 +1,41 @@
+appId: com.fauzibondanp.shopmart
+---
+# Uses the existing approved test session. Does not submit a final order.
+- pressKey: Back
+- pressKey: Back
+- pressKey: Back
+- pressKey: Back
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn:
+    text: "Cari.*"
+- assertVisible: "Pencarian"
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "Beras Premium Kerten"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 15000
+- assertVisible: "beras.*Stok.*"
+- tapOn:
+    text: "beras.*Stok.*"
+- extendedWaitUntil:
+    visible: "Detail Produk.*"
+    timeout: 10000
+- assertVisible: "Detail Produk.*"
+- tapOn: "Beli Sekarang"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 10000
+- assertVisible: "beras.*"
+- takeScreenshot: uat-transaction-cart
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Produk.*Stok tervalidasi server"
+    timeout: 15000
+- assertVisible: "COD / Bayar saat diterima"
+- assertVisible: "Buat Pesanan"
+- takeScreenshot: uat-transaction-checkout

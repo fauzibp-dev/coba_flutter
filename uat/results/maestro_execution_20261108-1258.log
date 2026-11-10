@@ -1,0 +1,58 @@
+Maestro MCP execution log
+Date: 2026-11-08 Asia/Jakarta
+Device: nnzxea79ayypnzzx
+App: com.fauzibondanp.shopmart
+
+PASS  startup.yaml
+  Assertion: Belanja Lebih Mudah Di KKMP Kerten visible
+  Evidence: startup-home.png
+
+PASS  pencarian.yaml
+  Assertion: Pencarian and search field visible; query beras entered
+  Evidence: search-results-beras.png
+
+PASS  keranjang.yaml
+  Assertion: Keranjang masih kosong visible on clean read-only run
+  Evidence: cart-current-session.png
+
+PASS  customer.yaml
+  Assertion: KKMP Kerten Super Admin visible
+  Evidence: customer-guest-account.png
+
+PASS  uat-validation.yaml
+  Assertion: Produk tidak ditemukan and Coba kata kunci... visible
+  Evidence: uat-validation-empty-search.png
+
+PASS  uat-transaction.yaml
+  Assertion: product appears in cart; checkout shows product, server stock validation,
+  COD / Bayar saat diterima, and Buat Pesanan
+  Evidence: uat-transaction-cart.png, uat-transaction-checkout.png
+
+BLOCKED  final COD submission
+  Reason: existing address was not verified as fictitious TD-009 test data
+  Evidence: uat-transaction-checkout.png
+
+BLOCKED  invalid voucher rejection
+  Reason: INVALID-UAT was submitted, but a stable rejection message was not exposed
+  by the current accessibility tree
+  Evidence: uat-invalid-voucher.png
+
+Cleanup note:
+  The test cart quantity was reduced to 1. Final item removal was attempted through
+  the visible cart control but was not confirmed by the accessibility tree. No
+  non-test product, account, order, stock, role, or database record was deleted.
+
+Independent Admin CRUD follow-up:
+  UAT_TEST_PRODUK_20261108 was created through Super Admin UI with price Rp10.000,
+  active status, SKU UAT_TEST_20261108, description marker, and stock 10.
+  READ was verified in Katalog Global. UPDATE changed price to Rp11.000 and the
+  updated card was visible. The product was then archived through UI as cleanup.
+  No delete control exists in the current Super Admin product screen/repository,
+  so direct database deletion was not performed.
+  During create/update save, Flutter displayed framework assertion
+  "_dependents.isEmpty" (framework.dart line 6281), while the product mutations
+  still completed and were verified in the catalog/read-only query.
+
+Address diagnosis:
+  UAT-036 remains FAIL. Source trace and authenticated-query limitation are
+  recorded in uat036_diagnosis_and_admin_crud_20261108-1355.log.

@@ -1,0 +1,15 @@
+appId: com.fauzibondanp.shopmart
+---
+# Checkout is intentionally blocked until an approved test account and test data exist.
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 15000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- takeScreenshot: checkout-blocked-no-mutation

@@ -1,0 +1,70 @@
+UAT-036 diagnosis and independent Admin CRUD evidence
+Date: 2026-11-08 13:55 Asia/Jakarta
+Device: nnzxea79ayypnzzx
+App: com.fauzibondanp.shopmart
+
+UAT-036 source trace
+- AddressBookScreen._open() awaits showModalBottomSheet<bool>() and calls
+  setState(_reload) only when the editor returns true.
+- _AddressEditor._save() validates required fields, awaits
+  ShopRepository.addAddress(), then Navigator.pop(context, true).
+- ShopRepository.addAddress() performs an authenticated insert into public.addresses
+  with user_id = auth user id, then select('id').single().
+- AddressBookScreen.addresses() reloads the same user's rows ordered by default and
+  created_at. There is no client-side filtering that would hide label UAT_TEST.
+- The save catch displays friendlyError(e), but friendlyError intentionally reduces
+  most Supabase/PostgREST errors to the generic text "Terjadi kendala. Silakan coba
+  lagi." and does not preserve the original error in the UI.
+
+Observed UAT-036 result
+- Form hierarchy showed UAT_TEST, UAT Test Customer, test phone, and TD-009 address.
+- After save, the list returned with only the pre-existing Rumah address.
+- Reopening the list did not show UAT_TEST.
+- Evidence: uat-address-form-filled.png, uat-address-save-attempt.png,
+  uat-address-create-failed.png.
+
+Read-only Supabase checks
+- Anonymous publishable-key REST query for label UAT_TEST/address_line UAT returned
+  [] with HTTP 200. This is not conclusive for the logged-in user because the request
+  had no authenticated user JWT and addresses_owner RLS filters by auth.uid().
+- Therefore the evidence does not justify claiming an RLS/database defect.
+- The exact authenticated insert response is not available in the UI because the
+  client catches and sanitizes the exception. A raw authenticated query/log would
+  require the session JWT, which was not extracted or stored.
+
+Diagnosis boundary
+- Selector failure: not proven; the filled values and post-save navigation were
+  observed.
+- Client refresh bug: not proven; _open() returns true and setState(_reload) is
+  wired, and addresses() has no UAT_TEST filter.
+- Validation failure: not proven; required fields were filled and no validation
+  error was shown.
+- Insert/RLS/backend failure or wrong authenticated user: unresolved from available
+  evidence. The expected persisted/read-back result is nevertheless reproducibly
+  absent, so UAT-036 remains FAIL.
+
+Separate Flutter defect observed during Admin product dialog
+- After product create and update saves, the device displayed:
+  "Tampilan mengalami kendala. Silakan kembali dan buka lagi."
+  Flutter assertion: framework.dart line 6281 pos 12, "_dependents.isEmpty".
+- This is a Flutter lifecycle/framework crash in the product dialog path, not evidence
+  that the Supabase product mutation failed. The database/UI checks below prove the
+  mutations completed.
+
+Independent Admin CRUD evidence
+- CREATE: product UAT_TEST_PRODUK_20261108 created via Super Admin UI with price
+  Rp10.000, active status, SKU UAT_TEST_20261108, description marker, stock 10.
+- READ: Super Admin catalog showed the exact product and stock 10.
+- UPDATE: price changed via UI to Rp11.000; catalog showed Rp11.000 and stock 10.
+- CLEANUP/DELETE: no delete control exists in SuperadminProductsScreen or its
+  repository. The exact product was archived via UI instead; catalog showed
+  archived • UAT_TEST_20261108. Direct database deletion was not performed.
+- Read-only public REST confirmed the active product at Rp10.000/stock 10 after
+  create and Rp11.000 after update. Archived products were no longer returned by
+  the public product query.
+- Evidence: uat-admin-product-create-form.png, uat-admin-product-read.png,
+  uat-admin-product-edit-form.png, uat-admin-product-update-result.png,
+  uat-admin-product-archive-attempt.png.
+
+No existing non-UAT product, address, account, order, stock, role, or database
+record was deleted.

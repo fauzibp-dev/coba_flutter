@@ -5,7 +5,7 @@ KKMP Kerten adalah aplikasi e-commerce mobile Flutter untuk Koperasi Merah Putih
 
 Brand lama aplikasi bernama Shop Mart. Identitas teknis (`coba_flutter`, package ID, database, dan migration history) dipertahankan agar pembaruan tetap kompatibel. Aplikasi ini dikembangkan oleh **fauzibondanp**.
 
-Versi aplikasi saat ini: **1.5.2+6**.
+Versi aplikasi yang diuji: **1.5.4+8**.
 
 ## Stack
 
@@ -135,6 +135,60 @@ Pastikan HP terlihat lebih dulu:
 flutter devices
 adb devices
 ```
+
+## Tujuan dan target pengguna
+
+KKMP Kerten menyediakan katalog dan pembelian kebutuhan koperasi secara mobile. Target
+penggunanya adalah pelanggan koperasi, admin toko, dan Super Admin platform. Alur
+pelanggan utama adalah membuka katalog, mencari produk, melihat detail, mengelola
+keranjang, mengisi checkout, memantau pesanan, dan memakai bantuan/chat. Admin mengelola
+produk, stok, pesanan, fulfillment, dan dukungan; Super Admin mengelola konfigurasi
+platform dan audit/error log.
+
+## Batasan pengujian
+
+UAT fisik saat ini menggunakan Xiaomi Android `nnzxea79ayypnzzx`
+(`nnzxea79ayypnzzx`) dan tidak menggunakan emulator/cloud. Pengujian non-destruktif
+tidak membuat pesanan, tidak mengubah stok/role, tidak logout atau clear state, dan
+tidak mengirim chat. Skenario yang membutuhkan akun/data khusus, perubahan jaringan,
+RLS, transaksi nyata, atau membuka ulang file ekspor diberi status `BLOCKED` atau
+`NOT RUN` sampai ada persetujuan dan prasyarat yang aman.
+
+## Maestro dan bukti UAT
+
+Flow reusable berada di [`.maestro/`](.maestro/). Contoh menjalankan satu flow pada
+perangkat fisik:
+
+```bash
+maestro test --device nnzxea79ayypnzzx .maestro/startup.yaml
+maestro test --device nnzxea79ayypnzzx .maestro/pencarian.yaml
+```
+
+Setiap flow UTS yang aktif harus memiliki assertion dan `takeScreenshot`. Matriks dan
+bukti eksekusi terbaru berada di
+[`uat/results/`](uat/results/), terutama
+[`uat_matrix_current_20261108-1355.csv`](uat/results/uat_matrix_current_20261108-1355.csv)
+dan
+[`uat_matrix_current_20261108-1355.json`](uat/results/uat_matrix_current_20261108-1355.json),
+dengan ringkasan final
+[`uat_execution_summary_20261110.md`](uat/results/uat_execution_summary_20261110.md)
+dan workbook
+[`KKMP_Kerten_UAT_136_Kasus_synced_20261110.xlsx`](uat/KKMP_Kerten_UAT_136_Kasus_synced_20261110.xlsx).
+
+Eksekusi terbaru mencatat 14 PASS, 1 FAIL, 3 BLOCKED, dan 118 NOT RUN.
+`UAT-036` gagal diverifikasi karena alamat `UAT_TEST` hilang dari daftar setelah
+penyimpanan; bukti diagnosis ada di
+`uat/results/uat036_diagnosis_and_admin_crud_20261108-1355.log`. CRUD produk
+UAT_TEST berhasil dibuat, dibaca, diubah, lalu diarsipkan melalui UI; penghapusan
+tidak tersedia pada layar Super Admin.
+
+Flow UTS tambahan:
+
+- [`.maestro/uat-transaction.yaml`](.maestro/uat-transaction.yaml): mencari produk,
+  menambah ke cart, membuka checkout COD, dan mengassert section checkout tanpa
+  mengirim order final.
+- [`.maestro/uat-validation.yaml`](.maestro/uat-validation.yaml): validasi query
+  tanpa hasil dengan assertion `Produk tidak ditemukan`.
 
 ## Supabase migrations
 

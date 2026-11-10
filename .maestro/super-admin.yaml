@@ -1,0 +1,15 @@
+appId: com.fauzibondanp.shopmart
+---
+# Requires an approved super-admin session; no role-changing or login actions are performed.
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 15000
+- tapOn: "Akun"
+- assertVisible: "Akun"

@@ -1,0 +1,20 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Back
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn:
+    text: "Cari.*"
+- assertVisible: "Pencarian"
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "zzzuatnotfound"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "Produk tidak ditemukan"
+    timeout: 15000
+- assertVisible: "Produk tidak ditemukan"
+- assertVisible: "Coba kata kunci.*"
+- takeScreenshot: uat-validation-empty-search

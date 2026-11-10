@@ -81,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
                       child: ListView.separated(
                         padding: const EdgeInsets.all(16),
                         itemCount: items.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        separatorBuilder: (_, _) => const SizedBox(height: 10),
                         itemBuilder: (_, i) {
                           final item = items[i];
                           final product = Map<String, dynamic>.from(item['products'] as Map);
@@ -102,7 +102,7 @@ class _CartScreenState extends State<CartScreen> {
                                     height: 76,
                                     child: imageUrl == null
                                         ? Container(color: const Color(0xFFF1F1F1), child: const Icon(Icons.inventory_2_outlined, color: AppTheme.textSecondary))
-                                        : Image.network(imageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFFF1F1F1), child: Icon(Icons.broken_image_outlined))),
+                                        : Image.network(imageUrl, fit: BoxFit.cover, errorBuilder: (_, _, _) => const ColoredBox(color: Color(0xFFF1F1F1), child: Icon(Icons.broken_image_outlined))),
                                   ),
                                 ),
                                 const SizedBox(width: 12),

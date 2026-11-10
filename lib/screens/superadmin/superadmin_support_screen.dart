@@ -74,7 +74,7 @@ class _SuperadminSupportScreenState extends State<SuperadminSupportScreen> {
                         child: ListView.separated(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                           itemCount: conversations.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 8),
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (_, i) {
                             final c = conversations[i];
                             final unread = (c['unread_count'] as num?)?.toInt() ?? 0;

@@ -436,7 +436,7 @@ class _IntegrationsTab extends StatelessWidget {
                   child: ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                     itemCount: integrations.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (_, i) {
                       final row = integrations[i];
                       final active = row['is_active'] == true;
@@ -489,7 +489,7 @@ class _SyncLogsTab extends StatelessWidget {
       child: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: logs.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (_, i) {
           final row = logs[i];
           final time = DateTime.tryParse(row['created_at']?.toString() ?? '');

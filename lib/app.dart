@@ -31,8 +31,12 @@ class _ShopMartAppState extends State<ShopMartApp> {
         .toList();
     final a = parts(current);
     final b = parts(minimum);
-    while (a.length < 3) a.add(0);
-    while (b.length < 3) b.add(0);
+    while (a.length < 3) {
+      a.add(0);
+    }
+    while (b.length < 3) {
+      b.add(0);
+    }
     for (var i = 0; i < 3; i++) {
       if (a[i] < b[i]) return true;
       if (a[i] > b[i]) return false;

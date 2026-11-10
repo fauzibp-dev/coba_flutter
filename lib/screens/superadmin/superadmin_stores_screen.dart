@@ -126,7 +126,7 @@ class _SuperadminStoresScreenState extends State<SuperadminStoresScreen> {
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: stores.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (_, i) {
                 final s = stores[i];
                 final active = s['is_active'] == true;

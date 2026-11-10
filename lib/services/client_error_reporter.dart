@@ -24,7 +24,9 @@ class ClientErrorReporter {
     final message = safe(problem.toString(), 1200);
     final now = DateTime.now();
     if (previous == message && previousAt != null &&
-        now.difference(previousAt!).inSeconds < 15) return;
+        now.difference(previousAt!).inSeconds < 15) {
+      return;
+    }
     previous = message;
     previousAt = now;
     if (pending.length >= 30) pending.removeAt(0);

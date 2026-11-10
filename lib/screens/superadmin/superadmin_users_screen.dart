@@ -191,7 +191,7 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
                   child: ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                     itemCount: users.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (_, i) {
                       final u = users[i];
                       final memberships = (u['memberships'] as List? ?? []).map((e) => Map<String, dynamic>.from(e as Map)).toList();

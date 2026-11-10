@@ -41,15 +41,19 @@ class _SuperadminErrorLogsScreenState extends State<SuperadminErrorLogsScreen> {
     try {
       await ClientErrorExport.share(rows, extension);
     } catch (error) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ekspor gagal: ${friendlyError(error)}')));
+      }
     }
   }
 
   Future<void> _copy(String content) async {
     await Clipboard.setData(ClipboardData(text: content));
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Log berhasil disalin.')));
+    }
   }
 
   Future<void> _testLog() async {

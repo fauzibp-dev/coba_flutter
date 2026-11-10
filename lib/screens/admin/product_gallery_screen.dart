@@ -269,7 +269,7 @@ class _ProductGalleryScreenState extends State<ProductGalleryScreen> {
                                   width: 82,
                                   height: 82,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
+                                  errorBuilder: (_, _, _) => Container(
                                     width: 82,
                                     height: 82,
                                     color: const Color(0xFFF1F1F1),

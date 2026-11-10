@@ -147,7 +147,7 @@ class _SuperadminOrdersScreenState extends State<SuperadminOrdersScreen> {
                         child: ListView.separated(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                           itemCount: orders.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 8),
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (_, i) {
                             final o = orders[i];
                             final current = o['status']?.toString() ?? '';

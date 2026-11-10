@@ -183,7 +183,7 @@ class _SuperadminCategoriesScreenState extends State<SuperadminCategoriesScreen>
                         child: ListView.separated(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
                           itemCount: categories.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 8),
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (_, i) {
                             final c = categories[i];
                             return Container(

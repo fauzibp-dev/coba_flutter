@@ -40,7 +40,7 @@ class _SuperadminAuditScreenState extends State<SuperadminAuditScreen> {
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: rows.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (_, i) {
                 final a = rows[i];
                 final created = DateTime.tryParse(a['created_at']?.toString() ?? '');

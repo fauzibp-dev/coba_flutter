@@ -293,7 +293,7 @@ class _MessageBubble extends StatelessWidget {
                       width: 220,
                       height: 180,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const SizedBox(
+                      errorBuilder: (_, _, _) => const SizedBox(
                         width: 190,
                         height: 100,
                         child: Center(child: Icon(Icons.broken_image_outlined)),

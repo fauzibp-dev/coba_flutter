@@ -293,7 +293,7 @@ class _SuperadminPromotionsScreenState extends State<SuperadminPromotionsScreen>
       ),
       floatingActionButton: AnimatedBuilder(
         animation: _tabs,
-        builder: (_, __) => FutureBuilder<List<dynamic>>(
+        builder: (_, _) => FutureBuilder<List<dynamic>>(
           future: _future,
           builder: (context, snapshot) {
             final stores = snapshot.data == null ? <Map<String, dynamic>>[] : snapshot.data![2] as List<Map<String, dynamic>>;
@@ -322,7 +322,7 @@ class _VoucherList extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: vouchers.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      separatorBuilder: (_, _) => const SizedBox(height: 8),
       itemBuilder: (_, i) {
         final v = vouchers[i];
         final suffix = v['discount_type'] == 'percentage' ? '%' : '';
@@ -352,7 +352,7 @@ class _BannerList extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: banners.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      separatorBuilder: (_, _) => const SizedBox(height: 8),
       itemBuilder: (_, i) {
         final b = banners[i];
         return Container(

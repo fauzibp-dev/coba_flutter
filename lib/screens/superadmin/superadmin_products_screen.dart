@@ -162,7 +162,7 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
                         decoration: BoxDecoration(color: const Color(0xFFF2F2F2), borderRadius: BorderRadius.circular(9)),
                         child: currentImageUrl == null
                             ? const Icon(Icons.image_outlined, color: AppTheme.textSecondary)
-                            : Image.network(currentImageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.broken_image_outlined)),
+                            : Image.network(currentImageUrl, fit: BoxFit.cover, errorBuilder: (_, _, _) => const Icon(Icons.broken_image_outlined)),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -300,7 +300,7 @@ class _SuperadminProductsScreenState extends State<SuperadminProductsScreen> {
                         child: ListView.separated(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
                           itemCount: products.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 8),
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (_, i) {
                             final p = products[i];
                             return Container(

@@ -41,7 +41,12 @@ class _CartScreenState extends State<CartScreen> {
   Future<void> _saveQuantity(String itemId, int quantity) =>
       (widget.saveQuantity ?? ShopRepository.instance.setCartQuantity)(itemId, quantity);
 
-  void _reload() => _future = _fetchCart();
+  // setState callbacks must return void, not the Future assigned to _future.
+  // The old arrow-bodied _reload caused Flutter's
+  // "setState() callback argument returned a Future" assertion.
+  void _reload() {
+    _future = _fetchCart();
+  }
 
   Future<void> _change(Map<String, dynamic> item, int delta) async {
     final current = ((item['quantity'] ?? 1) as num).toInt();

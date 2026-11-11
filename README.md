@@ -4,6 +4,8 @@
 
 **Perbaikan instalasi berulang driver Maestro (11 November 2026):** jalankan `bash scripts/run_uts_maestro.sh smoke`. Sekarang smoke dijalankan dalam satu proses Maestro (bukan `maestro test` berulang tiap flow). Baca [panduan](.maestro/uts/README.md).
 
+**Rekaman UTS satu kali:** `bash scripts/record_uts_all.sh` (scrcpy tersedia) merekam seluruh 10 flow di HP menjadi satu MP4, sedangkan `bash scripts/run_uts_maestro.sh all` menjalankan 10 flow tanpa recorder. Urutan dijaga di `.maestro/uts/config.yaml`. Bukti baru harus dieksekusi di HP sebelum dicatat PASS.
+
 ## UTS Mobile Testing 2026/2027 — status pengumpulan
 
 Dokumen soal meminta minimal **5 skenario UAT**, **4 flow YAML Maestro** (startup, navigasi, transaksi/CRUD dan validasi), assertion serta log/screenshot/rekaman, laporan UAT, README dan video 5–10 menit. Paket terfokus berada di:

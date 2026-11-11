@@ -49,3 +49,14 @@ Catatan: Status historis berasal dari `uat/UTS_UAT_REPORT.md` dan `uat/results/u
 - UAT-036 disampaikan sebagai bug yang ditemukan, bukan disembunyikan.
 
 Dokumen ini menilai kesesuaian komponen **yang disiapkan**, bukan menjamin aplikasi lulus tes otomatis. Jika run baru FAIL, selesaikan diagnosis sebelum mengklaim hasil.
+
+## Tambahan pengujian untuk rekaman penuh (11 November 2026)
+
+| ID tambahan | Area | Input/aksi dan assert | Bukti | Status |
+|---|---|---|---|---|
+| UTS-07 | Pengurutan produk | Pilih Harga terendah dan assert opsi aktif | `uts-07-sort-price` | NOT RUN |
+| UTS-08 | Filter harga | Ketik harga minimum 10000 lalu assert 1 filter aktif | `uts-08-price-filter` | NOT RUN |
+| UTS-09 | Super Admin SKU | Ketik SKU dummy dan assert Produk tidak ditemukan | `uts-09-superadmin-sku-invalid` | NOT RUN |
+| UTS-10 | Super Admin produk | Isi nama dan harga pada form produk lalu Batal (tanpa INSERT) | `uts-10-product-draft`, `uts-10-product-cancelled` | NOT RUN |
+
+Semua 10 flow dieksekusi dari satu proses Maestro lokal menggunakan `config.yaml` untuk urutan; `continueOnFailure: true` memberi rangkaian yang tetap berlanjut bila satu test gagal. Flow baru 07–10 **belum diuji pada perangkat**. Bukti yang lengkap harus diambil setelah eksekusi, bukan sekadar berdasar YAML.

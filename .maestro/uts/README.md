@@ -1,3 +1,24 @@
+## Satu kali tes + rekam dari awal sampai akhir (10 flow)
+
+Paket rekaman UTS sekarang berisi **10 flow** (6 flow sebelumnya + 4 skenario tambahan). Setelah tiga smoke test pada 11 November **3/3 PASS**, flow tambahan yang baru dibuat **belum diuji secara runtime**, dan tiga flow auth lama juga belum dikonfirmasi ulang.
+
+**Urutan eksekusi dipaksa melalui `.maestro/uts/config.yaml`:** start, cari produk, urut harga, filter harga, validasi pencarian, tambah/baca cart, checkout draft, validasi alamat, cari SKU Super Admin, isi form produk draft lalu batal. `continueOnFailure: true` sengaja membiarkan tes berikutnya berjalan ketika tes sebelumnya FAIL agar rekaman mencakup keseluruhan. Tiap kegagalan tetap tercatat FAIL, bukan diabaikan.
+
+Semua berjalan dalam **satu proses Maestro**:
+```bash
+bash scripts/run_uts_maestro.sh all
+```
+
+**Sekalian rekam satu video HP** dengan scrcpy (tidak perlu merekam dan menjalankan tes dari dua terminal):
+```bash
+bash scripts/record_uts_all.sh
+```
+
+Skrip ini hanya bekerja jika scrcpy sudah terpasang. Output video MP4 ada di `build/uts-record-<timestamp>/`. Jika scrcpy belum ada, rekam dengan aplikasi perekam layar Xiaomi lalu jalankan `bash scripts/run_uts_maestro.sh all`. Untuk video yang memuat terminal PASS/FAIL juga, gunakan OBS/screen recording Mac.
+
+**Prasyarat:** Login akun customer yang juga memiliki akses Super Admin, `Beras Premium Kerten` aktif/berstok, ADB terhubung, driver Maestro disetujui jika Xiaomi meminta izin. Flow cart menambah item (bisa menaikkan kuantitas pada pengulangan); tidak ada flow yang menekan **Buat Pesanan**, menyimpan produk, menghapus produk, mengganti password, atau mengirim pesan. Tanpa prasyarat, sebagian flow mungkin FAIL dan perlu dicatat.
+
+---
 ## Catatan eksekusi smoke nyata — 11 November 2026
 
 Pengguna membagikan terminal log `smoke` dari Mac Xiaomi, sebelum runner versi satu-proses digunakan. Tiga flow PASS secara nyata:

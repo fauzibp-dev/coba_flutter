@@ -1,0 +1,27 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-09 Customer melihat riwayat pesanan"
+tags:
+  - uts-customer
+  - uts-read
+  - uts-orders
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Pesanan.*"
+- extendedWaitUntil:
+    visible: "Pesanan Saya"
+    timeout: 25000
+- assertVisible: "Pesanan Saya"
+# Tidak membatalkan pesanan dan tidak membuat order baru.
+- takeScreenshot: studio-uts-09-pesanan
+

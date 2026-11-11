@@ -1,0 +1,37 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-10 Customer melihat notifikasi"
+tags:
+  - uts-customer
+  - uts-read
+  - uts-notifications
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+# Flow customer berikut memerlukan sesi login aktif.
+- assertNotVisible: "Masuk / Daftar"
+- scrollUntilVisible:
+    element: "Notifikasi.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Notifikasi.*"
+- extendedWaitUntil:
+    visible: "Baca semua"
+    timeout: 20000
+- assertVisible: "Baca semua"
+# Tidak menandai notifikasi telah dibaca.
+- takeScreenshot: studio-uts-10-notifikasi
+

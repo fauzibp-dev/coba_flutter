@@ -1,0 +1,42 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-13 Customer membuka pusat bantuan"
+tags:
+  - uts-customer
+  - uts-read
+  - uts-help
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+# Flow customer berikut memerlukan sesi login aktif.
+- assertNotVisible: "Masuk / Daftar"
+- scrollUntilVisible:
+    element: "Pusat Bantuan.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Pusat Bantuan.*"
+- extendedWaitUntil:
+    visible: "Pusat Bantuan"
+    timeout: 20000
+- assertVisible: "Pusat Bantuan"
+# Ini memeriksa percakapan benar-benar tersedia, bukan judul halaman saja.
+- extendedWaitUntil:
+    visible: "Tulis pesan..."
+    timeout: 25000
+- assertVisible: "Tulis pesan..."
+# Tidak mengirim pesan ke CS.
+- takeScreenshot: studio-uts-13-chat
+

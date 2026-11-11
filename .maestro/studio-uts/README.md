@@ -1,3 +1,46 @@
+# UTS Maestro Studio — 12 flow customer KKMP Kerten
+
+**Dibuat pada 11 November 2026. Semua pengujian customer saja. Tidak ada YAML Super Admin di workspace ini.**
+
+## Apa yang sudah terbukti
+
+Lima flow lama di bawah ini **sudah PASS 5/5 di Maestro Studio**, sesuai screenshot yang dibagikan pengguna (durasi 3:17). File YAML-nya **tidak diubah**:
+
+- `01_startup.yaml`: membuka aplikasi / katalog
+- `02_navigasi_pencarian.yaml`: navigasi dan input keyword
+- `03_cart_create_read.yaml`: tambah keranjang dan baca ulang setelah restart app (mengubah keranjang)
+- `05_validasi_pencarian.yaml`: keyword tidak tersedia menampilkan empty-state
+- `07_urutkan_harga.yaml`: pilihan harga terendah
+
+## 7 flow customer baru — belum dieksekusi
+
+| YAML | Tujuan | Risiko/Prasyarat |
+|---|---|---|
+| `06_detail_produk.yaml` | Cari beras → buka detail → cek deskripsi dan tombol beli | Produk beras tersedia |
+| `08_wishlist_customer.yaml` | Masuk akun → buka Wishlist | Harus login |
+| `09_riwayat_pesanan.yaml` | Buka tab Pesanan Saya | Harus login |
+| `10_notifikasi_customer.yaml` | Masuk akun → halaman Notifikasi dan Baca semua terlihat | Harus login; tidak mengubah read status |
+| `11_validasi_alamat.yaml` | Menu alamat → formulir baru → simpan kosong → peringatan wajib diisi | Harus login; tidak mengirim alamat |
+| `12_keamanan_akun.yaml` | Menu keamanan → dialog ganti password → batal | Harus login; tidak mengganti password |
+| `13_pusat_bantuan.yaml` | Masuk Pusat Bantuan → pastikan input Tulis pesan tampil | Harus login; tergantung layanan chat; tidak mengirim pesan |
+
+**Penting:** Jika login hilang saat mencoba flow customer, lakukan login manual di HP *sebelum* menjalankan semua flow. File tidak menyimpan email/password/token. Beberapa halaman bergantung pada data Supabase, jadi hasil FAIL harus tetap dicatat dan dianalisis di Studio, jangan diubah jadi PASS hanya dengan membuang assertion.
+
+## Eksekusi di Maestro Studio (tanpa skrip/Cloud)
+
+1. Buka workspace `/Users/fauzibondanp/Desktop/coba_flutter/.maestro/studio-uts` di Studio.
+2. Pastikan Xiaomi Android fisik dipilih dan **Local** aktif.
+3. Jalankan `Run All Tests`; Maestro menyimpan status langkah, screenshot, dan log. `continueOnFailure: true` memberi hasil per-flow tanpa menutupi flow yang gagal.
+4. Rekam manual di HP apabila akan dipakai untuk video UTS.
+
+Nama lengkap tiap flow pada `config.yaml` mengatur urutan, sehingga flow dibuka dahulu, baru katalog/customer transaksi/akun.
+
+**Jangan jalankan** `.maestro/uts` sebagai workspace Studio jika hanya ingin tes customer, karena folder lama berisi flow Super Admin.
+
+---
+
+## Catatan versi sebelumnya
+
 # KKMP Kerten — Workspace Maestro Studio (Xiaomi fisik)
 
 Workspace ini disiapkan langsung lewat GitHub. **Tidak perlu membuat file satu per satu di GUI.**
@@ -29,4 +72,5 @@ Semua flow berisi assertion dan screenshot. UTS mencakup startup, navigasi, tran
 - Flow keranjang **menambah item** pada akun aktif, tidak membuat pesanan sungguhan.
 - Jika UTS meminta laporan lebih luas, status dan bukti semua 10 flow lama masih ada di `uat/results/maestro_all_cli_20261111_132322.md` dan log Mac pengguna.
 - Jika suatu saat membuat flow tambahan, gunakan Studio Inspect Screen dan masukkan file ke folder ini setelah benar-benar diuji.
+
 

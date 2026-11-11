@@ -1,0 +1,36 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-08 Customer membuka wishlist"
+tags:
+  - uts-customer
+  - uts-read
+  - uts-wishlist
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+# Flow customer berikut memerlukan sesi login aktif.
+- assertNotVisible: "Masuk / Daftar"
+- scrollUntilVisible:
+    element: "Wishlist"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Wishlist"
+- extendedWaitUntil:
+    visible: "Wishlist"
+    timeout: 20000
+- assertVisible: "Wishlist"
+- takeScreenshot: studio-uts-08-wishlist
+

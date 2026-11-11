@@ -1,5 +1,6 @@
-# Studio workspace tersendiri. Hanya lima flow yang sudah PASS di Xiaomi CLI terakhir.
-# Nama lengkap diperlukan agar maestro 2.12.1 menjaga urutan.
+# Workspace khusus customer KKMP Kerten.
+# Pertahankan 5 flow PASS yang sudah terbukti di perangkat fisik.
+# Flow tambahan belum PASS sampai Maestro Studio benar-benar menjalankannya.
 flows:
   - "*.yaml"
 executionOrder:
@@ -7,6 +8,13 @@ executionOrder:
   flowsOrder:
     - "UTS-01 Pembukaan aplikasi dan katalog"
     - "UTS-02 Navigasi dan input pencarian"
-    - "UTS-03 CRUD keranjang create/read dan persistensi"
     - "UTS-05 Kondisi gagal pencarian produk"
     - "UTS-07 Pilih urutan harga terendah"
+    - "UTS-06 Customer lihat detail dan deskripsi produk"
+    - "UTS-03 CRUD keranjang create/read dan persistensi"
+    - "UTS-08 Customer membuka wishlist"
+    - "UTS-09 Customer melihat riwayat pesanan"
+    - "UTS-10 Customer melihat notifikasi"
+    - "UTS-11 Customer validasi alamat wajib diisi"
+    - "UTS-12 Customer buka keamanan dan batal ganti password"
+    - "UTS-13 Customer membuka pusat bantuan"

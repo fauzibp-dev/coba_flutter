@@ -1,0 +1,45 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-12 Customer buka keamanan dan batal ganti password"
+tags:
+  - uts-customer
+  - uts-validation
+  - uts-security
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+# Flow customer berikut memerlukan sesi login aktif.
+- assertNotVisible: "Masuk / Daftar"
+- scrollUntilVisible:
+    element: "Keamanan & Preferensi.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Keamanan & Preferensi.*"
+- extendedWaitUntil:
+    visible: "Keamanan Akun"
+    timeout: 20000
+- assertVisible: "Ganti password"
+- tapOn: "Ganti password.*"
+- extendedWaitUntil:
+    visible: "Ganti Password"
+    timeout: 10000
+- assertVisible: "Password baru"
+- takeScreenshot: studio-uts-12-dialog-password
+# Batal tanpa memasukkan password atau mengubah akun.
+- tapOn: "Batal"
+- assertVisible: "Keamanan Akun"
+- takeScreenshot: studio-uts-12-keamanan
+

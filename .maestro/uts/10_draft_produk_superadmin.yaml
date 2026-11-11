@@ -45,6 +45,7 @@ tags:
 - assertVisible: "Nama produk *"
 - tapOn: "Nama produk *"
 - inputText: "PRODUK UTS DRAFT VIDEO"
+- hideKeyboard
 - tapOn: "Harga *"
 - inputText: "15000"
 - hideKeyboard

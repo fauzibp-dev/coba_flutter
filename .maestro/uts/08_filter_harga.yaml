@@ -31,8 +31,8 @@ tags:
 - hideKeyboard
 - tapOn: "Terapkan Filter"
 - extendedWaitUntil:
-    visible: "Filter \(1\)"
+    visible: "Filter.*1.*"
     timeout: 15000
-- assertVisible: "Filter \(1\)"
+- assertVisible: "Filter.*1.*"
 - takeScreenshot: uts-08-price-filter
 

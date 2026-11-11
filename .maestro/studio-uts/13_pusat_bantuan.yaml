@@ -28,14 +28,16 @@ tags:
     direction: DOWN
     timeout: 20000
 - tapOn: "Pusat Bantuan.*"
+# AppBar terdiri dari dua Text dalam Column: "Pusat Bantuan" + "KKMP Kerten".
+# Regex DOTALL menjaga assertion judul jika Semantics menyatukan keduanya.
 - extendedWaitUntil:
-    visible: "Pusat Bantuan"
-    timeout: 20000
-- assertVisible: "Pusat Bantuan"
-# Ini memeriksa percakapan benar-benar tersedia, bukan judul halaman saja.
+    visible: "(?s).*Pusat Bantuan.*"
+    timeout: 25000
+- assertVisible: "(?s).*Pusat Bantuan.*"
+# Pastikan percakapan aktif dan input chat tersedia, bukan sekadar AppBar.
 - extendedWaitUntil:
     visible: "Tulis pesan..."
-    timeout: 25000
+    timeout: 30000
 - assertVisible: "Tulis pesan..."
 # Tidak mengirim pesan ke CS.
 - takeScreenshot: studio-uts-13-chat

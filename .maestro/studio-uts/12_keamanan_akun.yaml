@@ -31,15 +31,19 @@ tags:
 - extendedWaitUntil:
     visible: "Keamanan Akun"
     timeout: 20000
-- assertVisible: "Ganti password"
-- tapOn: "Ganti password.*"
+# ListTile accessibility pada Flutter dapat menggabungkan judul + subtitle.
+# Karena itu regex DOTALL digunakan, bukan pencocokan teks persis.
+- assertVisible: "(?s).*Ganti password.*"
+- takeScreenshot: studio-uts-12-before-password-dialog
+- tapOn: "(?s).*Ganti password.*"
 - extendedWaitUntil:
-    visible: "Ganti Password"
-    timeout: 10000
+    visible: "(?s).*Ganti Password.*"
+    timeout: 15000
 - assertVisible: "Password baru"
 - takeScreenshot: studio-uts-12-dialog-password
 # Batal tanpa memasukkan password atau mengubah akun.
 - tapOn: "Batal"
 - assertVisible: "Keamanan Akun"
+- assertNotVisible: "Password baru"
 - takeScreenshot: studio-uts-12-keamanan
 

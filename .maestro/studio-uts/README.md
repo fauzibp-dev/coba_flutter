@@ -1,3 +1,23 @@
+## Koreksi berdasarkan screenshot Maestro Studio (11 November 2026, 14.47 WIB)
+
+Pengguna melaporkan **hanya tiga flow FAIL** pada suite customer Studio: UTS-06, UTS-12, dan UTS-13. Screenshot menunjukkan:
+
+- **UTS-06**: halaman detail sudah terbuka, `Detail Produk` dan `Beli Sekarang` terbaca; `scrollUntilVisible` gagal menemukan `Deskripsi Produk`. Kini ada screenshot sebelum scroll, swipe di area scrollable ListView, dan pencocokan regex DOTALL + visibility 50%.
+- **UTS-12**: layar **Keamanan & Preferensi** sudah terbuka, tetapi `assertVisible: "Ganti password"` gagal walau title tile terlihat. Pada Flutter `ListTile`, title dan subtitle dapat digabung dalam satu accessibility text. Diganti regex DOTALL dan cek tombol dialog, lalu **Batal** tanpa mengganti password.
+- **UTS-13**: tampilan chat **Pusat Bantuan** sudah terbuka, namun `assertVisible: "Pusat Bantuan"` gagal. `AppBar` berisi title dan subtitle, yang dapat menjadi satu node aksesibilitas. Diganti regex DOTALL; assertion `Tulis pesan...` tetap wajib.
+
+Tiga file saja yang berubah. **Sembilan flow lain, termasuk lima flow sebelumnya yang pernah PASS, tidak diubah**. Tiga flow revisi **belum dijalankan di HP**, jangan mengklaim 12/12 PASS sebelum hasil Maestro Studio baru ada.
+
+Untuk memperbarui Mac:
+```bash
+git switch test/maestro-exploration-20261111
+git pull --ff-only
+```
+
+Maestro Studio workspace: `/Users/fauzibondanp/Desktop/coba_flutter/.maestro/studio-uts`; jika editor tidak memuat perubahan, tutup/buka file atau workspace. Pilih perangkat Xiaomi, **Local → Run All Tests**; rekam manual bila perlu.
+
+---
+
 # UTS Maestro Studio — 12 flow customer KKMP Kerten
 
 **Dibuat pada 11 November 2026. Semua pengujian customer saja. Tidak ada YAML Super Admin di workspace ini.**

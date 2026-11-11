@@ -34,10 +34,20 @@ tags:
     visible: "Detail Produk"
     timeout: 20000
 - assertVisible: "Beli Sekarang"
+# Screenshot saat halaman detail benar-benar terbuka sebelum scroll.
+- takeScreenshot: studio-uts-06-before-scroll
+# Body detail Flutter memakai ListView, sedangkan tombol beli statis di bawah.
+# Geser pada area isi, bukan tombol tetap / AppBar.
+- swipe:
+    start: "50%, 72%"
+    end: "50%, 38%"
+    duration: 650
+# Semantics bisa menggabungkan judul Deskripsi dan isi paragraf.
 - scrollUntilVisible:
-    element: "Deskripsi Produk"
+    element: "(?s).*Deskripsi Produk.*"
     direction: DOWN
-    timeout: 20000
-- assertVisible: "Deskripsi Produk"
+    visibilityPercentage: 50
+    timeout: 30000
+- assertVisible: "(?s).*Deskripsi Produk.*"
 - takeScreenshot: studio-uts-06-detail-produk
 

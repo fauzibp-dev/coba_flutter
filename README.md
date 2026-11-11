@@ -174,6 +174,8 @@ dengan ringkasan final
 [`uat_execution_summary_20261110.md`](uat/results/uat_execution_summary_20261110.md)
 dan workbook
 [`KKMP_Kerten_UAT_136_Kasus_synced_20261110.xlsx`](uat/KKMP_Kerten_UAT_136_Kasus_synced_20261110.xlsx).
+Screenshot UAT tersimpan terpusat di
+[`uat/evidence/screenshots/`](uat/evidence/screenshots/).
 
 Eksekusi terbaru mencatat 14 PASS, 1 FAIL, 3 BLOCKED, dan 118 NOT RUN.
 `UAT-036` gagal diverifikasi karena alamat `UAT_TEST` hilang dari daftar setelah

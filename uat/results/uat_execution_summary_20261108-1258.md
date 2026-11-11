@@ -18,15 +18,15 @@
 
 | ID | Status | Evidence |
 |---|---|---|
-| UAT-021 | PASS | `uat-validation-empty-search.png` |
-| UAT-029 | PASS | `uat-transaction-checkout.png` |
-| REG-001 | PASS | `uat-transaction-checkout.png` |
-| UAT-040 | BLOCKED | `uat-transaction-checkout.png` |
-| UAT-045 | BLOCKED | `uat-invalid-voucher.png` |
-| UAT-036 | FAIL | `uat-address-form-filled.png`, `uat-address-save-attempt.png`, `uat-address-create-failed.png` |
-| UAT-060 | PASS | `uat-admin-product-create-form.png`, `uat-admin-product-read.png` |
-| UAT-063 | PASS | `uat-admin-product-edit-form.png`, `uat036_diagnosis_and_admin_crud_20261108-1355.log` |
-| UAT-064 | PASS | `uat-admin-product-archive-attempt.png` |
+| UAT-021 | PASS | `../evidence/screenshots/uat-validation-empty-search.png` |
+| UAT-029 | PASS | `../evidence/screenshots/uat-transaction-checkout.png` |
+| REG-001 | PASS | `../evidence/screenshots/uat-transaction-checkout.png` |
+| UAT-040 | BLOCKED | `../evidence/screenshots/uat-transaction-checkout.png` |
+| UAT-045 | BLOCKED | `../evidence/screenshots/uat-invalid-voucher.png` |
+| UAT-036 | FAIL | `../evidence/screenshots/uat-address-form-filled.png`, `../evidence/screenshots/uat-address-save-attempt.png`, `../evidence/screenshots/uat-address-create-failed.png` |
+| UAT-060 | PASS | `../evidence/screenshots/uat-admin-product-create-form.png`, `../evidence/screenshots/uat-admin-product-read.png` |
+| UAT-063 | PASS | `../evidence/screenshots/uat-admin-product-edit-form.png`, `uat036_diagnosis_and_admin_crud_20261108-1355.log` |
+| UAT-064 | PASS | `../evidence/screenshots/uat-admin-product-archive-attempt.png` |
 
 The transaction flow added/updated a cart item and reached checkout with COD, but did not submit a final order because a verified fictitious address was not available.
 

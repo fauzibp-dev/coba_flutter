@@ -36,7 +36,7 @@
 
 1. **Pembukaan aplikasi:** 01 startup menguji Beranda, tagline dan kategori.
 2. **Navigasi:** 02 pencarian, 07 sorting, 08 Wishlist, 09 Pesanan, 10 Notifikasi, dan 13 Bantuan.
-3. **Transaksi/CRUD:** 03 menambahkan dan membaca ulang keranjang setelah aplikasi dibuka kembali (**CREATE/READ**); bukan submit order.
+3. **Transaksi/CRUD:** 03 menambahkan dan membaca ulang keranjang setelah aplikasi dibuka kembali (**CREATE/READ**). Pengujian tambahan UTS-14 setelah perbaikan aplikasi memperlihatkan **CREATE/READ/UPDATE/DELETE** dengan enam screenshot asli; bukan submit order.
 4. **Validasi kesalahan:** 05 produk tidak ditemukan, 11 form alamat kosong menghasilkan `Wajib diisi.`.
 
 ## Pengamatan dan batasan
@@ -62,22 +62,67 @@ Syarat minimal 5 skenario UAT, minimal 4 YAML, assertion, screenshot/log, README
 
 12 flow Maestro Studio yang berfokus pada pelanggan sudah menunjukkan **PASS 12/12** dalam eksekusi lokal di Xiaomi. Laporan ini dipisahkan dari hasil Maestro MCP Server: 14 PASS, 1 FAIL, 3 BLOCKED, 118 NOT RUN pada matriks 136 kasus UAT. Status UAT MCP tidak boleh digabung dengan status 12 flow Studio.
 
-## Pengujian tambahan UTS-14 — CRUD keranjang lengkap (setelah perbaikan aplikasi)
+## Pengujian tambahan UTS-14 — CRUD keranjang lengkap (11 November 2026)
 
-Penguji mengonfirmasi bahwa alur UTS-03 sebelumnya hanya menambah dan membaca isi keranjang, tidak menekan tombol `+`, `−`, atau hapus. Maka kategorinya adalah CREATE/READ parsial, bukan CRUD lengkap. Agar cakupan lebih kuat, ditambahkan [UTS-14 CRUD lengkap keranjang](../.maestro/studio-uts/00_crud_keranjang_lengkap.yaml) dengan assertion sebelum/sesudah update serta delete dan screenshot `uts-14-*.png`.
+**Flow:** [00_crud_keranjang_lengkap.yaml](../.maestro/studio-uts/00_crud_keranjang_lengkap.yaml)  
+**Peran:** Customer (login aktif)  
+**Perangkat:** Xiaomi Android fisik, Maestro Studio lokal  
+**Produk uji:** Tes Produk, harga Rp5.000/unit  
+**Prasyarat:** Aplikasi versi perbaikan terpasang; akun customer aktif; produk uji tersedia, belum ada dalam keranjang  
+**Tujuan:** Memastikan operasi CREATE, READ, UPDATE (+ dan −), DELETE dan persistensi penghapusan pada keranjang bekerja dengan benar  
+**Pelaksanaan:** Penguji mengonfirmasi telah menjalankan dan merekam alur UTS-14 pada HP fisik. Keenam screenshot asli telah berhasil di-push ke GitHub dan diperiksa pada 11 November 2026.  
+**Hasil:** **PASS berdasarkan bukti visual keenam tahap**. Screenshot akhir run Maestro Studio yang menampilkan label PASS belum disertakan, sehingga tidak mengklaim run gabungan 13/13 PASS dalam satu sesi.
 
-Pada percakapan setelah perbaikan keranjang, penguji menyatakan tombol +/−/hapus sudah normal dan menyampaikan bahwa tahap rekaman CRUD telah dilakukan. **Namun screenshot UTS-14 dan hasil PASS dari Maestro Studio belum tersedia di GitHub per pemeriksaan terakhir.** Karena itu angka eksekusi terverifikasi tetap **12/12 PASS untuk run awal**, sedangkan UTS-14 dicatat sebagai **uji tambahan dilaporkan telah dilakukan — bukti belum diarsipkan**. Jangan menghitung 13/13 PASS sebelum hasil Studio/artefak dapat diperiksa.
+### Hasil per langkah
 
-| Elemen UTS-14 | Langkah yang diprogram | Assertion | Screenshot yang dihasilkan |
-|---|---|---|---|
-| Guard data awal | Periksa Tes Produk belum ada di cart | `assertNotVisible: Tes Produk` | `uts-14-cart-before.png` |
-| CREATE + READ | Cari Tes Produk, tekan Beli Sekarang, cek cart | `Jumlah Tes Produk: 1` | `uts-14-created.png` |
-| UPDATE (+) | Ketuk tambah | `Jumlah Tes Produk: 2` | `uts-14-updated-plus.png` |
-| UPDATE (−) | Ketuk kurang | `Jumlah Tes Produk: 1` | `uts-14-updated-minus.png` |
-| DELETE | Ketuk ikon hapus | `Tes Produk` tidak terlihat | `uts-14-deleted.png` |
-| Persistensi hasil | Buka ulang aplikasi, cek cart | `Tes Produk` tetap tidak terlihat | `uts-14-delete-persisted.png` |
+| Langkah | Aksi | Kriteria penerimaan | Hasil aktual (screenshot) | Penilaian visual |
+|---|---|---|---|---|
+| Kondisi awal | Membuka keranjang sebelum uji | Tes Produk belum ada | Keranjang kosong | PASS |
+| CREATE + READ | Cari Tes Produk, tekan Beli Sekarang | Item ditambah; jumlah 1 | Tes Produk tampil; subtotal Rp5.000 | PASS |
+| UPDATE (+) | Tekan + | Jumlah 1 → 2 | Jumlah 2; subtotal Rp10.000 | PASS |
+| UPDATE (−) | Tekan − | Jumlah 2 → 1 | Jumlah 1; subtotal Rp5.000 | PASS |
+| DELETE | Tekan ikon hapus | Produk uji hilang | Keranjang kembali kosong | PASS |
+| Persistensi | Buka ulang aplikasi lalu lihat keranjang | Produk yang dihapus tidak kembali | Keranjang tetap kosong | PASS |
 
-**Status bukti:** Flow YAML [00_crud_keranjang_lengkap.yaml](../.maestro/studio-uts/00_crud_keranjang_lengkap.yaml) sudah tersimpan; enam screenshot di atas masih perlu diunggah ke `uat/evidence/maestro-studio/crud-uts-14/`. Rekaman video CRUD yang baru dibuat dapat ditambahkan sebagai bukti pelengkap tanpa merekam ulang 12 flow lain. Screenshot asli dapat ditemukan di Mac pada `~/.maestro/tests/<sesi>/artifacts/takeScreenshot/`.
+### Lampiran screenshot asli — UTS-14
+
+**Gambar CRUD-1. Kondisi awal sebelum CREATE: keranjang masih kosong**
+
+![Gambar CRUD-1: Kondisi awal sebelum CREATE: keranjang masih kosong](evidence/maestro-studio/crud-uts-14/uts-14-cart-before.png)
+
+[Sumber PNG asli](evidence/maestro-studio/crud-uts-14/uts-14-cart-before.png)
+
+**Gambar CRUD-2. CREATE/READ: Tes Produk, jumlah 1, subtotal Rp5.000**
+
+![Gambar CRUD-2: CREATE/READ: Tes Produk, jumlah 1, subtotal Rp5.000](evidence/maestro-studio/crud-uts-14/uts-14-created.png)
+
+[Sumber PNG asli](evidence/maestro-studio/crud-uts-14/uts-14-created.png)
+
+**Gambar CRUD-3. UPDATE (+): jumlah 2, subtotal Rp10.000**
+
+![Gambar CRUD-3: UPDATE (+): jumlah 2, subtotal Rp10.000](evidence/maestro-studio/crud-uts-14/uts-14-updated-plus.png)
+
+[Sumber PNG asli](evidence/maestro-studio/crud-uts-14/uts-14-updated-plus.png)
+
+**Gambar CRUD-4. UPDATE (-): kembali jumlah 1, subtotal Rp5.000**
+
+![Gambar CRUD-4: UPDATE (-): kembali jumlah 1, subtotal Rp5.000](evidence/maestro-studio/crud-uts-14/uts-14-updated-minus.png)
+
+[Sumber PNG asli](evidence/maestro-studio/crud-uts-14/uts-14-updated-minus.png)
+
+**Gambar CRUD-5. DELETE: Tes Produk terhapus dan keranjang kosong**
+
+![Gambar CRUD-5: DELETE: Tes Produk terhapus dan keranjang kosong](evidence/maestro-studio/crud-uts-14/uts-14-deleted.png)
+
+[Sumber PNG asli](evidence/maestro-studio/crud-uts-14/uts-14-deleted.png)
+
+**Gambar CRUD-6. Verifikasi persistensi: setelah aplikasi dibuka ulang keranjang tetap kosong**
+
+![Gambar CRUD-6: Verifikasi persistensi: setelah aplikasi dibuka ulang keranjang tetap kosong](evidence/maestro-studio/crud-uts-14/uts-14-delete-persisted.png)
+
+[Sumber PNG asli](evidence/maestro-studio/crud-uts-14/uts-14-delete-persisted.png)
+
+**Interpretasi:** Dari keenam screenshot dan urutan eksekusi yang dilaporkan, seluruh tindakan CRUD dan persistensi penghapusan dapat diamati. Foto tidak membuktikan nilai database secara independen dan tidak menggantikan log hasil Maestro. **Hasil lama 12 PASS / 0 FAIL adalah sesi terpisah**; tidak ada kebutuhan merekam ulang 12 flow lama.
 
 ## Koreksi bug keranjang setelah hasil Studio 12/12 PASS
 
@@ -85,4 +130,4 @@ Pengguna menguji tombol **+**, **−**, dan hapus secara manual dan melaporkan t
 
 Perubahan pada branch uji: permintaan kuantitas/hapus dijalankan **satu per satu**, indikator proses tampil, hasil dibaca ulang dari server dan dibandingkan dengan kuantitas yang diminta, error ditampilkan dalam SnackBar, dan tersedia tombol retry baca data. Tombol kurang tidak menghapus barang ketika jumlah satu; hapus dilakukan via ikon tempat sampah. Area sentuh tombol +/- diperbesar.
 
-**Pembaruan lapangan:** Penguji melaporkan tombol keranjang sudah normal setelah APK baru dipasang, dan merekam alur CRUD tambahan. Verifikasi PASS flow UTS-14 di laporan tetap menunggu bukti hasil Maestro Studio dan screenshot, bukan hanya laporan verbal.
+**Pembaruan lapangan:** Setelah APK perbaikan dipasang, penguji menjalankan CRUD terbaru dan menyimpan enam screenshot di GitHub. Bukti visual mendukung keberhasilan CREATE, READ, UPDATE (+/−), DELETE serta persistensi penghapusan. Bukti layar ringkasan PASS Maestro untuk UTS-14 belum dilampirkan.

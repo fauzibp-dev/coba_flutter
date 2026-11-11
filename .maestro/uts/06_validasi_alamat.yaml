@@ -1,0 +1,37 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-06 Validasi kolom wajib alamat kosong"
+tags:
+  - uts-auth
+  - uts-validation
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- tapOn: "Alamat tersimpan"
+- extendedWaitUntil:
+    visible: "Alamat Tersimpan"
+    timeout: 20000
+- tapOn: "Alamat"
+- extendedWaitUntil:
+    visible: "Tambah Alamat"
+    timeout: 20000
+- assertVisible: "Nama penerima"
+- scrollUntilVisible:
+    element: "Simpan Alamat"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Simpan Alamat"
+- assertVisible: "Tambah Alamat"
+- scrollUntilVisible:
+    element: "Wajib diisi."
+    direction: UP
+    timeout: 20000
+- assertVisible: "Wajib diisi."
+- takeScreenshot: uts-06-address-required

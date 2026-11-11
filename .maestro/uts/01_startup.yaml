@@ -1,0 +1,18 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-01 Pembukaan aplikasi dan katalog"
+tags:
+  - uts-smoke
+  - uts-startup
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- assertVisible: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Kategori.*"
+    timeout: 20000
+- assertVisible: "Kategori.*"
+- takeScreenshot: uts-01-startup

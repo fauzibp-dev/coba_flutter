@@ -1,0 +1,57 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-04 Checkout pilih ambil dan hitung total server"
+tags:
+  - uts-auth
+  - uts-transaction
+  - uts-checkout
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+# Transaksi tahap draft: tidak mengetuk Buat Pesanan, tidak membuat order sungguhan.
+- tapOn: "Cari produk, promo, atau kategori..."
+- extendedWaitUntil:
+    visible: "Pencarian"
+    timeout: 20000
+- assertVisible: "Cari nama atau deskripsi produk..."
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "Beras Premium Kerten"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 25000
+- assertVisible: "beras.*Stok.*"
+- tapOn:
+    text: "beras.*Stok.*"
+- extendedWaitUntil:
+    visible: "Detail Produk"
+    timeout: 20000
+- assertVisible: "Detail Produk"
+- assertVisible: "Beli Sekarang"
+- tapOn: "Beli Sekarang"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 20000
+- assertVisible: "Checkout"
+- takeScreenshot: uts-04-cart
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Alamat & Fulfillment"
+    timeout: 25000
+- assertVisible: "Buat Pesanan"
+- tapOn: "Ambil"
+- assertVisible: "Pesanan diambil langsung di koperasi. Alamat tidak diperlukan."
+- scrollUntilVisible:
+    element: "Hitung Total Final"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Hitung Total Final"
+- extendedWaitUntil:
+    visible: "Total"
+    timeout: 25000
+- assertVisible: "Total"
+- takeScreenshot: uts-04-quote
+# Jika total gagal tampil, ini FAIL untuk dilaporkan, bukan alasan melewati assertion.

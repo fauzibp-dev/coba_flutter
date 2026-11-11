@@ -1,4 +1,35 @@
 # KKMP Kerten
+
+## UTS Mobile Testing 2026/2027 — status pengumpulan
+
+Dokumen soal meminta minimal **5 skenario UAT**, **4 flow YAML Maestro** (startup, navigasi, transaksi/CRUD dan validasi), assertion serta log/screenshot/rekaman, laporan UAT, README dan video 5–10 menit. Paket terfokus berada di:
+
+- [6 flow khusus UTS](.maestro/uts/README.md)
+- [Matriks enam skenario UAT dan audit kesesuaian soal](uat/UTS_6_SKENARIO_DAN_KESESUAIAN.md)
+- [Laporan UAT historis dan temuan bug](uat/UTS_UAT_REPORT.md)
+- [Panduan video dan tautan yang harus diisi](uat/VIDEO_PANDUAN_UTS_2026.md)
+
+**Identitas untuk diisi sebelum pengumpulan** (jangan menyalin identitas dari tugas mahasiswa lain):
+- **Nama mahasiswa:** [ISI NAMA RESMI]
+- **NIM:** [ISI NIM]
+- **Kelas:** TI23B (sesuai lembar soal; verifikasi)
+- **Peran setiap anggota:** [ISI PERAN NYATA / PEMBAGIAN TUGAS]
+
+**Tautan video:** [ISI URL VIDEO 5–10 MENIT, AKSES DOSEN HARUS DIBUKA]
+
+**Akses repository:** repo GitHub saat audit masih **private**. Agar dosen dapat membaca, berikan akses melalui GitHub collaborator atau pengaturan akses lain yang disetujui. Pastikan tautan benar-benar dapat dibuka. Jangan menambahkan password, token, service-role/secret key ke GitHub.
+
+Run cepat di Mac (HP fisik telah terpasang APK, session login untuk auth):
+```bash
+adb devices
+bash scripts/run_uts_maestro.sh smoke
+bash scripts/run_uts_maestro.sh auth
+```
+
+Hasil terbaru belum ada sampai dijalankan pada HP; status UAT historis **14 PASS, 1 FAIL, 3 BLOCKED, 118 NOT RUN** bukan status 6 flow baru. Jalur data UAT-036 masih berstatus FAIL.
+
+---
+
 KKMP Kerten adalah aplikasi e-commerce mobile Flutter untuk Koperasi Merah Putih Kerten, Kecamatan Laweyan.
 
 **Tagline:** Belanja Lebih Mudah Di KKMP Kerten.

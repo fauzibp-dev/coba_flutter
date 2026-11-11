@@ -1,0 +1,23 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-01 Startup dan katalog
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- assertVisible: "Kategori.*"
+- takeScreenshot: exp-01-home
+- scrollUntilVisible:
+    element: "Semua Produk"
+    direction: DOWN
+    timeout: 15000
+- assertVisible: "Semua Produk"
+- takeScreenshot: exp-01-catalog

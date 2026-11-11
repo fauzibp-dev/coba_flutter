@@ -1,0 +1,42 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-08 Validasi kolom wajib alamat
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+# Memvalidasi form kosong; tidak menyimpan alamat.
+- tapOn:
+    text: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 15000
+- tapOn: "Alamat tersimpan"
+- extendedWaitUntil:
+    visible: "Alamat Tersimpan"
+    timeout: 15000
+- tapOn: "Alamat"
+- extendedWaitUntil:
+    visible: "Tambah Alamat"
+    timeout: 15000
+- assertVisible: "Nama penerima"
+- scrollUntilVisible:
+    element: "Simpan Alamat"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Simpan Alamat"
+- assertVisible: "Tambah Alamat"
+- scrollUntilVisible:
+    element: "Wajib diisi."
+    direction: UP
+    timeout: 15000
+- assertVisible: "Wajib diisi."
+- takeScreenshot: exp-08-required-fields

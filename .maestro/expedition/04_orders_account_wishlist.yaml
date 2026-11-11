@@ -1,0 +1,38 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-04 Pesanan, akun, wishlist, alamat
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn:
+    text: "Pesanan.*"
+- extendedWaitUntil:
+    visible: "Pesanan Saya"
+    timeout: 15000
+- assertVisible: "Pesanan Saya"
+- takeScreenshot: exp-04-orders
+- tapOn:
+    text: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 15000
+- assertVisible: "Alamat tersimpan"
+- tapOn: "Alamat tersimpan"
+- extendedWaitUntil:
+    visible: "Alamat Tersimpan"
+    timeout: 15000
+- assertVisible: "Alamat Tersimpan"
+- takeScreenshot: exp-04-address-book
+- pressKey: Back
+- tapOn: "Wishlist"
+- assertVisible: "Wishlist"
+- takeScreenshot: exp-04-wishlist

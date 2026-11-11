@@ -1,0 +1,29 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-07 Validasi pencarian tidak ditemukan
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn:
+    text: "Cari.*"
+- extendedWaitUntil:
+    visible: "Cari Produk"
+    timeout: 15000
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "zzzuatnotfound"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "Produk tidak ditemukan"
+    timeout: 20000
+- assertVisible: "Produk tidak ditemukan"
+- assertVisible: "Coba kata kunci.*"
+- takeScreenshot: exp-07-not-found

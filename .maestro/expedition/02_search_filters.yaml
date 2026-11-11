@@ -1,0 +1,36 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-02 Pencarian dan filter
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn:
+    text: "Cari.*"
+- extendedWaitUntil:
+    visible: "Cari Produk"
+    timeout: 15000
+- assertVisible: "Cari nama atau deskripsi produk..."
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "beras"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 20000
+- assertVisible: "beras.*Stok.*"
+- takeScreenshot: exp-02-search-results
+- tapOn: "Filter"
+- assertVisible: "Filter Produk"
+- assertVisible: "Harga minimum"
+- tapOn: "Reset"
+- tapOn: "Terapkan Filter"
+- assertVisible: "Cari Produk"
+- takeScreenshot: exp-02-after-filter

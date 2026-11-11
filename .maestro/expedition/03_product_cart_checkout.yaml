@@ -1,0 +1,48 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-03 Detail produk, cart, dan checkout review
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+# Mengubah item keranjang pada sesi yang sudah login; TIDAK membuat order.
+- tapOn:
+    text: "Cari.*"
+- extendedWaitUntil:
+    visible: "Cari Produk"
+    timeout: 15000
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "Beras Premium Kerten"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 20000
+- tapOn:
+    text: "beras.*Stok.*"
+- extendedWaitUntil:
+    visible: "Detail Produk"
+    timeout: 15000
+- assertVisible: "Detail Produk"
+- assertVisible: "Beli Sekarang"
+- takeScreenshot: exp-03-product-detail
+- tapOn: "Beli Sekarang"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 15000
+- assertVisible: "Checkout"
+- takeScreenshot: exp-03-cart
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Alamat & Fulfillment"
+    timeout: 20000
+- assertVisible: "Buat Pesanan"
+- takeScreenshot: exp-03-checkout
+# Berhenti sebelum 'Buat Pesanan' agar tidak membuat transaksi sungguhan.

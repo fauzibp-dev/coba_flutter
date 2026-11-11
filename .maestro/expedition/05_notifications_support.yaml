@@ -1,0 +1,38 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-05 Notifikasi dan bantuan
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn:
+    text: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 15000
+- tapOn: "Notifikasi"
+- extendedWaitUntil:
+    visible: "Notifikasi"
+    timeout: 15000
+- assertVisible: "Notifikasi"
+- takeScreenshot: exp-05-notifications
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Pusat Bantuan"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Pusat Bantuan"
+- extendedWaitUntil:
+    visible: "Pusat Bantuan"
+    timeout: 15000
+- assertVisible: "Pusat Bantuan"
+- takeScreenshot: exp-05-support
+# Tidak mengirim chat/gambar dan tidak menandai seluruh notifikasi dibaca.

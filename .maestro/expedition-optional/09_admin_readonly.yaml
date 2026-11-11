@@ -1,0 +1,35 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-09 Dashboard Admin toko - opsional
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+# Jalankan hanya jika sesi telah memiliki akses Pengelola Koperasi.
+- tapOn:
+    text: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 15000
+- scrollUntilVisible:
+    element: "KKMP Kerten Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "KKMP Kerten Admin.*"
+- extendedWaitUntil:
+    visible: "Operasional toko & koperasi"
+    timeout: 20000
+- assertVisible: "KKMP Kerten Admin"
+- takeScreenshot: exp-09-admin-products
+- tapOn: "Pesanan"
+- assertVisible: "KKMP Kerten Admin"
+- takeScreenshot: exp-09-admin-orders

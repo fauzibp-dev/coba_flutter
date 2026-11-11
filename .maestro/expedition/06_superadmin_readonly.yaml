@@ -1,0 +1,54 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-06 Dashboard dan modul Super Admin (baca saja)
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+# Membutuhkan sesi Super Admin yang sudah aktif.
+- tapOn:
+    text: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 15000
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- takeScreenshot: exp-06-superadmin-dashboard
+- scrollUntilVisible:
+    element: "Katalog Global"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Katalog Global"
+- extendedWaitUntil:
+    visible: "Katalog Global"
+    timeout: 15000
+- assertVisible: "Katalog Global"
+- takeScreenshot: exp-06-global-catalog
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Error Log Center"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Error Log Center"
+- extendedWaitUntil:
+    visible: "Error Log Center"
+    timeout: 15000
+- assertVisible: "Error Log Center"
+- takeScreenshot: exp-06-error-log-center
+# Tidak menekan tombol 'Uji pencatatan log', ubah role, archive, ekspor atau hapus.

@@ -1,0 +1,88 @@
+appId: com.fauzibondanp.shopmart
+name: EXP-VIDEO Satu rekaman perjalanan aplikasi
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+# Satu perjalanan dalam aplikasi, bukan launcher->app berulang kali.
+- assertVisible: "Kategori.*"
+- takeScreenshot: exp-video-home
+- tapOn:
+    text: "Cari.*"
+- extendedWaitUntil:
+    visible: "Cari Produk"
+    timeout: 15000
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "Beras Premium Kerten"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 20000
+- takeScreenshot: exp-video-search
+- tapOn:
+    text: "beras.*Stok.*"
+- extendedWaitUntil:
+    visible: "Detail Produk"
+    timeout: 15000
+- assertVisible: "Beli Sekarang"
+- takeScreenshot: exp-video-product
+- tapOn: "Beli Sekarang"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 15000
+- assertVisible: "Checkout"
+- takeScreenshot: exp-video-cart
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Alamat & Fulfillment"
+    timeout: 20000
+- assertVisible: "Buat Pesanan"
+- takeScreenshot: exp-video-checkout
+# Tidak menekan Buat Pesanan.
+- pressKey: Back
+- pressKey: Back
+- pressKey: Back
+- tapOn:
+    text: "Pesanan.*"
+- extendedWaitUntil:
+    visible: "Pesanan Saya"
+    timeout: 15000
+- assertVisible: "Pesanan Saya"
+- takeScreenshot: exp-video-orders
+- tapOn:
+    text: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 15000
+- assertVisible: "Alamat tersimpan"
+- tapOn: "Alamat tersimpan"
+- assertVisible: "Alamat Tersimpan"
+- takeScreenshot: exp-video-addresses
+- pressKey: Back
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    text: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- takeScreenshot: exp-video-superadmin
+- scrollUntilVisible:
+    element: "Error Log Center"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Error Log Center"
+- assertVisible: "Error Log Center"
+- takeScreenshot: exp-video-error-logs

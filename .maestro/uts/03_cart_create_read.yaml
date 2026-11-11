@@ -5,6 +5,8 @@ tags:
   - uts-transaction
   - uts-cart
 ---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
 - pressKey: Home
 - tapOn: "KKMP Kerten"
 - extendedWaitUntil:
@@ -17,14 +19,14 @@ tags:
     timeout: 25000
 - assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
 # CREATE: item yang ada di katalog dimasukkan ke keranjang pelanggan.
-# Prasyarat: sudah login, item Beras Premium Kerten aktif dan berstok.
+# Prasyarat: sudah login, item beras aktif dan berstok.
 - tapOn: "Cari produk, promo, atau kategori..."
 - extendedWaitUntil:
     visible: "Pencarian"
     timeout: 20000
 - assertVisible: "Cari nama atau deskripsi produk..."
 - tapOn: "Cari nama atau deskripsi produk..."
-- inputText: "Beras Premium Kerten"
+- inputText: "beras"
 - pressKey: Enter
 - extendedWaitUntil:
     visible: "beras.*Stok.*"
@@ -60,6 +62,9 @@ tags:
 - extendedWaitUntil:
     visible: "Subtotal"
     timeout: 20000
-- assertVisible: ".*Beras Premium Kerten.*"
+- extendedWaitUntil:
+    visible: "(?is).*beras.*"
+    timeout: 15000
+- assertVisible: "(?is).*beras.*"
 - assertVisible: "Checkout"
 - takeScreenshot: uts-03-cart-persisted

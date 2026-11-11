@@ -4,6 +4,8 @@ tags:
   - uts-auth
   - uts-validation
 ---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
 - pressKey: Home
 - tapOn: "KKMP Kerten"
 - extendedWaitUntil:

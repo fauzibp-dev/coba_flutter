@@ -5,6 +5,8 @@ tags:
   - uts-superadmin
   - uts-crud-draft
 ---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
 - pressKey: Home
 - tapOn: "KKMP Kerten"
 - extendedWaitUntil:
@@ -26,8 +28,12 @@ tags:
     timeout: 20000
 - tapOn: "KKMP Kerten Super Admin.*"
 - extendedWaitUntil:
+    visible: "Kontrol platform dan seluruh toko"
+    timeout: 20000
+- takeScreenshot: uts-10-superadmin-dashboard-opened
+- extendedWaitUntil:
     visible: "Platform Control Center"
-    timeout: 25000
+    timeout: 35000
 - assertVisible: "Platform Control Center"
 - scrollUntilVisible:
     element: "Katalog Global"

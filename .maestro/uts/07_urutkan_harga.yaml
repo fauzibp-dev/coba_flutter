@@ -4,6 +4,8 @@ tags:
   - uts-extended
   - uts-search
 ---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
 - pressKey: Home
 - tapOn: "KKMP Kerten"
 - extendedWaitUntil:
@@ -20,11 +22,13 @@ tags:
     visible: "Pencarian"
     timeout: 20000
 - assertVisible: "Cari nama atau deskripsi produk..."
-- tapOn: "Paling relevan"
+- assertVisible: "Pencarian"
+- takeScreenshot: uts-07-before-sort
+- tapOn: "Urutkan.*"
 - extendedWaitUntil:
     visible: "Harga terendah"
     timeout: 10000
 - tapOn: "Harga terendah"
-- assertVisible: "Harga terendah"
+- assertVisible: "(?s).*Harga terendah.*"
 - takeScreenshot: uts-07-sort-price
 

@@ -1,3 +1,10 @@
+## Temuan dari pengujian penuh 10 flow — 11 November 2026
+
+Berdasarkan log terminal yang dikirim pengguna: **3 PASS / 7 FAIL**. UTS-01/02/05 PASS; flow lainnya gagal seperti dirinci di [laporan](../../uat/results/maestro_all_cli_20261111_132322.md). Revisi saat ini bersifat **BELUM TERUJI RUNTIME**: reset route app, koreksi nama beras, filter hasil kosong, diagnostik checkout/Super Admin, dan urutan config menggunakan `name:` persis.
+
+**Jangan langsung mengklaim semua PASS.** Setelah `git pull --ff-only` jalankan ulang `bash scripts/run_uts_maestro.sh all` sambil merekam manual lewat Xiaomi. Jika checkout atau Super Admin masih gagal, diperlukan screenshot gagal dari folder debug; tes tetap harus FAIL, bukan dilewati.
+
+---
 ## Satu kali tes + rekam dari awal sampai akhir (10 flow)
 
 Paket rekaman UTS sekarang berisi **10 flow** (6 flow sebelumnya + 4 skenario tambahan). Setelah tiga smoke test pada 11 November **3/3 PASS**, flow tambahan yang baru dibuat **belum diuji secara runtime**, dan tiga flow auth lama juga belum dikonfirmasi ulang.

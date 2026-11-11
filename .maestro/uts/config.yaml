@@ -1,17 +1,16 @@
-# Maestro UTS local runner. Set explicit ordering for continuous recording.
-# Continue so one independent FAIL does not hide subsequent tests.
+# Flow name (name:) dipakai eksplisit sebagai acuan pengurutan Maestro 2.12.1.
 flows:
   - "*.yaml"
 executionOrder:
   continueOnFailure: true
   flowsOrder:
-    - 01_startup
-    - 02_navigasi_pencarian
-    - 07_urutkan_harga
-    - 08_filter_harga
-    - 05_validasi_pencarian
-    - 03_cart_create_read
-    - 04_checkout_quote
-    - 06_validasi_alamat
-    - 09_cari_sku_superadmin
-    - 10_draft_produk_superadmin
+    - "UTS-01 Pembukaan aplikasi dan katalog"
+    - "UTS-02 Navigasi dan input pencarian"
+    - "UTS-07 Pilih urutan harga terendah"
+    - "UTS-08 Masukkan filter harga lalu terapkan"
+    - "UTS-05 Kondisi gagal pencarian produk"
+    - "UTS-03 CRUD keranjang create/read dan persistensi"
+    - "UTS-04 Checkout pilih ambil dan hitung total server"
+    - "UTS-06 Validasi kolom wajib alamat kosong"
+    - "UTS-09 Super Admin input SKU tak tersedia"
+    - "UTS-10 Super Admin isi draft produk lalu batal"

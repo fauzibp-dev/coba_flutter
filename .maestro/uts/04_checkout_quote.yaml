@@ -5,6 +5,8 @@ tags:
   - uts-transaction
   - uts-checkout
 ---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
 - pressKey: Home
 - tapOn: "KKMP Kerten"
 - extendedWaitUntil:
@@ -23,7 +25,7 @@ tags:
     timeout: 20000
 - assertVisible: "Cari nama atau deskripsi produk..."
 - tapOn: "Cari nama atau deskripsi produk..."
-- inputText: "Beras Premium Kerten"
+- inputText: "beras"
 - pressKey: Enter
 - extendedWaitUntil:
     visible: "beras.*Stok.*"
@@ -43,6 +45,8 @@ tags:
 - assertVisible: "Checkout"
 - takeScreenshot: uts-04-cart
 - tapOn: "Checkout"
+- assertVisible: "Checkout"
+- takeScreenshot: uts-04-after-checkout-tap
 - extendedWaitUntil:
     visible: "Alamat & Fulfillment"
     timeout: 25000

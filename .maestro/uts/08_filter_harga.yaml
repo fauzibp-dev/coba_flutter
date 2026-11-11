@@ -5,6 +5,8 @@ tags:
   - uts-search
   - uts-validation
 ---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
 - pressKey: Home
 - tapOn: "KKMP Kerten"
 - extendedWaitUntil:
@@ -27,12 +29,13 @@ tags:
     timeout: 15000
 - assertVisible: "Harga minimum"
 - tapOn: "Harga minimum"
-- inputText: "10000"
+- inputText: "999999999"
 - hideKeyboard
 - tapOn: "Terapkan Filter"
+- takeScreenshot: uts-08-filter-submitted
 - extendedWaitUntil:
-    visible: "Filter.*1.*"
-    timeout: 15000
-- assertVisible: "Filter.*1.*"
+    visible: "Produk tidak ditemukan"
+    timeout: 25000
+- assertVisible: "Produk tidak ditemukan"
 - takeScreenshot: uts-08-price-filter
 

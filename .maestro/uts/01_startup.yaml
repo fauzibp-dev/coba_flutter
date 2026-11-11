@@ -4,6 +4,8 @@ tags:
   - uts-smoke
   - uts-startup
 ---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
 - pressKey: Home
 - tapOn: "KKMP Kerten"
 - extendedWaitUntil:

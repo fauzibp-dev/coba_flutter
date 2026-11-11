@@ -18,6 +18,8 @@ String friendlyError(Object error) {
   if (text.contains('Email not confirmed')) return 'Email belum dikonfirmasi.';
   if (text.contains('User already registered')) return 'Email sudah terdaftar.';
   if (text.contains('Stock not enough')) return 'Stok produk tidak mencukupi.';
+  if (text.contains('Cart item not found')) return 'Produk di keranjang sudah berubah atau terhapus. Keranjang akan dimuat ulang.';
+  if (text.contains('CART_NOT_SYNCED')) return 'Perubahan belum sesuai data server. Keranjang dimuat ulang.';
   if (text.contains('Cart is empty')) return 'Keranjang masih kosong.';
   if (text.contains('Voucher')) return text.replaceFirst('Exception: ', '');
   return 'Terjadi kendala. Silakan coba lagi.';

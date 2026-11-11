@@ -15,6 +15,9 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   late Future<List<Map<String, dynamic>>> _future;
+  // Lock cart mutations until Supabase confirms and the newest cart is read.
+  // Without this lock, rapid +/-/delete taps can race against stale quantities.
+  String? _pendingItemId;
 
   @override
   void initState() {
@@ -26,8 +29,59 @@ class _CartScreenState extends State<CartScreen> {
 
   Future<void> _change(Map<String, dynamic> item, int delta) async {
     final current = ((item['quantity'] ?? 1) as num).toInt();
-    await ShopRepository.instance.setCartQuantity(item['id'] as String, current + delta);
-    if (mounted) setState(_reload);
+    final next = current + delta;
+    // A "-" at quantity one must not silently remove the product.
+    if (next < 1 || next > 99) return;
+    await _mutateItem(item, next);
+  }
+
+  Future<void> _remove(Map<String, dynamic> item) => _mutateItem(item, 0);
+
+  Future<void> _mutateItem(Map<String, dynamic> item, int desiredQuantity) async {
+    // Only one cart mutation may be in flight at a time. The backend RPC
+    // takes an absolute quantity, so overlapping stale requests can undo
+    // changes or try to mutate an item that was already deleted.
+    if (_pendingItemId != null) return;
+    final itemId = item['id'] as String;
+    setState(() => _pendingItemId = itemId);
+
+    try {
+      await ShopRepository.instance.setCartQuantity(itemId, desiredQuantity);
+      // A 204 RPC response alone is not enough to show the mutation as PASS.
+      // Read the authoritative quantity back from Supabase.
+      final freshItems = await ShopRepository.instance.cartItems();
+      final matching = freshItems.where((element) => element['id'] == itemId);
+      final savedQuantity = matching.isEmpty
+          ? null
+          : ((matching.first['quantity'] ?? 0) as num).toInt();
+      if ((desiredQuantity == 0 && savedQuantity != null) ||
+          (desiredQuantity > 0 && savedQuantity != desiredQuantity)) {
+        throw StateError('CART_NOT_SYNCED');
+      }
+      if (!mounted) return;
+      setState(() => _future = Future.value(freshItems));
+    } catch (error) {
+      if (!mounted) return;
+      // Never swallow PostgREST errors: show a useful message, then refresh
+      // to remove stale rows (e.g. after "Cart item not found").
+      final message = friendlyError(error);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(message),
+            action: SnackBarAction(
+              label: 'Muat ulang',
+              onPressed: () {
+                if (mounted) setState(_reload);
+              },
+            ),
+          ),
+        );
+      setState(_reload);
+    } finally {
+      if (mounted) setState(() => _pendingItemId = null);
+    }
   }
 
   num _itemPrice(Map<String, dynamic> item) {
@@ -55,7 +109,21 @@ class _CartScreenState extends State<CartScreen> {
               future: _future,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-                if (snapshot.hasError) return const Center(child: Text('Gagal memuat keranjang.'));
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Gagal memuat keranjang.'),
+                        const SizedBox(height: 8),
+                        TextButton(
+                          onPressed: () => setState(_reload),
+                          child: const Text('Coba lagi'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
                 final items = snapshot.data ?? [];
                 if (items.isEmpty) {
                   return const Center(
@@ -89,6 +157,8 @@ class _CartScreenState extends State<CartScreen> {
                           final images = product['product_images'] as List? ?? [];
                           final imageUrl = images.isNotEmpty ? (images.first as Map)['image_url']?.toString() : null;
                           final qty = ((item['quantity'] ?? 1) as num).toInt();
+                          final busy = _pendingItemId != null;
+                          final updatingThisItem = _pendingItemId == item['id'];
                           return Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.border)),
@@ -120,6 +190,7 @@ class _CartScreenState extends State<CartScreen> {
                                           _QtyButton(
                                             icon: Icons.remove,
                                             semanticLabel: 'Kurangi jumlah ${product['name'] ?? 'produk'}',
+                                            enabled: !busy && qty > 1,
                                             onTap: () => _change(item, -1),
                                           ),
                                           SizedBox(
@@ -135,19 +206,22 @@ class _CartScreenState extends State<CartScreen> {
                                           _QtyButton(
                                             icon: Icons.add,
                                             semanticLabel: 'Tambah jumlah ${product['name'] ?? 'produk'}',
+                                            enabled: !busy && qty < 99,
                                             onTap: () => _change(item, 1),
                                           ),
                                           const Spacer(),
                                           IconButton(
                                             tooltip: 'Hapus ${product['name'] ?? 'produk'} dari keranjang',
-                                            onPressed: () async {
-                                              await ShopRepository.instance.removeCartItem(item['id'] as String);
-                                              if (mounted) setState(_reload);
-                                            },
+                                            onPressed: busy ? null : () => _remove(item),
                                             icon: const Icon(Icons.delete_outline_rounded, color: AppTheme.textSecondary),
                                           ),
                                         ],
                                       ),
+                                      if (updatingThisItem)
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 8),
+                                          child: LinearProgressIndicator(minHeight: 2),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -201,25 +275,33 @@ class _CartScreenState extends State<CartScreen> {
 }
 
 class _QtyButton extends StatelessWidget {
-  const _QtyButton({required this.icon, required this.onTap, required this.semanticLabel});
+  const _QtyButton({
+    required this.icon,
+    required this.onTap,
+    required this.semanticLabel,
+    required this.enabled,
+  });
   final IconData icon;
   final VoidCallback onTap;
   final String semanticLabel;
+  final bool enabled;
   @override
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
       button: true,
+      enabled: enabled,
       label: semanticLabel,
+      onTap: enabled ? onTap : null,
       child: InkWell(
         excludeFromSemantics: true,
-        onTap: onTap,
+        onTap: enabled ? onTap : null,
         borderRadius: BorderRadius.circular(7),
         child: Container(
-          width: 30,
-          height: 30,
+          width: 38,
+          height: 38,
           decoration: BoxDecoration(border: Border.all(color: AppTheme.border), borderRadius: BorderRadius.circular(7)),
-          child: Icon(icon, size: 17),
+          child: Icon(icon, size: 18, color: enabled ? null : AppTheme.textSecondary.withValues(alpha: 0.4)),
         ),
       ),
     );

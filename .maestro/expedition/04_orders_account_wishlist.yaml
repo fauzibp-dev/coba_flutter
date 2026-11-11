@@ -1,4 +1,8 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - customer
+  - orders
+  - auth
 name: EXP-04 Pesanan, akun, wishlist, alamat
 ---
 - stopApp

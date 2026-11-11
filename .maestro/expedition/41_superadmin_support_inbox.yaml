@@ -1,0 +1,45 @@
+appId: com.fauzibondanp.shopmart
+name: "Super Admin - support inbox"
+tags:
+  - superadmin
+  - platform
+  - support
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Customer Support"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Customer Support"
+- extendedWaitUntil:
+    visible: "Support Inbox"
+    timeout: 20000
+- assertVisible: "Support Inbox"
+- assertVisible: "Filter toko"
+- takeScreenshot: exp-41-support-inbox

@@ -1,4 +1,10 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - customer
+  - checkout
+  - cart-write
+  - auth
+  - data-dependent
 name: EXP-03 Detail produk, cart, dan checkout review
 ---
 - stopApp

@@ -1,4 +1,8 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - customer
+  - support
+  - auth
 name: EXP-05 Notifikasi dan bantuan
 ---
 - stopApp

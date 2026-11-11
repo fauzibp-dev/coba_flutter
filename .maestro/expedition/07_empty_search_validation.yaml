@@ -1,4 +1,8 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - smoke
+  - customer
+  - validation
 name: EXP-07 Validasi pencarian tidak ditemukan
 ---
 - stopApp

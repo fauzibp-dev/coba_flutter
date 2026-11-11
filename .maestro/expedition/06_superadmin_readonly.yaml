@@ -1,4 +1,8 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - superadmin
+  - platform
+  - auth
 name: EXP-06 Dashboard dan modul Super Admin (baca saja)
 ---
 - stopApp

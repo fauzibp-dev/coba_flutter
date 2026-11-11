@@ -1,0 +1,36 @@
+appId: com.fauzibondanp.shopmart
+name: "Akun - halaman keamanan dan preferensi"
+tags:
+  - customer
+  - account
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "Keamanan & Preferensi"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Keamanan & Preferensi"
+- extendedWaitUntil:
+    visible: "Keamanan & Preferensi"
+    timeout: 20000
+- assertVisible: "Keamanan Akun"
+- assertVisible: "Ganti password"
+- assertVisible: "Notifikasi"
+- takeScreenshot: exp-23-security-overview

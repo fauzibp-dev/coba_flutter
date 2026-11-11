@@ -1,0 +1,44 @@
+appId: com.fauzibondanp.shopmart
+name: "Super Admin - daftar toko koperasi"
+tags:
+  - superadmin
+  - platform
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Toko & Koperasi"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Toko & Koperasi"
+- extendedWaitUntil:
+    visible: "Toko & Koperasi"
+    timeout: 20000
+- assertVisible: "Toko & Koperasi"
+- assertVisible: "Tambah Toko"
+- takeScreenshot: exp-30-stores

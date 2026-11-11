@@ -1,0 +1,51 @@
+appId: com.fauzibondanp.shopmart
+name: "Super Admin - dialog maintenance tanpa mengubah status"
+tags:
+  - superadmin
+  - platform
+  - validation
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Commerce Control Center"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Commerce Control Center"
+- extendedWaitUntil:
+    visible: "Commerce Control Center"
+    timeout: 20000
+- assertVisible: "Commerce Control Center"
+- tapOn: "Maintenance"
+- extendedWaitUntil:
+    visible: "Maintenance Mode"
+    timeout: 20000
+- assertVisible: "Aktifkan maintenance"
+- takeScreenshot: exp-50-maintenance-dialog
+- tapOn: "Batal"
+- assertVisible: "Commerce Control Center"

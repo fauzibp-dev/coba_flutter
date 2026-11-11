@@ -1,4 +1,8 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - smoke
+  - customer
+  - catalog
 name: EXP-01 Startup dan katalog
 ---
 - stopApp

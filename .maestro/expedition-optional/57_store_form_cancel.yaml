@@ -1,0 +1,51 @@
+appId: com.fauzibondanp.shopmart
+name: "Super Admin - form tambah toko tanpa simpan"
+tags:
+  - superadmin
+  - optional
+  - validation
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Toko & Koperasi"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Toko & Koperasi"
+- extendedWaitUntil:
+    visible: "Toko & Koperasi"
+    timeout: 20000
+- assertVisible: "Toko & Koperasi"
+- tapOn: "Tambah Toko"
+- extendedWaitUntil:
+    visible: "Nama toko *"
+    timeout: 20000
+- assertVisible: "Slug *"
+- takeScreenshot: opt-57-store-form
+- tapOn: "Batal"
+- assertVisible: "Toko & Koperasi"

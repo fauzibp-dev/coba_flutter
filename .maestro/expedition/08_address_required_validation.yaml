@@ -1,4 +1,8 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - customer
+  - validation
+  - auth
 name: EXP-08 Validasi kolom wajib alamat
 ---
 - stopApp

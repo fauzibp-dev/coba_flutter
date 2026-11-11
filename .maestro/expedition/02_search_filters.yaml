@@ -1,4 +1,8 @@
 appId: com.fauzibondanp.shopmart
+tags:
+  - customer
+  - search
+  - data-dependent
 name: EXP-02 Pencarian dan filter
 ---
 - stopApp

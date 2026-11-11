@@ -1,0 +1,130 @@
+appId: com.fauzibondanp.shopmart
+name: "EXP-VIDEO-02 Tur lengkap Super Admin tanpa perubahan data"
+tags:
+  - superadmin
+  - video
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Toko & Koperasi"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Toko & Koperasi"
+- extendedWaitUntil:
+    visible: "Toko & Koperasi"
+    timeout: 20000
+- assertVisible: "Toko & Koperasi"
+- takeScreenshot: exp-video2-stores
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Pengguna & Hak Akses"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Pengguna & Hak Akses"
+- extendedWaitUntil:
+    visible: "Pengguna & Hak Akses"
+    timeout: 20000
+- assertVisible: "Pengguna & Hak Akses"
+- takeScreenshot: exp-video2-users
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Kategori Global"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Kategori Global"
+- extendedWaitUntil:
+    visible: "Kategori Global"
+    timeout: 20000
+- assertVisible: "Kategori Global"
+- takeScreenshot: exp-video2-categories
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Katalog Global"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Katalog Global"
+- extendedWaitUntil:
+    visible: "Katalog Global"
+    timeout: 20000
+- assertVisible: "Katalog Global"
+- takeScreenshot: exp-video2-catalog
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Pesanan Global"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Pesanan Global"
+- extendedWaitUntil:
+    visible: "Pesanan Global"
+    timeout: 20000
+- assertVisible: "Pesanan Global"
+- takeScreenshot: exp-video2-orders
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Voucher & Banner"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Voucher & Banner"
+- extendedWaitUntil:
+    visible: "Promo & Banner"
+    timeout: 20000
+- assertVisible: "Promo & Banner"
+- takeScreenshot: exp-video2-promotions
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Operations Center"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Operations Center"
+- extendedWaitUntil:
+    visible: "Operations Center"
+    timeout: 20000
+- assertVisible: "Operations Center"
+- takeScreenshot: exp-video2-operations
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Audit Log"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Audit Log"
+- extendedWaitUntil:
+    visible: "Audit Log"
+    timeout: 20000
+- assertVisible: "Audit Log"
+- takeScreenshot: exp-video2-audit
+- pressKey: Back
+- scrollUntilVisible:
+    element: "Error Log Center"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Error Log Center"
+- extendedWaitUntil:
+    visible: "Error Log Center"
+    timeout: 20000
+- assertVisible: "Error Log Center"
+- takeScreenshot: exp-video2-errors

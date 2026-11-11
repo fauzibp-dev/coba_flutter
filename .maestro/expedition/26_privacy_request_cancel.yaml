@@ -1,0 +1,46 @@
+appId: com.fauzibondanp.shopmart
+name: "Akun - permintaan hapus akun dibatalkan"
+tags:
+  - customer
+  - account
+  - validation
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "Keamanan & Preferensi"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Keamanan & Preferensi"
+- extendedWaitUntil:
+    visible: "Keamanan & Preferensi"
+    timeout: 20000
+- assertVisible: "Keamanan Akun"
+- scrollUntilVisible:
+    element: "Ajukan penghapusan akun"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Ajukan penghapusan akun"
+- extendedWaitUntil:
+    visible: "Ajukan Penghapusan Akun"
+    timeout: 20000
+- assertVisible: "Saya memahami akun akan dinonaktifkan/dihapus setelah diproses."
+- takeScreenshot: exp-26-privacy-dialog
+- tapOn: "Batal"
+- assertVisible: "Keamanan & Preferensi"

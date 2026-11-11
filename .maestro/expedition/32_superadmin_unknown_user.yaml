@@ -1,0 +1,51 @@
+appId: com.fauzibondanp.shopmart
+name: "Super Admin - pencarian pengguna tak ditemukan"
+tags:
+  - superadmin
+  - platform
+  - validation
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Pengguna & Hak Akses"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Pengguna & Hak Akses"
+- extendedWaitUntil:
+    visible: "Pengguna & Hak Akses"
+    timeout: 20000
+- assertVisible: "Pengguna & Hak Akses"
+- tapOn: "Cari nama atau email"
+- inputText: "no-user-uat-980987654321"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "Pengguna tidak ditemukan."
+    timeout: 25000
+- assertVisible: "Pengguna tidak ditemukan."
+- takeScreenshot: exp-32-user-not-found

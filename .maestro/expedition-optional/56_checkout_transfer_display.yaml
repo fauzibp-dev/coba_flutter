@@ -1,0 +1,37 @@
+appId: com.fauzibondanp.shopmart
+name: "Checkout - tampilkan transfer manual tanpa order"
+tags:
+  - checkout
+  - optional
+  - auth
+  - cart-required
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Keranjang.*"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 15000
+- assertVisible: "Checkout"
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Alamat & Fulfillment"
+    timeout: 25000
+- assertVisible: "Buat Pesanan"
+- scrollUntilVisible:
+    element: "Transfer manual"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Transfer manual"
+- assertVisible: "Buat Pesanan"
+- takeScreenshot: opt-56-checkout-transfer

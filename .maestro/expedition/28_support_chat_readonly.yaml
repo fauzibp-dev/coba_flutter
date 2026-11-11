@@ -1,0 +1,34 @@
+appId: com.fauzibondanp.shopmart
+name: "Bantuan - lihat chat tanpa mengirim pesan"
+tags:
+  - customer
+  - support
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "Pusat Bantuan"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Pusat Bantuan"
+- extendedWaitUntil:
+    visible: "Pusat Bantuan"
+    timeout: 20000
+- assertVisible: "Pusat Bantuan"
+- takeScreenshot: exp-28-chat

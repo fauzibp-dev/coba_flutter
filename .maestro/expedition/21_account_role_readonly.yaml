@@ -1,0 +1,26 @@
+appId: com.fauzibondanp.shopmart
+name: "Akun - periksa informasi hak akses"
+tags:
+  - superadmin
+  - account
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- assertVisible: "Platform • SUPER ADMIN"
+- takeScreenshot: exp-21-account-role

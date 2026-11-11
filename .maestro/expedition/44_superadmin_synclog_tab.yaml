@@ -1,0 +1,46 @@
+appId: com.fauzibondanp.shopmart
+name: "Super Admin - operations sinkronisasi"
+tags:
+  - superadmin
+  - platform
+  - operations
+  - auth
+---
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 20000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Operations Center"
+    direction: DOWN
+    timeout: 18000
+- tapOn: "Operations Center"
+- extendedWaitUntil:
+    visible: "Operations Center"
+    timeout: 20000
+- assertVisible: "Operations Center"
+- tapOn: "Sync Log"
+- assertVisible: "Operations Center"
+- takeScreenshot: exp-44-ops-sync

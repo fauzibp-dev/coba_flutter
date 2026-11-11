@@ -1,8 +1,15 @@
+## Rekaman khusus CRUD saja — urutan pertama di Studio
+
+Flow **UTS-14 CRUD lengkap keranjang Tes Produk** sekarang menjadi **urutan pertama** dalam `config.yaml` dan nama berkas diawali `00_` supaya berada di posisi atas pada daftar berkas. Perubahan hanya mengatur urutan dan nama berkas, **tidak menjalankan ulang 12 flow lama**.
+
+Untuk merekam hanya CRUD, pilih `00_crud_keranjang_lengkap.yaml` dan klik **Run Test** pada flow terpilih, **jangan** klik **Run All Tests**. Uji ini merekam Create (tambah), Read (lihat), Update (+/-), dan Delete. Pastikan `Tes Produk` belum berada di keranjang sebelum tes. Hasil tes ini belum dinyatakan PASS sampai dijalankan pada HP fisik.
+
+---
 ## Tambahan UTS-14 — CRUD keranjang lengkap (belum diuji)
 
 Pengujian Studio awal **12/12 PASS** tetap berlaku untuk 12 flow lama. UTS-03 **hanya** CREATE dan READ keranjang; tidak pernah menekan +/- atau hapus. Jangan klaim sudah CRUD lengkap dari UTS-03.
 
-Flow `14_crud_keranjang_lengkap.yaml` baru ditambahkan untuk benar-benar melakukan:
+Flow `00_crud_keranjang_lengkap.yaml` baru ditambahkan untuk benar-benar melakukan:
 1. Guard `Tes Produk` **belum** ada di cart, agar tidak menghapus barang lama.
 2. CREATE: menambahkan Tes Produk satu kali.
 3. READ: assert kuantitas 1, screenshot.

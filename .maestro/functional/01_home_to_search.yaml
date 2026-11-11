@@ -1,0 +1,18 @@
+appId: com.fauzibondanp.shopmart
+name: "Buka app lalu halaman pencarian"
+tags:
+  - smoke
+  - customer
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Cari produk, promo, atau kategori..."
+- extendedWaitUntil:
+    visible: "Pencarian"
+    timeout: 20000
+- assertVisible: "Cari nama atau deskripsi produk..."
+- takeScreenshot: fix-01-search

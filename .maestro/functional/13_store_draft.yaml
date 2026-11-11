@@ -1,0 +1,46 @@
+appId: com.fauzibondanp.shopmart
+name: "Input nama toko baru dan batal"
+tags:
+  - superadmin
+  - auth
+  - draft
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 25000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Toko & Koperasi"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Toko & Koperasi"
+- extendedWaitUntil:
+    visible: "Toko & Koperasi"
+    timeout: 20000
+- assertVisible: "Toko & Koperasi"
+- tapOn: "Tambah Toko"
+- extendedWaitUntil:
+    visible: "Tambah Toko"
+    timeout: 20000
+- tapOn: "Nama toko *"
+- inputText: "TOKO UAT DRAFT"
+- assertVisible: "Slug *"
+- takeScreenshot: fix-13-store-entry
+- tapOn: "Batal"
+- assertVisible: "Toko & Koperasi"

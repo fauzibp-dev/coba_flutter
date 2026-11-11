@@ -1,0 +1,38 @@
+appId: com.fauzibondanp.shopmart
+name: "Validasi wajib isi form alamat"
+tags:
+  - customer
+  - account
+  - validation
+  - auth
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- tapOn: "Alamat tersimpan"
+- extendedWaitUntil:
+    visible: "Alamat Tersimpan"
+    timeout: 20000
+- tapOn: "Alamat"
+- extendedWaitUntil:
+    visible: "Tambah Alamat"
+    timeout: 20000
+- scrollUntilVisible:
+    element: "Simpan Alamat"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Simpan Alamat"
+- scrollUntilVisible:
+    element: "Wajib diisi."
+    direction: UP
+    timeout: 20000
+- assertVisible: "Wajib diisi."
+- takeScreenshot: fix-07-address-validation

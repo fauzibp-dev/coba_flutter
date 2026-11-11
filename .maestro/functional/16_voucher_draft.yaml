@@ -1,0 +1,50 @@
+appId: com.fauzibondanp.shopmart
+name: "Input voucher draf lalu batal"
+tags:
+  - superadmin
+  - auth
+  - draft
+  - store-required
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 25000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Voucher & Banner"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Voucher & Banner"
+- extendedWaitUntil:
+    visible: "Promo & Banner"
+    timeout: 20000
+- assertVisible: "Promo & Banner"
+- tapOn: "^Voucher$"
+- extendedWaitUntil:
+    visible: "Tambah Voucher"
+    timeout: 20000
+- tapOn: "Kode *"
+- inputText: "DRAFTUAT2026"
+- tapOn: "Judul *"
+- inputText: "Voucher UAT Draft"
+- hideKeyboard
+- assertVisible: "Tambah Voucher"
+- takeScreenshot: fix-16-voucher-entry
+- tapOn: "Batal"
+- assertVisible: "Promo & Banner"

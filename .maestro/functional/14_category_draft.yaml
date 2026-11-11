@@ -1,0 +1,47 @@
+appId: com.fauzibondanp.shopmart
+name: "Input nama kategori baru dan batal"
+tags:
+  - superadmin
+  - auth
+  - draft
+  - store-required
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 25000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Kategori Global"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Kategori Global"
+- extendedWaitUntil:
+    visible: "Kategori Global"
+    timeout: 20000
+- assertVisible: "Kategori Global"
+- tapOn: "Kategori"
+- extendedWaitUntil:
+    visible: "Tambah Kategori"
+    timeout: 20000
+- tapOn: "Nama kategori *"
+- inputText: "KATEGORI UAT DRAFT"
+- assertVisible: "Slug *"
+- takeScreenshot: fix-14-category-entry
+- tapOn: "Batal"
+- assertVisible: "Kategori Global"

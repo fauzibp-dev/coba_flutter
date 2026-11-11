@@ -1,0 +1,41 @@
+appId: com.fauzibondanp.shopmart
+name: "Ketik pencarian akun di admin"
+tags:
+  - superadmin
+  - auth
+  - search
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 25000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Pengguna & Hak Akses"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Pengguna & Hak Akses"
+- extendedWaitUntil:
+    visible: "Pengguna & Hak Akses"
+    timeout: 20000
+- assertVisible: "Pengguna & Hak Akses"
+- tapOn: "Cari nama atau email"
+- inputText: "uat"
+- pressKey: Enter
+- assertVisible: "Pengguna & Hak Akses"
+- takeScreenshot: fix-18-user-search

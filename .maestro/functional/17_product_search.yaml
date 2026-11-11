@@ -1,0 +1,41 @@
+appId: com.fauzibondanp.shopmart
+name: "Ketik pencarian produk di admin"
+tags:
+  - superadmin
+  - auth
+  - search
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "KKMP Kerten Super Admin.*"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center"
+    timeout: 25000
+- assertVisible: "Platform Control Center"
+- scrollUntilVisible:
+    element: "Katalog Global"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Katalog Global"
+- extendedWaitUntil:
+    visible: "Katalog Global"
+    timeout: 20000
+- assertVisible: "Katalog Global"
+- tapOn: "Cari produk / SKU"
+- inputText: "beras"
+- pressKey: Enter
+- assertVisible: "Katalog Global"
+- takeScreenshot: fix-17-admin-search

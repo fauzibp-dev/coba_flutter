@@ -1,0 +1,33 @@
+appId: com.fauzibondanp.shopmart
+name: "Ketik draft pesan tanpa mengirim"
+tags:
+  - customer
+  - optional
+  - auth
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "Pusat Bantuan"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Pusat Bantuan"
+- extendedWaitUntil:
+    visible: "Pusat Bantuan"
+    timeout: 20000
+- extendedWaitUntil:
+    visible: "Tulis pesan..."
+    timeout: 25000
+- tapOn: "Tulis pesan..."
+- inputText: "Halo ini uji otomatis chat tanpa kirim"
+- assertVisible: "Pusat Bantuan"
+- takeScreenshot: fix-19-chat-entry

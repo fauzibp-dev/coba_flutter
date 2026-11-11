@@ -1,0 +1,46 @@
+appId: com.fauzibondanp.shopmart
+name: "Isi data alamat draf lalu batal"
+tags:
+  - customer
+  - account
+  - auth
+  - draft
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- tapOn: "Alamat tersimpan"
+- extendedWaitUntil:
+    visible: "Alamat Tersimpan"
+    timeout: 20000
+- tapOn: "Alamat"
+- extendedWaitUntil:
+    visible: "Tambah Alamat"
+    timeout: 20000
+- tapOn: "Label"
+- eraseText
+- inputText: "UAT_DRAFT"
+- tapOn: "Nama penerima"
+- inputText: "Pengguna UAT"
+- tapOn: "Nomor HP"
+- inputText: "081234567890"
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Alamat lengkap"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Alamat lengkap"
+- inputText: "Jl Uji Aplikasi Nomor 1"
+- hideKeyboard
+- assertVisible: "Tambah Alamat"
+- takeScreenshot: fix-08-address-entry
+- pressKey: Back
+- assertVisible: "Alamat Tersimpan"

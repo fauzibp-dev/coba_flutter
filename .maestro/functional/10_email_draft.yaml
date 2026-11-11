@@ -1,0 +1,40 @@
+appId: com.fauzibondanp.shopmart
+name: "Isi email draf tidak valid lalu batal"
+tags:
+  - customer
+  - account
+  - validation
+  - auth
+  - draft
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Akun.*"
+- extendedWaitUntil:
+    visible: "Akun"
+    timeout: 20000
+- assertVisible: "Akun"
+- scrollUntilVisible:
+    element: "Keamanan & Preferensi"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Keamanan & Preferensi"
+- extendedWaitUntil:
+    visible: "Keamanan & Preferensi"
+    timeout: 20000
+- assertVisible: "Keamanan Akun"
+- tapOn: "Ganti email"
+- extendedWaitUntil:
+    visible: "Ganti Email"
+    timeout: 20000
+- tapOn: "Email baru"
+- eraseText
+- inputText: "email-tidak-valid"
+- assertVisible: "Ganti Email"
+- takeScreenshot: fix-10-email-entry
+- tapOn: "Batal"
+- assertVisible: "Keamanan & Preferensi"

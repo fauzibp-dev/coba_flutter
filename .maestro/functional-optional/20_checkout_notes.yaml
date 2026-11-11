@@ -1,0 +1,31 @@
+appId: com.fauzibondanp.shopmart
+name: "Ketik catatan checkout tanpa membuat order"
+tags:
+  - customer
+  - optional
+  - auth
+  - cart-required
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Keranjang.*"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 20000
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Alamat & Fulfillment"
+    timeout: 25000
+- scrollUntilVisible:
+    element: "Catatan pesanan (opsional)"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Catatan pesanan (opsional)"
+- inputText: "CATATAN UAT TIDAK DIKIRIM"
+- hideKeyboard
+- assertVisible: "Buat Pesanan"
+- takeScreenshot: fix-20-checkout-entry

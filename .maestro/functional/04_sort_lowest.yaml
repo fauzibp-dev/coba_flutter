@@ -1,0 +1,21 @@
+appId: com.fauzibondanp.shopmart
+name: "Ubah urutan harga ke terendah"
+tags:
+  - customer
+  - search
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Cari produk, promo, atau kategori..."
+- extendedWaitUntil:
+    visible: "Pencarian"
+    timeout: 20000
+- assertVisible: "Cari nama atau deskripsi produk..."
+- tapOn: "Paling relevan"
+- tapOn: "Harga terendah"
+- assertVisible: "Harga terendah"
+- takeScreenshot: fix-04-sort

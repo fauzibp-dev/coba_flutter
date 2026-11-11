@@ -1,0 +1,25 @@
+appId: com.fauzibondanp.shopmart
+name: "Pilih ambil tanpa membuat order"
+tags:
+  - customer
+  - optional
+  - auth
+  - cart-required
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Keranjang.*"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 20000
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Alamat & Fulfillment"
+    timeout: 25000
+- tapOn: "Ambil"
+- assertVisible: "Pesanan diambil langsung di koperasi. Alamat tidak diperlukan."
+- takeScreenshot: fix-21-pickup

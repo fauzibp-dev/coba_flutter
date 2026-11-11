@@ -1,0 +1,28 @@
+appId: com.fauzibondanp.shopmart
+name: "Input filter harga minimum"
+tags:
+  - customer
+  - search
+  - validation
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 30000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Cari produk, promo, atau kategori..."
+- extendedWaitUntil:
+    visible: "Pencarian"
+    timeout: 20000
+- assertVisible: "Cari nama atau deskripsi produk..."
+- tapOn: "Filter"
+- extendedWaitUntil:
+    visible: "Filter Produk"
+    timeout: 20000
+- tapOn: "Harga minimum"
+- inputText: "10000"
+- hideKeyboard
+- tapOn: "Terapkan Filter"
+- assertVisible: "Filter.*"
+- takeScreenshot: fix-05-filter

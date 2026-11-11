@@ -1,3 +1,9 @@
+# ⚠️ 50 FLOW LAMA: JANGAN DIJALANKAN ULANG UNTUK REKAMAN UTS
+
+Pengguna melaporkan semua gagal dan banyak hanya scroll/navigasi. Paket pengganti di [`.maestro/functional/`](../functional/README.md) berisi tes yang mengetik, mengisi form, dan memvalidasi. Gunakan `bash scripts/run_maestro_functional.sh smoke` lebih dahulu. Paket lama di bawah tetap diarsip sebagai referensi, bukan tanda PASS.
+
+---
+
 # KKMP Kerten — Maestro Expedition (50 core flows)
 
 Source-backed test suite for the Xiaomi Android physical device; package `com.fauzibondanp.shopmart`.

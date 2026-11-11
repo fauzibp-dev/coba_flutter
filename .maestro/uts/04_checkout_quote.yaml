@@ -5,11 +5,16 @@ tags:
   - uts-transaction
   - uts-checkout
 ---
-- launchApp:
-    clearState: false
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
 - extendedWaitUntil:
     visible: "Belanja Lebih Mudah Di KKMP Kerten"
-    timeout: 30000
+    timeout: 25000
 - assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
 # Transaksi tahap draft: tidak mengetuk Buat Pesanan, tidak membuat order sungguhan.
 - tapOn: "Cari produk, promo, atau kategori..."
@@ -53,5 +58,7 @@ tags:
     visible: "Total"
     timeout: 25000
 - assertVisible: "Total"
+- assertVisible: "Diskon"
+- assertVisible: "Pengiriman"
 - takeScreenshot: uts-04-quote
 # Jika total gagal tampil, ini FAIL untuk dilaporkan, bukan alasan melewati assertion.

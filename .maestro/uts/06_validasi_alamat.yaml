@@ -4,11 +4,16 @@ tags:
   - uts-auth
   - uts-validation
 ---
-- launchApp:
-    clearState: false
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
 - extendedWaitUntil:
     visible: "Belanja Lebih Mudah Di KKMP Kerten"
-    timeout: 30000
+    timeout: 25000
 - assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
 - tapOn: "Akun.*"
 - extendedWaitUntil:

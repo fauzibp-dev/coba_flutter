@@ -5,11 +5,16 @@ tags:
   - uts-transaction
   - uts-cart
 ---
-- launchApp:
-    clearState: false
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
 - extendedWaitUntil:
     visible: "Belanja Lebih Mudah Di KKMP Kerten"
-    timeout: 30000
+    timeout: 25000
 - assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
 # CREATE: item yang ada di katalog dimasukkan ke keranjang pelanggan.
 # Prasyarat: sudah login, item Beras Premium Kerten aktif dan berstok.
@@ -39,15 +44,22 @@ tags:
 - assertVisible: "Checkout"
 - takeScreenshot: uts-03-cart-created
 # READ: restart proses Flutter tanpa clearState, lalu buka keranjang lagi.
-- launchApp:
-    clearState: false
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
 - extendedWaitUntil:
     visible: "Belanja Lebih Mudah Di KKMP Kerten"
-    timeout: 30000
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
 - tapOn: "Keranjang.*"
 - extendedWaitUntil:
     visible: "Subtotal"
     timeout: 20000
-- assertVisible: "Beras Premium Kerten"
+- assertVisible: ".*Beras Premium Kerten.*"
 - assertVisible: "Checkout"
 - takeScreenshot: uts-03-cart-persisted

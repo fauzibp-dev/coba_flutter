@@ -1,3 +1,22 @@
+# PERBAIKAN STARTUP XIAOMI — 11 NOVEMBER 2026
+
+Pengguna melaporkan smoke FAIL sebelum aplikasi terbuka. Pada perangkat ini pola `launchApp` pernah tidak andal; kode flow kini kembali memakai pola launcher dari `.maestro/startup.yaml` yang pernah PASS.
+
+Script baru memeriksa ADB, memvalidasi `pm path` (termasuk output kosong), memulai KKMP Kerten via ADB `monkey` tanpa menghapus sesi, menyimpan `preflight.png` dan `launch.log`, lalu menjalankan YAML secara berurutan dan berhenti pada FAIL pertama. Proses aplikasi hidup **belum membuktikan layar UI benar-benar tampil**; periksa layar HP/screenshot sebelum menjalankan smoke.
+
+```bash
+git fetch origin
+git switch test/maestro-exploration-20261111
+git pull --ff-only
+bash scripts/run_uts_maestro.sh doctor
+# HANYA jika KKMP Kerten sudah terlihat pada HP:
+bash scripts/run_uts_maestro.sh smoke
+```
+
+Gunakan `auth` atau `all` setelah smoke berhasil dan session login tersedia. Output: `build/uts-maestro-<waktu>-<mode>/` — tiap flow memiliki JUnit XML, log, screenshot dan debug. **Status PASS belum tersedia hingga dieksekusi pada HP.**
+
+---
+
 # Paket Maestro khusus UTS Mobile Testing 2026/2027
 
 Sumber: `UTS_mobile_testing_ti_23_B(2).pdf`, ketentuan C.3-4.

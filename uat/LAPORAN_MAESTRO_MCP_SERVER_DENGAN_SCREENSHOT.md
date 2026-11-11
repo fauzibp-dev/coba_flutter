@@ -49,13 +49,9 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Beranda KKMP Kerten dan daftar produk dapat ditampilkan.  
 **Status:** **PASS**
 
-<figure>
-
 ![Tampilan Beranda KKMP Kerten](../startup-home.png)
 
-<figcaption>**Gambar:** Tampilan Beranda KKMP Kerten. Berkas asli: <a href="../startup-home.png"><code>startup-home.png</code></a></figcaption>
-
-</figure>
+*Gambar: Tampilan Beranda KKMP Kerten. File asli: [startup-home.png](../startup-home.png).*
 
 
 ### UAT-015 — Navigasi kategori produk
@@ -68,13 +64,9 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Kategori Sembako terbuka dan produk terkait terlihat.  
 **Status:** **PASS**
 
-<figure>
-
 ![Navigasi kategori Sembako](../uat-u15-category-sembako.png)
 
-<figcaption>**Gambar:** Navigasi kategori Sembako. Berkas asli: <a href="../uat-u15-category-sembako.png"><code>uat-u15-category-sembako.png</code></a></figcaption>
-
-</figure>
+*Gambar: Navigasi kategori Sembako. File asli: [uat-u15-category-sembako.png](../uat-u15-category-sembako.png).*
 
 
 ### UAT-019 — Pencarian produk
@@ -87,13 +79,9 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Kata kunci beras menghasilkan produk terkait pada aplikasi.  
 **Status:** **PASS**
 
-<figure>
-
 ![Hasil pencarian kata kunci beras](../search-results-beras.png)
 
-<figcaption>**Gambar:** Hasil pencarian kata kunci beras. Berkas asli: <a href="../search-results-beras.png"><code>search-results-beras.png</code></a></figcaption>
-
-</figure>
+*Gambar: Hasil pencarian kata kunci beras. File asli: [search-results-beras.png](../search-results-beras.png).*
 
 
 ### UAT-021 — Validasi pencarian tanpa hasil
@@ -106,13 +94,9 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Pesan `Produk tidak ditemukan` dan petunjuk pencarian lain muncul.  
 **Status:** **PASS**
 
-<figure>
-
 ![Validasi pencarian dengan kata kunci tidak ditemukan](../uat-validation-empty-search.png)
 
-<figcaption>**Gambar:** Validasi pencarian dengan kata kunci tidak ditemukan. Berkas asli: <a href="../uat-validation-empty-search.png"><code>uat-validation-empty-search.png</code></a></figcaption>
-
-</figure>
+*Gambar: Validasi pencarian dengan kata kunci tidak ditemukan. File asli: [uat-validation-empty-search.png](../uat-validation-empty-search.png).*
 
 
 ### UAT-023 — Detail produk
@@ -125,13 +109,9 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Halaman detail terbuka, tetapi perbandingan seluruh field terhadap dataset belum dituntaskan.  
 **Status:** **PASS PARSIAL — bukan sign-off penuh**
 
-<figure>
-
 ![Pembukaan detail produk](../uat-u23-product-detail.png)
 
-<figcaption>**Gambar:** Pembukaan detail produk. Berkas asli: <a href="../uat-u23-product-detail.png"><code>uat-u23-product-detail.png</code></a></figcaption>
-
-</figure>
+*Gambar: Pembukaan detail produk. File asli: [uat-u23-product-detail.png](../uat-u23-product-detail.png).*
 
 
 ### UAT-029 — Tambah kuantitas produk di keranjang
@@ -144,21 +124,13 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Bukti menunjukkan 5 × Rp35.000 = Rp175.000 dan 8 × Rp35.000 = Rp280.000; assertion subtotal numerik secara otomatis tidak tercatat.  
 **Status:** **PASS PARSIAL — bukti angka tersedia, assertion numerik belum**
 
-<figure>
-
 ![Percobaan penambahan kuantitas keranjang](../uat-cart-plus-attempt.png)
 
-<figcaption>**Gambar:** Percobaan penambahan kuantitas keranjang. Berkas asli: <a href="../uat-cart-plus-attempt.png"><code>uat-cart-plus-attempt.png</code></a></figcaption>
-
-</figure>
-
-<figure>
+*Gambar: Percobaan penambahan kuantitas keranjang. File asli: [uat-cart-plus-attempt.png](../uat-cart-plus-attempt.png).*
 
 ![Kuantitas lanjutan dan subtotal keranjang](../uat-cart-plus-second-attempt.png)
 
-<figcaption>**Gambar:** Kuantitas lanjutan dan subtotal keranjang. Berkas asli: <a href="../uat-cart-plus-second-attempt.png"><code>uat-cart-plus-second-attempt.png</code></a></figcaption>
-
-</figure>
+*Gambar: Kuantitas lanjutan dan subtotal keranjang. File asli: [uat-cart-plus-second-attempt.png](../uat-cart-plus-second-attempt.png).*
 
 
 ### REG-001 — Navigasi sampai checkout
@@ -171,13 +143,9 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Bagian utama checkout terlihat, tetapi submit order final dan verifikasi total lengkap tidak dilakukan.  
 **Status:** **PASS PARSIAL — bukan bukti pesanan berhasil dibuat**
 
-<figure>
-
 ![Tampilan checkout hasil navigasi dari cart](../uat-transaction-checkout.png)
 
-<figcaption>**Gambar:** Tampilan checkout hasil navigasi dari cart. Berkas asli: <a href="../uat-transaction-checkout.png"><code>uat-transaction-checkout.png</code></a></figcaption>
-
-</figure>
+*Gambar: Tampilan checkout hasil navigasi dari cart. File asli: [uat-transaction-checkout.png](../uat-transaction-checkout.png).*
 
 
 ### UAT-036 — Pembuatan alamat tersimpan
@@ -190,29 +158,17 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Isian alamat terlihat sebelum save, tetapi alamat uji tidak ditemukan dalam daftar setelah penyimpanan.  
 **Status:** **FAIL — DEF-030 masih OPEN**
 
-<figure>
-
 ![Form alamat UAT_TEST terisi](../uat-address-form-filled.png)
 
-<figcaption>**Gambar:** Form alamat UAT_TEST terisi. Berkas asli: <a href="../uat-address-form-filled.png"><code>uat-address-form-filled.png</code></a></figcaption>
-
-</figure>
-
-<figure>
+*Gambar: Form alamat UAT_TEST terisi. File asli: [uat-address-form-filled.png](../uat-address-form-filled.png).*
 
 ![Percobaan menyimpan alamat](../uat-address-save-attempt.png)
 
-<figcaption>**Gambar:** Percobaan menyimpan alamat. Berkas asli: <a href="../uat-address-save-attempt.png"><code>uat-address-save-attempt.png</code></a></figcaption>
-
-</figure>
-
-<figure>
+*Gambar: Percobaan menyimpan alamat. File asli: [uat-address-save-attempt.png](../uat-address-save-attempt.png).*
 
 ![Daftar alamat setelah penyimpanan: entri uji tidak terlihat](../uat-address-create-failed.png)
 
-<figcaption>**Gambar:** Daftar alamat setelah penyimpanan: entri uji tidak terlihat. Berkas asli: <a href="../uat-address-create-failed.png"><code>uat-address-create-failed.png</code></a></figcaption>
-
-</figure>
+*Gambar: Daftar alamat setelah penyimpanan: entri uji tidak terlihat. File asli: [uat-address-create-failed.png](../uat-address-create-failed.png).*
 
 
 ### UAT-045 — Validasi voucher tidak sah
@@ -225,13 +181,9 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 **Hasil aktual:** Voucher ditolak, namun aplikasi memperlihatkan pesan teknis PostgrestException P0001; total setelah penolakan belum diverifikasi.  
 **Status:** **BLOCKED — DEF-032, hasil akhir belum tervalidasi**
 
-<figure>
-
 ![Pesan teknis yang tampil ketika voucher tidak valid](../uat-invalid-voucher.png)
 
-<figcaption>**Gambar:** Pesan teknis yang tampil ketika voucher tidak valid. Berkas asli: <a href="../uat-invalid-voucher.png"><code>uat-invalid-voucher.png</code></a></figcaption>
-
-</figure>
+*Gambar: Pesan teknis yang tampil ketika voucher tidak valid. File asli: [uat-invalid-voucher.png](../uat-invalid-voucher.png).*
 
 
 
@@ -246,58 +198,30 @@ Laporan ini menjelaskan evaluasi aplikasi KKMP Kerten dengan Maestro MCP Server 
 | UPDATE | Harga produk berubah Rp10.000 → Rp11.000 | Terlihat pada UI/query |
 | ARCHIVE | Produk uji diarsipkan | Bukan DELETE permanen |
 
-<figure>
-
 ![Form pembuatan produk uji Super Admin](../uat-admin-product-create-form.png)
 
-<figcaption>**Gambar:** Form pembuatan produk uji Super Admin. Berkas asli: <a href="../uat-admin-product-create-form.png"><code>uat-admin-product-create-form.png</code></a></figcaption>
-
-</figure>
-<figure>
-
+*Gambar: Form pembuatan produk uji Super Admin. File asli: [uat-admin-product-create-form.png](../uat-admin-product-create-form.png).*
 ![Bukti pembacaan produk uji di katalog admin](../uat-admin-product-read.png)
 
-<figcaption>**Gambar:** Bukti pembacaan produk uji di katalog admin. Berkas asli: <a href="../uat-admin-product-read.png"><code>uat-admin-product-read.png</code></a></figcaption>
-
-</figure>
-<figure>
-
+*Gambar: Bukti pembacaan produk uji di katalog admin. File asli: [uat-admin-product-read.png](../uat-admin-product-read.png).*
 ![Form pembaruan harga produk uji](../uat-admin-product-edit-form.png)
 
-<figcaption>**Gambar:** Form pembaruan harga produk uji. Berkas asli: <a href="../uat-admin-product-edit-form.png"><code>uat-admin-product-edit-form.png</code></a></figcaption>
-
-</figure>
-<figure>
-
+*Gambar: Form pembaruan harga produk uji. File asli: [uat-admin-product-edit-form.png](../uat-admin-product-edit-form.png).*
 ![Proses pengarsipan produk uji](../uat-admin-product-archive-attempt.png)
 
-<figcaption>**Gambar:** Proses pengarsipan produk uji. Berkas asli: <a href="../uat-admin-product-archive-attempt.png"><code>uat-admin-product-archive-attempt.png</code></a></figcaption>
-
-</figure>
+*Gambar: Proses pengarsipan produk uji. File asli: [uat-admin-product-archive-attempt.png](../uat-admin-product-archive-attempt.png).*
 
 ## 5. Bantuan customer, notifikasi dan error log
 
-<figure>
-
 ![Halaman Pusat Bantuan / customer support dapat dibuka](../uat-chat-open.png)
 
-<figcaption>**Gambar:** Halaman Pusat Bantuan / customer support dapat dibuka. Berkas asli: <a href="../uat-chat-open.png"><code>uat-chat-open.png</code></a></figcaption>
-
-</figure>
-<figure>
-
+*Gambar: Halaman Pusat Bantuan / customer support dapat dibuka. File asli: [uat-chat-open.png](../uat-chat-open.png).*
 ![Tampilan Error Log Center](../uat-reg013-error-log-center.png)
 
-<figcaption>**Gambar:** Tampilan Error Log Center. Berkas asli: <a href="../uat-reg013-error-log-center.png"><code>uat-reg013-error-log-center.png</code></a></figcaption>
-
-</figure>
-<figure>
-
+*Gambar: Tampilan Error Log Center. File asli: [uat-reg013-error-log-center.png](../uat-reg013-error-log-center.png).*
 ![Tampilan hasil observasi Error Log Center](../uat-reg013-error-log-after-test.png)
 
-<figcaption>**Gambar:** Tampilan hasil observasi Error Log Center. Berkas asli: <a href="../uat-reg013-error-log-after-test.png"><code>uat-reg013-error-log-after-test.png</code></a></figcaption>
-
-</figure>
+*Gambar: Tampilan hasil observasi Error Log Center. File asli: [uat-reg013-error-log-after-test.png](../uat-reg013-error-log-after-test.png).*
 
 **Batasan:** pembukaan halaman bantuan tidak membuktikan pesan berhasil dikirim. Observasi Error Log Center tidak otomatis berarti seluruh subkriteria regresi telah PASS.
 

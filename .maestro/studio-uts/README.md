@@ -1,3 +1,20 @@
+## Tambahan UTS-14 — CRUD keranjang lengkap (belum diuji)
+
+Pengujian Studio awal **12/12 PASS** tetap berlaku untuk 12 flow lama. UTS-03 **hanya** CREATE dan READ keranjang; tidak pernah menekan +/- atau hapus. Jangan klaim sudah CRUD lengkap dari UTS-03.
+
+Flow `14_crud_keranjang_lengkap.yaml` baru ditambahkan untuk benar-benar melakukan:
+1. Guard `Tes Produk` **belum** ada di cart, agar tidak menghapus barang lama.
+2. CREATE: menambahkan Tes Produk satu kali.
+3. READ: assert kuantitas 1, screenshot.
+4. UPDATE (+): tap tombol tambah, assert kuantitas 2, screenshot.
+5. UPDATE (-): tap tombol kurang, assert kuantitas 1, screenshot.
+6. DELETE: tap ikon hapus **Tes Produk saja**, pastikan item hilang dan tidak kembali setelah restart.
+
+**Perlu APK baru:** tombol +/- sebelumnya tidak punya label aksesibilitas. Source `lib/screens/cart_screen.dart` sekarang memberi Semantics untuk +/- dan quantity, serta tooltip hapus. Build di Mac dengan `flutter build apk --debug`, lalu `adb install -r build/app/outputs/flutter-apk/app-debug.apk`. `adb install -r` mempertahankan data lokal, tetapi gunakan aplikasi yang cocok dengan konfigurasi Supabase pengujian.
+
+Tes produk "Tes Produk" harus aktif/berstok dan belum ada di cart. Kalau sudah ada, guard sengaja FAIL dan tes tidak menghapus item lama. Setelah instalasi, jalankan flow 14 saja di Studio terlebih dahulu; 13/13 PASS hanya boleh dilaporkan setelah dibuktikan perangkat.
+
+---
 ## Koreksi berdasarkan screenshot Maestro Studio (11 November 2026, 14.47 WIB)
 
 Pengguna melaporkan **hanya tiga flow FAIL** pada suite customer Studio: UTS-06, UTS-12, dan UTS-13. Screenshot menunjukkan:

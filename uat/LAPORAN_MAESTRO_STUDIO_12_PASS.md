@@ -61,3 +61,9 @@ Syarat minimal 5 skenario UAT, minimal 4 YAML, assertion, screenshot/log, README
 ## Kesimpulan
 
 12 flow Maestro Studio yang berfokus pada pelanggan sudah menunjukkan **PASS 12/12** dalam eksekusi lokal di Xiaomi. Laporan ini dipisahkan dari hasil Maestro MCP Server: 14 PASS, 1 FAIL, 3 BLOCKED, 118 NOT RUN pada matriks 136 kasus UAT. Status UAT MCP tidak boleh digabung dengan status 12 flow Studio.
+
+## Lampiran tambahan UTS-14 (belum diuji; tidak termasuk 12/12 PASS)
+
+Penguji mengonfirmasi bahwa alur UTS-03 sebelumnya hanya menambah dan membaca isi keranjang, tidak menekan tombol `+`, `−`, atau hapus. Maka kategorinya adalah CREATE/READ parsial, bukan CRUD lengkap. Agar cakupan lebih kuat, ditambahkan [UTS-14 CRUD lengkap keranjang](../.maestro/studio-uts/14_crud_keranjang_lengkap.yaml) dengan assertion sebelum/sesudah update serta delete dan screenshot `uts-14-*.png`.
+
+Flow baru **NOT RUN**, belum termasuk hasil 12/12 PASS. Perubahan Semantics pada Flutter memerlukan pembangunan dan pemasangan APK baru; jangan mengubah catatan sejarah 12/12 sebelum eksekusi terbaru.

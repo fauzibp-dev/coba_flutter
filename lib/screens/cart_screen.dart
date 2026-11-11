@@ -117,11 +117,29 @@ class _CartScreenState extends State<CartScreen> {
                                       const SizedBox(height: 8),
                                       Row(
                                         children: [
-                                          _QtyButton(icon: Icons.remove, onTap: () => _change(item, -1)),
-                                          SizedBox(width: 38, child: Text('$qty', textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w700))),
-                                          _QtyButton(icon: Icons.add, onTap: () => _change(item, 1)),
+                                          _QtyButton(
+                                            icon: Icons.remove,
+                                            semanticLabel: 'Kurangi jumlah ${product['name'] ?? 'produk'}',
+                                            onTap: () => _change(item, -1),
+                                          ),
+                                          SizedBox(
+                                            width: 38,
+                                            child: Semantics(
+                                              container: true,
+                                              label: 'Jumlah ${product['name'] ?? 'produk'}: $qty',
+                                              child: ExcludeSemantics(
+                                                child: Text('$qty', textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w700)),
+                                              ),
+                                            ),
+                                          ),
+                                          _QtyButton(
+                                            icon: Icons.add,
+                                            semanticLabel: 'Tambah jumlah ${product['name'] ?? 'produk'}',
+                                            onTap: () => _change(item, 1),
+                                          ),
                                           const Spacer(),
                                           IconButton(
+                                            tooltip: 'Hapus ${product['name'] ?? 'produk'} dari keranjang',
                                             onPressed: () async {
                                               await ShopRepository.instance.removeCartItem(item['id'] as String);
                                               if (mounted) setState(_reload);
@@ -183,19 +201,26 @@ class _CartScreenState extends State<CartScreen> {
 }
 
 class _QtyButton extends StatelessWidget {
-  const _QtyButton({required this.icon, required this.onTap});
+  const _QtyButton({required this.icon, required this.onTap, required this.semanticLabel});
   final IconData icon;
   final VoidCallback onTap;
+  final String semanticLabel;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(7),
-      child: Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(border: Border.all(color: AppTheme.border), borderRadius: BorderRadius.circular(7)),
-        child: Icon(icon, size: 17),
+    return Semantics(
+      container: true,
+      button: true,
+      label: semanticLabel,
+      child: InkWell(
+        excludeFromSemantics: true,
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(7),
+        child: Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(border: Border.all(color: AppTheme.border), borderRadius: BorderRadius.circular(7)),
+          child: Icon(icon, size: 17),
+        ),
       ),
     );
   }

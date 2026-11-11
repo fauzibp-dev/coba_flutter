@@ -12,6 +12,7 @@ executionOrder:
     - "UTS-07 Pilih urutan harga terendah"
     - "UTS-06 Customer lihat detail dan deskripsi produk"
     - "UTS-03 CRUD keranjang create/read dan persistensi"
+    - "UTS-14 CRUD lengkap keranjang Tes Produk"
     - "UTS-08 Customer membuka wishlist"
     - "UTS-09 Customer melihat riwayat pesanan"
     - "UTS-10 Customer melihat notifikasi"

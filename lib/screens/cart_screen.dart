@@ -80,7 +80,9 @@ class _CartScreenState extends State<CartScreen> {
         throw StateError('CART_NOT_SYNCED');
       }
       if (!mounted) return;
-      setState(() => _future = Future.value(freshItems));
+      setState(() {
+        _future = Future.value(freshItems);
+      });
     } catch (error) {
       if (!mounted) return;
       // Never swallow PostgREST errors: show a useful message, then refresh

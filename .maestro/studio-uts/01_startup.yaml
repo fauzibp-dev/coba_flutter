@@ -1,0 +1,24 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-01 Pembukaan aplikasi dan katalog"
+tags:
+  - uts-smoke
+  - uts-startup
+---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Kategori.*"
+    timeout: 20000
+- assertVisible: "Kategori.*"
+- takeScreenshot: uts-01-startup

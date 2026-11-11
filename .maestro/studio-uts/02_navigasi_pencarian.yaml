@@ -1,0 +1,32 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-02 Navigasi dan input pencarian"
+tags:
+  - uts-smoke
+  - uts-navigation
+---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Cari produk, promo, atau kategori..."
+- extendedWaitUntil:
+    visible: "Pencarian"
+    timeout: 20000
+- assertVisible: "Cari nama atau deskripsi produk..."
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "beras"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 25000
+- assertVisible: "beras.*Stok.*"
+- takeScreenshot: uts-02-navigasi-cari

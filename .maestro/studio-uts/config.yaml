@@ -1,0 +1,12 @@
+# Studio workspace tersendiri. Hanya lima flow yang sudah PASS di Xiaomi CLI terakhir.
+# Nama lengkap diperlukan agar maestro 2.12.1 menjaga urutan.
+flows:
+  - "*.yaml"
+executionOrder:
+  continueOnFailure: true
+  flowsOrder:
+    - "UTS-01 Pembukaan aplikasi dan katalog"
+    - "UTS-02 Navigasi dan input pencarian"
+    - "UTS-03 CRUD keranjang create/read dan persistensi"
+    - "UTS-05 Kondisi gagal pencarian produk"
+    - "UTS-07 Pilih urutan harga terendah"

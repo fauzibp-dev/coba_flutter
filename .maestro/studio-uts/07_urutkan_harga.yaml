@@ -1,0 +1,34 @@
+appId: com.fauzibondanp.shopmart
+name: "UTS-07 Pilih urutan harga terendah"
+tags:
+  - uts-extended
+  - uts-search
+---
+# Reset route stack tanpa menghapus data atau sesi login.
+- stopApp
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 25000
+- tapOn:
+    text: "Beranda.*"
+- extendedWaitUntil:
+    visible: "Belanja Lebih Mudah Di KKMP Kerten"
+    timeout: 25000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- tapOn: "Cari produk, promo, atau kategori..."
+- extendedWaitUntil:
+    visible: "Pencarian"
+    timeout: 20000
+- assertVisible: "Cari nama atau deskripsi produk..."
+- assertVisible: "Pencarian"
+- takeScreenshot: uts-07-before-sort
+- tapOn: "Urutkan.*"
+- extendedWaitUntil:
+    visible: "Harga terendah"
+    timeout: 10000
+- tapOn: "Harga terendah"
+- assertVisible: "(?s).*Harga terendah.*"
+- takeScreenshot: uts-07-sort-price
+

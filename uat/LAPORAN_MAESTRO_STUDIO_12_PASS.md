@@ -62,11 +62,22 @@ Syarat minimal 5 skenario UAT, minimal 4 YAML, assertion, screenshot/log, README
 
 12 flow Maestro Studio yang berfokus pada pelanggan sudah menunjukkan **PASS 12/12** dalam eksekusi lokal di Xiaomi. Laporan ini dipisahkan dari hasil Maestro MCP Server: 14 PASS, 1 FAIL, 3 BLOCKED, 118 NOT RUN pada matriks 136 kasus UAT. Status UAT MCP tidak boleh digabung dengan status 12 flow Studio.
 
-## Lampiran tambahan UTS-14 (belum diuji; tidak termasuk 12/12 PASS)
+## Pengujian tambahan UTS-14 — CRUD keranjang lengkap (setelah perbaikan aplikasi)
 
 Penguji mengonfirmasi bahwa alur UTS-03 sebelumnya hanya menambah dan membaca isi keranjang, tidak menekan tombol `+`, `−`, atau hapus. Maka kategorinya adalah CREATE/READ parsial, bukan CRUD lengkap. Agar cakupan lebih kuat, ditambahkan [UTS-14 CRUD lengkap keranjang](../.maestro/studio-uts/00_crud_keranjang_lengkap.yaml) dengan assertion sebelum/sesudah update serta delete dan screenshot `uts-14-*.png`.
 
-Flow baru **NOT RUN**, belum termasuk hasil 12/12 PASS. Perubahan Semantics pada Flutter memerlukan pembangunan dan pemasangan APK baru; jangan mengubah catatan sejarah 12/12 sebelum eksekusi terbaru.
+Pada percakapan setelah perbaikan keranjang, penguji menyatakan tombol +/−/hapus sudah normal dan menyampaikan bahwa tahap rekaman CRUD telah dilakukan. **Namun screenshot UTS-14 dan hasil PASS dari Maestro Studio belum tersedia di GitHub per pemeriksaan terakhir.** Karena itu angka eksekusi terverifikasi tetap **12/12 PASS untuk run awal**, sedangkan UTS-14 dicatat sebagai **uji tambahan dilaporkan telah dilakukan — bukti belum diarsipkan**. Jangan menghitung 13/13 PASS sebelum hasil Studio/artefak dapat diperiksa.
+
+| Elemen UTS-14 | Langkah yang diprogram | Assertion | Screenshot yang dihasilkan |
+|---|---|---|---|
+| Guard data awal | Periksa Tes Produk belum ada di cart | `assertNotVisible: Tes Produk` | `uts-14-cart-before.png` |
+| CREATE + READ | Cari Tes Produk, tekan Beli Sekarang, cek cart | `Jumlah Tes Produk: 1` | `uts-14-created.png` |
+| UPDATE (+) | Ketuk tambah | `Jumlah Tes Produk: 2` | `uts-14-updated-plus.png` |
+| UPDATE (−) | Ketuk kurang | `Jumlah Tes Produk: 1` | `uts-14-updated-minus.png` |
+| DELETE | Ketuk ikon hapus | `Tes Produk` tidak terlihat | `uts-14-deleted.png` |
+| Persistensi hasil | Buka ulang aplikasi, cek cart | `Tes Produk` tetap tidak terlihat | `uts-14-delete-persisted.png` |
+
+**Status bukti:** Flow YAML [00_crud_keranjang_lengkap.yaml](../.maestro/studio-uts/00_crud_keranjang_lengkap.yaml) sudah tersimpan; enam screenshot di atas masih perlu diunggah ke `uat/evidence/maestro-studio/crud-uts-14/`. Rekaman video CRUD yang baru dibuat dapat ditambahkan sebagai bukti pelengkap tanpa merekam ulang 12 flow lain. Screenshot asli dapat ditemukan di Mac pada `~/.maestro/tests/<sesi>/artifacts/takeScreenshot/`.
 
 ## Koreksi bug keranjang setelah hasil Studio 12/12 PASS
 
@@ -74,4 +85,4 @@ Pengguna menguji tombol **+**, **−**, dan hapus secara manual dan melaporkan t
 
 Perubahan pada branch uji: permintaan kuantitas/hapus dijalankan **satu per satu**, indikator proses tampil, hasil dibaca ulang dari server dan dibandingkan dengan kuantitas yang diminta, error ditampilkan dalam SnackBar, dan tersedia tombol retry baca data. Tombol kurang tidak menghapus barang ketika jumlah satu; hapus dilakukan via ikon tempat sampah. Area sentuh tombol +/- diperbesar.
 
-**Belum dikonfirmasi di perangkat.** UTS-14 yang menekan +/-/hapus harus dijalankan ulang setelah membangun APK baru. Status 12/12 PASS lama tidak berarti bug keranjang ini sudah diperbaiki pada APK fisik.
+**Pembaruan lapangan:** Penguji melaporkan tombol keranjang sudah normal setelah APK baru dipasang, dan merekam alur CRUD tambahan. Verifikasi PASS flow UTS-14 di laporan tetap menunggu bukti hasil Maestro Studio dan screenshot, bukan hanya laporan verbal.

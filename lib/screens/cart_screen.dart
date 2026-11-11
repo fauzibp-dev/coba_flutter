@@ -6,8 +6,18 @@ import '../services/shop_repository.dart';
 import 'checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key, this.embedded = false});
+  const CartScreen({
+    super.key,
+    this.embedded = false,
+    this.loadItems,
+    this.saveQuantity,
+  });
   final bool embedded;
+
+  // Optional dependencies allow widget tests to exercise the same buttons
+  // without writing to the user's real Supabase cart.
+  final Future<List<Map<String, dynamic>>> Function()? loadItems;
+  final Future<void> Function(String itemId, int quantity)? saveQuantity;
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -25,7 +35,13 @@ class _CartScreenState extends State<CartScreen> {
     _reload();
   }
 
-  void _reload() => _future = ShopRepository.instance.cartItems();
+  Future<List<Map<String, dynamic>>> _fetchCart() =>
+      (widget.loadItems ?? ShopRepository.instance.cartItems)();
+
+  Future<void> _saveQuantity(String itemId, int quantity) =>
+      (widget.saveQuantity ?? ShopRepository.instance.setCartQuantity)(itemId, quantity);
+
+  void _reload() => _future = _fetchCart();
 
   Future<void> _change(Map<String, dynamic> item, int delta) async {
     final current = ((item['quantity'] ?? 1) as num).toInt();
@@ -46,10 +62,10 @@ class _CartScreenState extends State<CartScreen> {
     setState(() => _pendingItemId = itemId);
 
     try {
-      await ShopRepository.instance.setCartQuantity(itemId, desiredQuantity);
+      await _saveQuantity(itemId, desiredQuantity);
       // A 204 RPC response alone is not enough to show the mutation as PASS.
       // Read the authoritative quantity back from Supabase.
-      final freshItems = await ShopRepository.instance.cartItems();
+      final freshItems = await _fetchCart();
       final matching = freshItems.where((element) => element['id'] == itemId);
       final savedQuantity = matching.isEmpty
           ? null

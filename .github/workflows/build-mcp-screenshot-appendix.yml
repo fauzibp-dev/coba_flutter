@@ -1,0 +1,27 @@
+name: Build UTS MCP screenshot appendix
+on:
+  push:
+    branches:
+      - test/maestro-exploration-20261111
+    paths:
+      - scripts/build_mcp_screenshot_appendix.py
+      - .github/workflows/build-mcp-screenshot-appendix.yml
+  workflow_dispatch:
+jobs:
+  build-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install python-docx reportlab Pillow
+      - run: python scripts/build_mcp_screenshot_appendix.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Lampiran-Bukti-Maestro-MCP-Server
+          path: artifacts/Lampiran_Bukti_Maestro_MCP_Server_GitHub.*
+          if-no-files-found: error
+          retention-days: 30

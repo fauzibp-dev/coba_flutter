@@ -1,3 +1,22 @@
+## Pembaruan 11 November 2026 — jangan ketuk Install setiap flow
+
+**Masalah:** runner sebelumnya memanggil proses `maestro test` **sekali per YAML**. Di Xiaomi/MIUI setiap inisialisasi berpotensi menampilkan permintaan **Install** driver Maestro, sehingga pengguna harus mengizinkan berulang-ulang.
+
+**Perbaikan:** runner baru membuka aplikasi melalui ADB sekali, lalu menjalankan seluruh flow smoke/auth/all yang dipilih dalam **satu pemanggilan `maestro test`**. JUnit, log dan screenshot tetap dikumpulkan. Perintah `doctor` tidak melakukan testing. Tidak menginstal ulang APK KKMP Kerten.
+
+```bash
+git fetch origin
+git switch test/maestro-exploration-20261111
+git pull --ff-only
+bash scripts/run_uts_maestro.sh smoke
+```
+
+Jika masih muncul jendela **Install** walaupun sekali per run, lihat nama aplikasinya. Jika menyebut **Maestro** atau `dev.mobile.maestro`, itu driver pengujian, bukan KKMP Kerten. Xiaomi/MIUI kadang meminta persetujuan instalasi lewat USB. Jangan menonaktifkan Play Protect secara umum; lihat pengaturan izin instalasi USB hanya jika memang diperlukan dan installer dapat diverifikasi. Jika prompt justru menyebut **KKMP Kerten**, kirim fotonya agar penyebabnya dipastikan.
+
+Bukti hasil berada di `build/uts-maestro-<waktu>-<mode>/junit.xml`, `terminal.log`, `artifacts/` dan `debug/`. Satu proses CLI dapat melanjutkan flow berikutnya walau flow sebelumnya FAIL, sehingga evaluasi per-flow tetap dilakukan dari JUnit.
+
+---
+
 # PERBAIKAN STARTUP XIAOMI — 11 NOVEMBER 2026
 
 Pengguna melaporkan smoke FAIL sebelum aplikasi terbuka. Pada perangkat ini pola `launchApp` pernah tidak andal; kode flow kini kembali memakai pola launcher dari `.maestro/startup.yaml` yang pernah PASS.

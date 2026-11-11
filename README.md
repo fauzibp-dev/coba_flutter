@@ -2,6 +2,8 @@
 
 **PRECHECK STARTUP XIAOMI:** Jalankan `bash scripts/run_uts_maestro.sh doctor` dahulu, baru `smoke` setelah layar HP menampilkan aplikasi. Script tidak lagi melaporkan banyak FAIL akibat startup tunggal. [Panduan](.maestro/uts/README.md).
 
+**Perbaikan instalasi berulang driver Maestro (11 November 2026):** jalankan `bash scripts/run_uts_maestro.sh smoke`. Sekarang smoke dijalankan dalam satu proses Maestro (bukan `maestro test` berulang tiap flow). Baca [panduan](.maestro/uts/README.md).
+
 ## UTS Mobile Testing 2026/2027 — status pengumpulan
 
 Dokumen soal meminta minimal **5 skenario UAT**, **4 flow YAML Maestro** (startup, navigasi, transaksi/CRUD dan validasi), assertion serta log/screenshot/rekaman, laporan UAT, README dan video 5–10 menit. Paket terfokus berada di:

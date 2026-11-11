@@ -1,3 +1,19 @@
+## Catatan eksekusi smoke nyata — 11 November 2026
+
+Pengguna membagikan terminal log `smoke` dari Mac Xiaomi, sebelum runner versi satu-proses digunakan. Tiga flow PASS secara nyata:
+
+- `01_startup.yaml`: PASS, app Home, tagline dan kategori visible, screenshot berhasil diambil (24 detik).
+- `02_navigasi_pencarian.yaml`: PASS, Maestro mengetik `beras`, Enter, hasil beras tampil, screenshot berhasil diambil (38 detik).
+- `05_validasi_pencarian.yaml`: PASS, Maestro mengetik `zzzuatnotfound`, empty-state dan petunjuk terlihat, screenshot berhasil diambil (39 detik).
+
+Log asal lokal: `build/uts-maestro-20261111-125547-smoke/` di Mac pengguna; output dikirim sebagai teks ke percakapan. Bukti screenshot/JUnit XML masih lokal dan **belum diunggah ke repository**. Runner tersebut memanggil Maestro tiga kali (`1/1 Flow Passed` tiga kali), yang mungkin menjelaskan permintaan instalasi driver di Xiaomi berulang.
+
+Runner sekarang memakai **satu path direktori** `.maestro/uts` dengan `--include-tags=uts-smoke` / `--include-tags=uts-auth`; tidak memakai banyak path YAML sebagai argumen. Wajib jalankan ulang untuk membuktikan pengurangan prompt instalasi driver; perubahan skrip belum dieksekusi di HP.
+
+Lihat `uat/results/maestro_smoke_cli_20261111.md` untuk ringkasan bukti terverifikasi dan batasannya.
+
+---
+
 ## Pembaruan 11 November 2026 — jangan ketuk Install setiap flow
 
 **Masalah:** runner sebelumnya memanggil proses `maestro test` **sekali per YAML**. Di Xiaomi/MIUI setiap inisialisasi berpotensi menampilkan permintaan **Install** driver Maestro, sehingga pengguna harus mengizinkan berulang-ulang.

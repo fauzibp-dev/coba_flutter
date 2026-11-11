@@ -59,27 +59,25 @@ if [[ "$MODE" == "doctor" ]]; then
   exit 0
 fi
 
-# Satu invocation Maestro untuk semua flow yang dipilih. Mengurangi
-# pengulangan install/initialize driver di Xiaomi/MIUI.
+# Maestro test menerima satu path; pakai direktori flow dan filter TAG.
+# Satu invocation Maestro menjalankan semua YAML sesuai pilihan mode.
 case "$MODE" in
-  smoke) flows=(01_startup.yaml 02_navigasi_pencarian.yaml 05_validasi_pencarian.yaml) ;;
-  auth) flows=(03_cart_create_read.yaml 04_checkout_quote.yaml 06_validasi_alamat.yaml) ;;
-  all) flows=(01_startup.yaml 02_navigasi_pencarian.yaml 03_cart_create_read.yaml 04_checkout_quote.yaml 05_validasi_pencarian.yaml 06_validasi_alamat.yaml) ;;
+  smoke) TAG="uts-smoke" ;;
+  auth) TAG="uts-auth" ;;
+  all) TAG="" ;;
 esac
-selected=()
-for file in "${flows[@]}"; do
-  selected+=(".maestro/uts/$file")
-done
-printf 'DAFTAR FLOW (%s):\n' "${#selected[@]}"
-printf ' - %s\n' "${selected[@]}"
-echo "Menjalankan 1 proses Maestro; MIUI mungkin meminta persetujuan driver sekali per run."
-
-maestro --device="$DEVICE" --verbose test \
-  --format=JUNIT \
-  --output="$OUT/junit.xml" \
-  --test-output-dir="$OUT/artifacts" \
-  --debug-output="$OUT/debug" \
-  "${selected[@]}" 2>&1 | tee "$OUT/terminal.log"
+echo "Menjalankan 1 proses Maestro dari folder .maestro/uts"
+echo "Mode $MODE — label $(if [[ -n "$TAG" ]]; then echo "$TAG"; else echo semua-flow; fi)"
+args=(--device="$DEVICE" --verbose test
+  --format=JUNIT
+  --output="$OUT/junit.xml"
+  --test-output-dir="$OUT/artifacts"
+  --debug-output="$OUT/debug")
+if [[ -n "$TAG" ]]; then
+  args+=(--include-tags="$TAG")
+fi
+args+=(.maestro/uts)
+maestro "${args[@]}" 2>&1 | tee "$OUT/terminal.log"
 
 echo "Selesai. PASS/FAIL: $OUT/junit.xml"
 echo "Log: $OUT/terminal.log"

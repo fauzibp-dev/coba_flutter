@@ -24,6 +24,7 @@ Catatan: Status historis berasal dari `uat/UTS_UAT_REPORT.md` dan `uat/results/u
 | UAT ≥5, memuat tujuan, peran, kriteria, prasyarat, langkah, hasil, status, bukti | Ada enam skenario di dokumen ini | Bukti lama ada; hasil pengujian ulang CLI perlu diisi setelah eksekusi |
 | Maestro ≥4: launch, navigasi, transaksi/CRUD, error validation | **6 file disiapkan** di `.maestro/uts/` | Jalankan di Android fisik dan koreksi selector berdasarkan log; flow 03 create/read cart, 04 checkout quote |
 | Tiap Maestro flow assertion + log/screenshot/rekaman | Assertion dan perintah screenshot ada di YAML | File eksekusi terbaru **belum tersedia** |
+| Larangan menyimpan kredensial / API key | **Perlu ditinjau sebelum dikumpulkan**: `lib/core/config/supabase_config.dart` saat ini memuat **Supabase publishable key** sebagai default build. Publishable key bukan service-role secret dan memang ditujukan untuk client, namun lembar soal secara eksplisit melarang API key di repository. Pilihan patuh secara literal: pindahkan nilai default ke konfigurasi lokal `--dart-define`, exclude file lokal dari Git, dan uji kembali build | 
 | Minimal 5 commit bermakna | Riwayat `main` menunjukkan >5 commit | Tampilkan Git history dalam video |
 | Source dan APK / petunjuk menjalankan | Source Flutter dan petunjuk `flutter run` tersedia | APK debug dapat dibangun lokal jika dibutuhkan |
 | Laporan UAT PDF atau Markdown dengan temuan | `uat/UTS_UAT_REPORT.md` tersedia | Lampirkan ringkasan bug UAT-036 dan screenshot |

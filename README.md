@@ -17,6 +17,8 @@ Dokumen soal meminta minimal **5 skenario UAT**, **4 flow YAML Maestro** (startu
 
 **Tautan video:** [ISI URL VIDEO 5–10 MENIT, AKSES DOSEN HARUS DIBUKA]
 
+**Kesesuaian kredensial:** source `lib/core/config/supabase_config.dart` memiliki *publishable* Supabase key sebagai default. Key itu bukan secret/server role, tetapi instruksi dosen melarang penyimpanan API key di repository. Sebelum pengumpulan, tentukan cara konfigurasi build lokal (`--dart-define`) dan jangan mengunggah nilai key di README/log; penghapusan default belum diterapkan supaya build/aplikasi yang sedang diuji tidak mendadak terputus dari backend.
+
 **Akses repository:** repo GitHub saat audit masih **private**. Agar dosen dapat membaca, berikan akses melalui GitHub collaborator atau pengaturan akses lain yang disetujui. Pastikan tautan benar-benar dapat dibuka. Jangan menambahkan password, token, service-role/secret key ke GitHub.
 
 Run cepat di Mac (HP fisik telah terpasang APK, session login untuk auth):

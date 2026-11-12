@@ -1,0 +1,15 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Back
+- tapOn: "KKMP Kerten Super Admin.*"
+- extendedWaitUntil:
+    visible: "Platform Control Center.*"
+    timeout: 15000
+- swipe:
+    direction: UP
+    duration: 500
+- swipe:
+    direction: UP
+    duration: 500
+- assertVisible: "Katalog Global.*"
+- takeScreenshot: exploratory-20261111-exp009-global-catalog-readonly

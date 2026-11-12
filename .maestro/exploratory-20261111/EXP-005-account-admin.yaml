@@ -1,0 +1,14 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn: "Akun\nTab 5 of 5"
+- assertVisible: "Akun"
+- assertVisible: "Wishlist"
+- assertVisible: "Alamat tersimpan.*"
+- assertVisible: "Pusat Bantuan.*"
+- assertVisible: "KKMP Kerten Super Admin.*"
+- takeScreenshot: exploratory-20261111-exp005-account-admin

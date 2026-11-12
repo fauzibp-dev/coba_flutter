@@ -1,0 +1,33 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn: "Cari\nTab 2 of 5"
+- assertVisible: "Cari Produk"
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "beras"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 15000
+- assertVisible: "beras.*Stok.*"
+- tapOn: "Filter"
+- assertVisible: "Filter Produk"
+- tapOn: "Harga minimum"
+- inputText: "10000"
+- tapOn: "Terapkan Filter"
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 15000
+- assertVisible: "beras.*Stok.*"
+- tapOn:
+    text: "beras.*Stok.*"
+- extendedWaitUntil:
+    visible: "Detail Produk.*"
+    timeout: 10000
+- assertVisible: "Detail Produk.*"
+- assertVisible: "Beli Sekarang"
+- takeScreenshot: exploratory-20261111-exp002-catalog-filter-detail

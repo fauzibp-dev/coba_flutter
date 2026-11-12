@@ -1,0 +1,16 @@
+appId: com.fauzibondanp.shopmart
+---
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn: "Akun\nTab 5 of 5"
+- extendedWaitUntil:
+    visible: "Alamat tersimpan.*"
+    timeout: 10000
+- tapOn: "Alamat tersimpan.*"
+- extendedWaitUntil:
+    visible: "Alamat tersimpan"
+    timeout: 10000
+- assertVisible: "Alamat tersimpan"
+- takeScreenshot: exploratory-20261111-exp008-address-readonly

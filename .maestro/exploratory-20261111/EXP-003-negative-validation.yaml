@@ -1,0 +1,18 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn: "Cari\nTab 2 of 5"
+- assertVisible: "Cari Produk"
+- tapOn: "Cari nama atau deskripsi produk..."
+- inputText: "EXP_UAT_20261111_NOT_FOUND"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "Produk tidak ditemukan"
+    timeout: 15000
+- assertVisible: "Produk tidak ditemukan"
+- assertVisible: "Coba kata kunci.*"
+- takeScreenshot: exploratory-20261111-exp003-negative-validation

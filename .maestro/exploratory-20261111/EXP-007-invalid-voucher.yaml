@@ -1,0 +1,23 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn: "Keranjang\nTab 3 of 5"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 15000
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Kode voucher"
+    timeout: 15000
+- tapOn: "Kode voucher"
+- inputText: "INVALID-UAT-20261111"
+- tapOn: "Terapkan"
+- extendedWaitUntil:
+    visible: "PostgrestException.*|Voucher invalid.*|invalid.*expired.*"
+    timeout: 15000
+- assertVisible: "PostgrestException.*|Voucher invalid.*|invalid.*expired.*"
+- takeScreenshot: exploratory-20261111-exp007-invalid-voucher

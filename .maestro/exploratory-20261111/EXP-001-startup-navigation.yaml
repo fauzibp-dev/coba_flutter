@@ -1,0 +1,14 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- assertVisible: "Cari produk, promo, atau kategori..."
+- tapOn: "Cari\nTab 2 of 5"
+- assertVisible: "Cari Produk"
+- tapOn: "Beranda\nTab 1 of 5"
+- assertVisible: "Belanja Lebih Mudah Di KKMP Kerten"
+- takeScreenshot: exploratory-20261111-exp001-startup-navigation

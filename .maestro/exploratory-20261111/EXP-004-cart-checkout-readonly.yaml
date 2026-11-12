@@ -1,0 +1,34 @@
+appId: com.fauzibondanp.shopmart
+---
+- pressKey: Home
+- tapOn: "KKMP Kerten"
+- extendedWaitUntil:
+    visible: "Beranda.*"
+    timeout: 15000
+- tapOn: "Cari\nTab 2 of 5"
+- assertVisible: "Cari Produk"
+- tapOn: "EXP_UAT_20261111_NOT_FOUND"
+- eraseText: 40
+- inputText: "beras"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "beras.*Stok.*"
+    timeout: 15000
+- tapOn:
+    text: "beras.*Stok.*"
+- extendedWaitUntil:
+    visible: "Detail Produk.*"
+    timeout: 10000
+- tapOn: "Beli Sekarang"
+- extendedWaitUntil:
+    visible: "Subtotal"
+    timeout: 10000
+- assertVisible: "Subtotal"
+- takeScreenshot: exploratory-20261111-exp004-cart
+- tapOn: "Checkout"
+- extendedWaitUntil:
+    visible: "Buat Pesanan"
+    timeout: 15000
+- assertVisible: "COD / Bayar saat diterima"
+- assertVisible: "Buat Pesanan"
+- takeScreenshot: exploratory-20261111-exp004-checkout
